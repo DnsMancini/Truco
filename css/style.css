@@ -147,6 +147,12 @@ body {
   background-image: url("../img/bot2.png");
 }
 
+.avatar-bot1,
+.avatar-bot2 {
+  width: 70px;
+  height: 70px;
+}
+
 .avatar-voce,
 .avatar-bot1,
 .avatar-bot2 {

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Truco Cassino UI</title>
+
+<link rel="icon" href="data:,">
+
+<link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<div id="gameWrapper">
+
+  <div class="mesa">
+
+    <div id="vira" class="carta viraCarta"></div>
+
+    <div id="mensagem"></div>
+    <div id="infoRodada"></div>
+    <div id="historicoRodadas"></div>
+    <div id="placar"></div>
+
+    <!-- 🔥 TRUCO -->
+    <div id="trucoStatus">Nenhum truco</div>
+    <button id="btnTruco" onclick="pedirTruco()">TRUCO</button>
+    <button id="btnCorrer" onclick="correr()">CORRER</button>
+
+    <!-- jogadores -->
+    <div class="player" id="p0"><div class="avatar"></div>Você</div>
+    <div class="player" id="p1"><div class="avatar"></div>Bot 1</div>
+    <div class="player" id="p2"><div class="avatar"></div>Parceiro</div>
+    <div class="player" id="p3"><div class="avatar"></div>Bot 2</div>
+
+    <!-- mãos bots -->
+    <div id="hand1" class="botHand"></div>
+    <div id="hand2" class="botHand"></div>
+    <div id="hand3" class="botHand"></div>
+
+    <!-- mesa -->
+    <div id="mesaCartas"></div>
+    <div id="mao"></div>
+
+  </div>
+
+</div>
+
+<!-- tela final -->
+<div id="telaFinal" class="telaFinal">
+  <div id="textoFinal"></div>
+</div>
+
+<script src="js/script.js"></script>
+
+</body>
+</html>

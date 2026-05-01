@@ -1,0 +1,494 @@
+body {
+  margin: 0;
+  background: #0b0b0b;
+  font-family: Arial;
+  color: white;
+}
+
+.mesa {
+  width: 664px;
+  height: 664px;
+  margin: 40px auto;
+  border-radius: 50%;
+  position: relative;
+  background: radial-gradient(
+    circle at center,
+    #1e7a4b 0%,
+    #145c39 40%,
+    #0a2b18 100%
+  );
+  box-shadow:
+    inset 0 0 80px rgba(0, 0, 0, 0.9),
+    0 30px 80px rgba(0, 0, 0, 0.9);
+}
+
+#btnCorrer {
+  position: absolute;
+  bottom: 25px;
+  left: calc(50% + 260px);
+
+  padding: 8px 14px;
+  background: #555;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 2000;
+}
+
+#vira {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(0deg);
+  width: 70px;
+  height: 100px;
+  background: white;
+  color: black;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  border: 3px solid gold;
+  z-index: 999;
+}
+
+#mensagem {
+  position: absolute;
+  top: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.85);
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-weight: bold;
+  display: none;
+  border: 2px solid #f1c40f;
+  z-index: 2000;
+}
+
+#infoRodada {
+  position: absolute;
+  top: 50px;
+  left: -180px;
+  transform: none;
+
+  background: rgba(0, 0, 0, 0.6);
+  padding: 6px 12px;
+  border-radius: 10px;
+
+  font-weight: bold;
+  color: #f1c40f;
+}
+
+/* 🔥 TRUCO UI */
+#trucoStatus {
+  position: absolute;
+  top: 95px;
+  left: -180px;
+  transform: none;
+
+  background: rgba(0, 0, 0, 0.6);
+  padding: 6px 12px;
+  border-radius: 10px;
+
+  font-weight: bold;
+  color: #f1c40f;
+}
+
+#btnTruco {
+  position: absolute;
+  bottom: 25px;
+  left: calc(50% + 150px);
+
+  padding: 8px 14px;
+  background: #c0392b;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 2000;
+}
+.player {
+  position: absolute;
+  text-align: center;
+  font-size: 12px;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(#555, #111);
+  margin: auto;
+  margin-bottom: 4px;
+}
+
+#p0 {
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+#p1 {
+  left: -20px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+#p2 {
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+#p3 {
+  right: -20px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.botHand {
+  position: absolute;
+  display: flex;
+  gap: 4px;
+}
+
+#hand1 {
+  left: 40px;
+  top: 50%;
+  transform: translateY(-50%);
+  flex-direction: column;
+}
+#hand2 {
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+#hand3 {
+  right: 40px;
+  top: 50%;
+  transform: translateY(-50%);
+  flex-direction: column;
+}
+
+#hand1 .carta,
+#hand3 .carta {
+  transform: rotate(90deg) scale(1);
+}
+
+.carta {
+  width: 85px;
+  height: 125px;
+
+  background-color: white; /* <- importante fallback */
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+
+  box-shadow:
+    0 10px 18px rgba(0, 0, 0, 0.45),
+    inset 0 2px 3px rgba(255, 255, 255, 0.9);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-weight: bold;
+  font-size: 18px;
+
+  user-select: none;
+}
+
+.cartaMesa {
+  transform: rotate(calc(var(--rot, 0deg)));
+}
+
+.carta.playerCard:hover {
+  transform: rotate(var(--rot)) translateY(-18px) scale(1.05);
+  z-index: 20;
+}
+
+.virada {
+  background:
+    radial-gradient(
+      circle at 30% 30%,
+      rgba(255, 255, 255, 0.08),
+      transparent 40%
+    ),
+    repeating-linear-gradient(
+      45deg,
+      #7a0c0c,
+      #7a0c0c 6px,
+      #8e1111 6px,
+      #8e1111 12px
+    );
+
+  border: 2px solid #c9a227;
+
+  border-radius: 12px;
+
+  box-shadow:
+    0 8px 18px rgba(0, 0, 0, 0.6),
+    inset 0 0 10px rgba(255, 255, 255, 0.08);
+}
+
+.virada::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50%;
+  height: 60%;
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 2px,
+    rgba(255, 255, 255, 0.05) 2px,
+    rgba(255, 255, 255, 0.05) 4px
+  );
+  border-radius: 5px;
+}
+
+#mesaCartas {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 420px;
+  height: 260px;
+}
+
+.cartaMesa {
+  width: 60px;
+  height: 85px;
+  background: white;
+  color: black;
+  border-radius: 10px;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.vencedor {
+  box-shadow: 0 0 20px gold;
+  transform: scale(1.1);
+}
+
+.c0 {
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.c1 {
+  left: -10px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.c2 {
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.c3 {
+  right: -10px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+#placar {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  left: auto;
+  background: rgba(0, 0, 0, 0.8);
+  padding: 10px 15px;
+  border-radius: 10px;
+  font-weight: bold;
+  border: 2px solid #f1c40f;
+  z-index: 2000;
+}
+#placar span {
+  display: block;
+  text-align: center;
+}
+
+.playerCard {
+  transform: rotate(var(--rot, 0deg));
+  transition: transform 0.15s ease;
+  will-change: transform;
+}
+
+.playerCard:hover {
+  transform: rotate(var(--rot)) translateY(-18px) scale(1.05);
+}
+
+#mao {
+  position: absolute;
+  bottom: 10px;
+  width: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+
+  gap: -20px;
+}
+
+#historicoRodadas {
+  position: absolute;
+  bottom: 115px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  background: rgba(0, 0, 0, 0.55);
+  padding: 8px 14px;
+  border-radius: 10px;
+
+  font-weight: bold;
+  color: white;
+  font-size: 14px;
+
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.telaFinal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 60px;
+  font-weight: bold;
+  color: white;
+
+  opacity: 0;
+  pointer-events: none;
+
+  transition: 0.5s;
+  z-index: 999;
+}
+
+.telaFinal.show {
+  opacity: 1;
+}
+
+#textoFinal {
+  animation: zoom 0.5s ease;
+}
+
+@keyframes zoom {
+  from {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.carta.animar {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.6) rotate(0deg);
+  opacity: 0;
+  transition: all 0.45s cubic-bezier(0.2, 0.9, 0.2, 1);
+  z-index: 9999;
+}
+
+.carta.animar.entrando {
+  opacity: 1;
+}
+
+/* canto superior esquerdo */
+.top-left {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  font-size: 14px;
+}
+
+/* centro */
+.center {
+  font-size: 28px;
+}
+
+/* canto inferior direito espelhado */
+.bottom-right {
+  position: absolute;
+  bottom: 6px;
+  right: 6px;
+  font-size: 14px;
+  transform: rotate(180deg);
+}
+
+.cartaMesa {
+  position: absolute;
+  width: 60px;
+  height: 85px;
+  background: white;
+  color: black;
+  border-radius: 10px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-weight: bold;
+  overflow: hidden;
+}
+
+.cartaMesa .top-left {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  font-size: 12px;
+}
+
+.cartaMesa .center {
+  font-size: 26px;
+}
+
+.cartaMesa .bottom-right {
+  position: absolute;
+  bottom: 6px;
+  right: 6px;
+  font-size: 12px;
+  transform: rotate(180deg);
+}
+
+.carta.virada {
+  background: url("../img/carta-copag-vermelha.png") center/cover no-repeat !important;
+}
+
+.carta.playerCard {
+  background: linear-gradient(145deg, #ffffff, #eaeaea);
+  color: #111;
+}
+
+.carta.playerCard .top-left,
+.carta.playerCard .bottom-right {
+  font-size: 14px;
+}
+
+#gameWrapper {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

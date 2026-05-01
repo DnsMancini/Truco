@@ -41,17 +41,7 @@ body {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%) rotate(0deg);
-  width: 70px;
-  height: 100px;
-  background: white;
-  color: black;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  border: 3px solid gold;
+  transform: translate(-50%, -50%);
   z-index: 999;
 }
 

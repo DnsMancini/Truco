@@ -149,8 +149,8 @@ body {
 
 .avatar-bot1,
 .avatar-bot2 {
-  width: 70px;
-  height: 70px;
+  width: 105px;
+  height: 105px;
 }
 
 .avatar-voce,
@@ -167,7 +167,7 @@ body {
   transform: translateX(-50%);
 }
 #p1 {
-  left: -20px;
+  left: -64px;
   top: 50%;
   transform: translateY(-50%);
 }
@@ -177,7 +177,7 @@ body {
   transform: translateX(-50%);
 }
 #p3 {
-  right: -20px;
+  right: -64px;
   top: 50%;
   transform: translateY(-50%);
 }

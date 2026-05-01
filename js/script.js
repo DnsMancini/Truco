@@ -265,6 +265,22 @@ function formatarCarta(carta) {
   return `<span class="${getClasseNaipe(carta)}">${getValorCarta(carta)}${getNaipe(carta)}</span>`;
 }
 
+function renderCartaFrente(carta) {
+  return `
+    <div class="top-left">
+      ${formatarCarta(carta)}
+    </div>
+
+    <div class="center">
+      ${formatarCarta(carta)}
+    </div>
+
+    <div class="bottom-right">
+      ${formatarCarta(carta)}
+    </div>
+  `;
+}
+
 function render() {
   document.getElementById("mao").innerHTML = maos[0]
     .map((c, i) => {
@@ -274,19 +290,7 @@ function render() {
       <div class="carta playerCard"
            onclick="jogar(${i})"
            style="--rot:${rot}deg;">
-        
-        <div class="top-left">
-          ${formatarCarta(c)}
-        </div>
-
-        <div class="center">
-          ${formatarCarta(c)}
-        </div>
-
-        <div class="bottom-right">
-          ${formatarCarta(c)}
-        </div>
-
+        ${renderCartaFrente(c)}
       </div>
       `;
     })
@@ -417,19 +421,7 @@ function renderMesa() {
     .map(
       (m, i) => `
       <div class="cartaMesa c${m.j} ${i === cartaVencedoraIndex ? "vencedor" : ""}">
-        
-        <div class="top-left">
-          ${formatarCarta(m.c)}
-        </div>
-
-        <div class="center">
-          ${formatarCarta(m.c)}
-        </div>
-
-        <div class="bottom-right">
-          ${formatarCarta(m.c)}
-        </div>
-
+        ${renderCartaFrente(m.c)}
       </div>
     `,
     )
@@ -638,7 +630,7 @@ function iniciar() {
   atualizarTrucoStatus("Nenhum truco");
 
   vira = baralho.pop();
-  document.getElementById("vira").innerHTML = formatarCarta(vira);
+  document.getElementById("vira").innerHTML = renderCartaFrente(vira);
 
   distribuir();
   atualizarPlacar();

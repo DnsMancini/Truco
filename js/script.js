@@ -99,7 +99,12 @@ function pedirTruco() {
 }
 
 function atualizarTrucoStatus(msg) {
-  document.getElementById("trucoStatus").innerText = msg;
+  const texto = msg.toLowerCase().startsWith("truco:") ? msg : `Truco: ${msg}`;
+  document.getElementById("trucoStatus").innerText = texto;
+}
+
+function atualizarPainelRodada() {
+  document.getElementById("infoRodada").innerText = `Rodada ${rodada} de 3`;
 }
 
 function getMaoStatusLabel() {
@@ -530,6 +535,7 @@ function resolver() {
 
     // próxima rodada
     rodada++;
+    atualizarPainelRodada();
 
     render();
     renderMesa();
@@ -629,7 +635,8 @@ function iniciar() {
   nivelTruco = 0;
   valorMao = 1;
 
-  atualizarTrucoStatus("Nenhum truco");
+  atualizarTrucoStatus("Nenhum");
+  atualizarPainelRodada();
 
   vira = baralho.pop();
   document.getElementById("vira").innerHTML = renderCartaFrente(vira);
@@ -662,10 +669,10 @@ function atualizarHistorico() {
       texto = "➖ Empate";
     }
 
-    html += i + 1 + "ª: " + texto + " | ";
+    html += i + 1 + "ª: " + texto + "\n";
   });
 
-  document.getElementById("historicoRodadas").innerText = html;
+  document.getElementById("historicoRodadas").innerText = html.trim();
 }
 
 function mostrarTelaFinal(vitoria) {

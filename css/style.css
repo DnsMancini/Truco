@@ -337,9 +337,9 @@ body {
   top: 16px;
   right: -172px;
   left: auto;
-  min-width: 210px;
+  min-width: 172px;
   background: linear-gradient(155deg, rgba(20, 20, 20, 0.95), rgba(5, 5, 5, 0.9));
-  padding: 14px 16px;
+  padding: 12px 14px;
   border-radius: 10px;
   font-weight: 700;
   font-size: 17px;
@@ -374,8 +374,8 @@ body {
   position: absolute;
   left: -170px;
   bottom: 26px;
-  width: 160px;
-  min-height: 165px;
+  width: 148px;
+  min-height: 128px;
   background: linear-gradient(155deg, rgba(20, 20, 20, 0.95), rgba(5, 5, 5, 0.9));
   border: 2px solid rgba(241, 196, 15, 0.75);
   border-radius: 10px;
@@ -393,7 +393,7 @@ body {
 }
 
 #historicoRodadas {
-  padding: 10px 14px;
+  padding: 8px 10px;
   color: #fff;
   font-weight: 700;
   font-size: 14px;

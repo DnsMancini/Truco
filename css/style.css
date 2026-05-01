@@ -272,7 +272,7 @@ body {
 }
 
 .c0 {
-  bottom: -10px;
+  bottom: -30px;
   left: 50%;
   transform: translateX(-50%);
 }
@@ -282,7 +282,7 @@ body {
   transform: translateY(-50%);
 }
 .c2 {
-  top: -10px;
+  top: -30px;
   left: 50%;
   transform: translateX(-50%);
 }

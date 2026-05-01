@@ -282,9 +282,11 @@ function renderCartaFrente(carta) {
 }
 
 function render() {
+  const inclinacoesJogador = [-8, 0, 8];
+
   document.getElementById("mao").innerHTML = maos[0]
     .map((c, i) => {
-      let rot = Math.random() * 20 - 10;
+      const rot = inclinacoesJogador[i] ?? 0;
 
       return `
       <div class="carta playerCard"

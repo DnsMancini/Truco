@@ -140,7 +140,7 @@ body {
 .botHand {
   position: absolute;
   display: flex;
-  gap: 4px;
+  gap: 0;
 }
 
 #hand1 {
@@ -327,7 +327,7 @@ body {
   justify-content: center;
   align-items: flex-end;
 
-  gap: -20px;
+  gap: 0;
 }
 
 #historicoRodadas {
@@ -488,4 +488,50 @@ body {
 
 .naipe-preto {
   color: #111;
+}
+
+
+/* Ajuste de leque para manter distância e inclinação fixas */
+#mao .playerCard {
+  margin-left: -18px;
+}
+#mao .playerCard:first-child {
+  margin-left: 0;
+}
+
+#hand2 .carta {
+  margin-left: -22px;
+}
+#hand2 .carta:first-child {
+  margin-left: 0;
+}
+#hand2 .carta:nth-child(1) {
+  transform: rotate(-9deg);
+}
+#hand2 .carta:nth-child(2) {
+  transform: rotate(0deg);
+}
+#hand2 .carta:nth-child(3) {
+  transform: rotate(9deg);
+}
+
+#hand1 .carta,
+#hand3 .carta {
+  margin-top: -26px;
+}
+#hand1 .carta:first-child,
+#hand3 .carta:first-child {
+  margin-top: 0;
+}
+#hand1 .carta:nth-child(1),
+#hand3 .carta:nth-child(1) {
+  transform: rotate(82deg);
+}
+#hand1 .carta:nth-child(2),
+#hand3 .carta:nth-child(2) {
+  transform: rotate(90deg);
+}
+#hand1 .carta:nth-child(3),
+#hand3 .carta:nth-child(3) {
+  transform: rotate(98deg);
 }

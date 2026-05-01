@@ -126,6 +126,26 @@ body {
   margin-bottom: 4px;
 }
 
+.avatar-voce {
+  background-image: url("../img/voce.png");
+}
+
+.avatar-bot1 {
+  background-image: url("../img/bot1.png");
+}
+
+.avatar-bot2 {
+  background-image: url("../img/bot2.png");
+}
+
+.avatar-voce,
+.avatar-bot1,
+.avatar-bot2 {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
 #p0 {
   bottom: -10px;
   left: 50%;

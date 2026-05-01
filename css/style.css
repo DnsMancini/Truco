@@ -492,3 +492,11 @@ body {
   align-items: center;
   justify-content: center;
 }
+
+.naipe-vermelho {
+  color: #c1121f;
+}
+
+.naipe-preto {
+  color: #111;
+}

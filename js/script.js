@@ -256,6 +256,15 @@ function criarAnimacaoCarta(player, cartaValor) {
   }, 600);
 }
 
+function getClasseNaipe(carta) {
+  const naipe = getNaipe(carta);
+  return naipe === "♥" || naipe === "♦" ? "naipe-vermelho" : "naipe-preto";
+}
+
+function formatarCarta(carta) {
+  return `<span class="${getClasseNaipe(carta)}">${getValorCarta(carta)}${getNaipe(carta)}</span>`;
+}
+
 function render() {
   document.getElementById("mao").innerHTML = maos[0]
     .map((c, i) => {
@@ -267,15 +276,15 @@ function render() {
            style="--rot:${rot}deg;">
         
         <div class="top-left">
-          ${getValorCarta(c)}${getNaipe(c)}
+          ${formatarCarta(c)}
         </div>
 
         <div class="center">
-          ${getValorCarta(c)}${getNaipe(c)}
+          ${formatarCarta(c)}
         </div>
 
         <div class="bottom-right">
-          ${getValorCarta(c)}${getNaipe(c)}
+          ${formatarCarta(c)}
         </div>
 
       </div>
@@ -410,15 +419,15 @@ function renderMesa() {
       <div class="cartaMesa c${m.j} ${i === cartaVencedoraIndex ? "vencedor" : ""}">
         
         <div class="top-left">
-          ${getValorCarta(m.c)}${getNaipe(m.c)}
+          ${formatarCarta(m.c)}
         </div>
 
         <div class="center">
-          ${getValorCarta(m.c)}${getNaipe(m.c)}
+          ${formatarCarta(m.c)}
         </div>
 
         <div class="bottom-right">
-          ${getValorCarta(m.c)}${getNaipe(m.c)}
+          ${formatarCarta(m.c)}
         </div>
 
       </div>

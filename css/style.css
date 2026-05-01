@@ -161,10 +161,6 @@ body {
   flex-direction: column;
 }
 
-#hand1 .carta,
-#hand3 .carta {
-  transform: rotate(90deg) scale(1);
-}
 
 .carta {
   width: 85px;

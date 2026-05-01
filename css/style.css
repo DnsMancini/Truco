@@ -24,7 +24,8 @@ body {
 #btnCorrer {
   position: absolute;
   bottom: 38px;
-  left: calc(50% + 360px);
+  right: -168px;
+  left: auto;
   width: 138px;
   height: 82px;
   padding: 0;
@@ -93,8 +94,9 @@ body {
 
 #btnTruco {
   position: absolute;
-  bottom: 128px;
-  left: calc(50% + 360px);
+  bottom: 132px;
+  right: -168px;
+  left: auto;
   width: 138px;
   height: 82px;
   padding: 0;
@@ -118,10 +120,6 @@ body {
   filter: brightness(1.08);
 }
 
-#btnTruco:active,
-#btnCorrer:active {
-  transform: translateY(1px);
-}
 .player {
   position: absolute;
   text-align: center;

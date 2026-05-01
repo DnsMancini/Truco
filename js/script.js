@@ -638,7 +638,7 @@ function iniciar() {
   atualizarTrucoStatus("Nenhum truco");
 
   vira = baralho.pop();
-  document.getElementById("vira").innerText = vira;
+  document.getElementById("vira").innerHTML = formatarCarta(vira);
 
   distribuir();
   atualizarPlacar();

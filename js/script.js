@@ -927,13 +927,13 @@ function atualizarPlacar() {
   let label = getMaoStatusLabel();
   let html = `
     <div class="placar-times">
-      <div class="placar-time placar-time--eles">
-        <div class="placar-time-nome">ELES</div>
-        <div class="placar-time-pontos">${pontos[1]}</div>
-      </div>
       <div class="placar-time placar-time--nos">
         <div class="placar-time-nome">NÓS</div>
         <div class="placar-time-pontos">${pontos[0]}</div>
+      </div>
+      <div class="placar-time placar-time--eles">
+        <div class="placar-time-nome">ELES</div>
+        <div class="placar-time-pontos">${pontos[1]}</div>
       </div>
     </div>
   `;

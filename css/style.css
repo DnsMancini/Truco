@@ -3,12 +3,36 @@ body {
   background: #0b0b0b;
   font-family: Arial;
   color: white;
+  overflow: hidden;
+}
+
+#gameWrapper {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avisoOrientacao {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: #060606;
+  color: #f1c40f;
+  font-size: 26px;
+  font-weight: 700;
+  text-align: center;
+  padding: 24px;
+  z-index: 5000;
 }
 
 .mesa {
   width: 664px;
   height: 664px;
-  margin: 40px auto;
+  margin: 0;
   border-radius: 50%;
   position: relative;
   background-color: #0a2b18;
@@ -19,6 +43,14 @@ body {
   box-shadow:
     inset 0 0 80px rgba(0, 0, 0, 0.9),
     0 30px 80px rgba(0, 0, 0, 0.9);
+}
+
+body.orientacao-vertical #gameWrapper {
+  display: none;
+}
+
+body.orientacao-vertical .avisoOrientacao {
+  display: flex;
 }
 
 #btnTruco,

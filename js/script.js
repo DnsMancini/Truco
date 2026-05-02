@@ -1048,14 +1048,22 @@ function proximoTurno() {
 }
 
 function ajustarEscala() {
+  const isVertical = window.innerHeight > window.innerWidth;
+  document.body.classList.toggle("orientacao-vertical", isVertical);
+
+  if (isVertical) return;
+
   const mesa = document.querySelector(".mesa");
+  if (!mesa) return;
 
   const w = window.innerWidth;
   const h = window.innerHeight;
 
-  const base = 664;
+  // 664 da mesa + painéis laterais e folga de bordas
+  const baseW = 1040;
+  const baseH = 760;
 
-  const scale = Math.min(w / base, h / base) * 0.95;
+  const scale = Math.min(w / baseW, h / baseH);
 
   mesa.style.transform = `scale(${scale})`;
   mesa.style.transformOrigin = "center center";

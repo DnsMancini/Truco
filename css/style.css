@@ -398,19 +398,6 @@ body.orientacao-vertical .avisoOrientacao {
   height: 260px;
 }
 
-.cartaMesa {
-  width: 60px;
-  height: 85px;
-  background: white;
-  color: black;
-  border-radius: 10px;
-  position: absolute;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-}
-
 .cartaMesa.entrando {
   opacity: 0;
   animation: cartaNaMesa 0.45s cubic-bezier(0.2, 0.85, 0.2, 1) forwards;
@@ -690,14 +677,6 @@ body.orientacao-vertical .avisoOrientacao {
 .carta.playerCard .top-left,
 .carta.playerCard .bottom-right {
   font-size: 14px;
-}
-
-#gameWrapper {
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .naipe-vermelho {

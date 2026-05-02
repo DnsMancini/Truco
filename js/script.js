@@ -2,6 +2,9 @@ const somDistribuir = new Audio("audio/Distribuicaocartas.mp3");
 const somJogarCarta = new Audio("audio/jogarcarta.mp3");
 const tg = window.Telegram?.WebApp;
 
+const isTelegram = !!tg;
+const isMobile = tg?.platform !== "tdesktop"; // desktop detectado corretamente
+
 if (tg) {
   tg.ready();
   tg.expand();
@@ -1125,20 +1128,24 @@ function proximoTurno() {
 }
 
 function ajustarEscala() {
+  const tg = window.Telegram?.WebApp;
+
+  const isDesktopTelegram = tg?.platform === "tdesktop";
   const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
   const isVertical = window.innerHeight > window.innerWidth;
 
   const aviso = document.getElementById("avisoOrientacao");
   const game = document.getElementById("gameWrapper");
 
-  // 🔥 no desktop nunca bloqueia
-  if (!isMobile) {
+  // 🔥 DESKTOP (inclusive Telegram Desktop) nunca bloqueia
+  if (isDesktopTelegram || !isMobile) {
     aviso.style.display = "none";
     game.style.display = "block";
     return;
   }
 
-  // 📱 no celular aplica regra de orientação
+  // 📱 celular normal
   if (isVertical) {
     aviso.style.display = "flex";
     game.style.display = "none";
@@ -1147,7 +1154,6 @@ function ajustarEscala() {
     game.style.display = "block";
   }
 }
-
 window.addEventListener("resize", ajustarEscala);
 window.addEventListener("load", ajustarEscala);
 

@@ -784,13 +784,15 @@ body.orientacao-vertical .avisoOrientacao {
   #gameWrapper {
     height: 100dvh;
     min-height: 100dvh;
-    padding: 8px 0;
+    padding: 0;
     overflow: visible;
+    align-items: flex-start;
   }
 
   .mesa {
     width: min(92vh, 92vw);
     height: min(92vh, 92vw);
+    margin-top: 0;
   }
 
   #mao {

@@ -575,7 +575,7 @@ body.orientacao-vertical #gameWrapper {
 body.orientacao-vertical .mesa {
   width: min(92vw, 664px);
   height: min(92vw, 664px);
-  margin-bottom: 230px;
+  margin: 0;
 }
 
 
@@ -848,15 +848,16 @@ body.orientacao-vertical #btnCorrer {
 @media (orientation: portrait) and (max-width: 900px) {
   #gameWrapper {
     min-height: 100dvh;
-    padding: 12px 0;
-    overflow: auto;
-    align-items: flex-start;
+    padding: 12px 0 calc(190px + env(safe-area-inset-bottom));
+    overflow: hidden;
+    align-items: center;
+    justify-content: center;
   }
 
   .mesa {
     width: min(94vw, 94dvh);
     height: min(94vw, 94dvh);
-    margin: 10px auto 16px;
+    margin: 0 auto;
   }
 
   #painelRodada,

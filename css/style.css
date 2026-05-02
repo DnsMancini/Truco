@@ -616,7 +616,7 @@ body.orientacao-vertical #mao {
   left: 0;
   right: 0;
   width: 100%;
-  bottom: 0;
+  bottom: max(0px, env(safe-area-inset-bottom));
   z-index: 2100;
 }
 
@@ -948,7 +948,7 @@ body.orientacao-vertical #btnCorrer {
   }
 
   #placar {
-    top: 12px;
+    top: max(0px, env(safe-area-inset-top));
     right: 12px;
     left: auto;
     bottom: auto;

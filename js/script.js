@@ -539,7 +539,7 @@ function botPlay() {
     return;
   }
 
-  if (botDevePedirTruco(turno)) {
+  if (getTime(turno) !== getTime(0) && botDevePedirTruco(turno)) {
     botPlayActive = false;
     botPedirTruco(turno);
     return;

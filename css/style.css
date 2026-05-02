@@ -30,10 +30,10 @@ body {
 }
 
 .mesa {
-  width: 664px;
-  height: 664px;
+  width: min(88vw, 980px);
+  height: min(74vh, 700px);
   margin: 0;
-  border-radius: 50%;
+  border-radius: 46%;
   position: relative;
   background-color: #0a2b18;
   background-image: url("../img/mesa.png");

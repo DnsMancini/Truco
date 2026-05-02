@@ -695,7 +695,7 @@ function ajustarEscala() {
   const w = window.innerWidth;
   const h = window.innerHeight;
 
-  const base = 664;
+  const base = 920;
 
   const scale = Math.min(w / base, h / base) * 0.95;
 

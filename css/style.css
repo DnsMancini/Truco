@@ -637,6 +637,20 @@ body.orientacao-vertical #painelHistorico {
   transform: translateX(calc(-50% - 170px));
 }
 
+
+body.orientacao-vertical #p1,
+body.orientacao-vertical #p3 {
+  --avatar-size: 40px;
+}
+
+body.orientacao-vertical #hand1 {
+  left: 0;
+}
+
+body.orientacao-vertical #hand3 {
+  right: 0;
+}
+
 body.orientacao-vertical #btnTruco {
   right: 12px;
   bottom: 98px;

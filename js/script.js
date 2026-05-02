@@ -46,8 +46,15 @@ let valorMao = 1;
 
 function getPontosRecusaTruco() {
   if (maoDeOnzeAtiva && maoDeOnzeAceita) return 3;
-  if (valorMao <= 1) return 1;
-  return trucoValores[Math.max(0, nivelTruco - 1)];
+
+  const pontosPorRecusa = {
+    3: 1,
+    6: 3,
+    9: 6,
+    12: 9,
+  };
+
+  return pontosPorRecusa[valorMao] ?? 1;
 }
 
 function pedirTruco() {

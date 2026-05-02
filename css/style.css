@@ -46,13 +46,6 @@ body {
     0 30px 80px rgba(0, 0, 0, 0.9);
 }
 
-body.orientacao-vertical #gameWrapper {
-  display: none;
-}
-
-body.orientacao-vertical .avisoOrientacao {
-  display: flex;
-}
 
 #btnTruco,
 #btnCorrer {
@@ -520,7 +513,9 @@ body.orientacao-vertical .avisoOrientacao {
     min-height: 96px;
   }
 
-  .painelTitulo {
+  
+
+.painelTitulo {
     font-size: 18px;
     padding: 6px 0;
   }
@@ -531,6 +526,52 @@ body.orientacao-vertical .avisoOrientacao {
     padding: 6px 8px;
   }
 }
+body.orientacao-vertical #gameWrapper {
+  transform: none !important;
+}
+
+body.orientacao-vertical .mesa {
+  width: min(92vw, 664px);
+  height: min(92vw, 664px);
+  margin-bottom: 230px;
+}
+
+body.orientacao-vertical #painelRodada,
+body.orientacao-vertical #placar,
+body.orientacao-vertical #painelHistorico {
+  left: 50%;
+  right: auto;
+  top: auto;
+  bottom: -220px;
+  transform: translateX(-50%);
+}
+
+body.orientacao-vertical #painelRodada {
+  width: min(28vw, 190px);
+  margin-left: -32vw;
+}
+
+body.orientacao-vertical #placar {
+  min-width: min(28vw, 190px);
+  margin-left: 0;
+}
+
+body.orientacao-vertical #painelHistorico {
+  width: min(28vw, 190px);
+  min-height: 120px;
+  margin-left: 32vw;
+}
+
+body.orientacao-vertical #btnTruco {
+  right: 12px;
+  bottom: 98px;
+}
+
+body.orientacao-vertical #btnCorrer {
+  right: 12px;
+  bottom: 38px;
+}
+
 
 .painelTitulo {
   color: #f1c40f;

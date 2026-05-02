@@ -17,11 +17,20 @@ if (tg) {
 }
 
 function ajustarEscala() {
+  const gameWrapper = document.getElementById("gameWrapper");
+  const emRetrato = window.matchMedia("(orientation: portrait)").matches;
+
+  if (emRetrato) {
+    gameWrapper.style.transform = "none";
+    gameWrapper.style.transformOrigin = "center center";
+    return;
+  }
+
   const baseWidth = 420;
   const scale = Math.min(window.innerWidth / baseWidth, 1);
 
-  document.getElementById("gameWrapper").style.transform = `scale(${scale})`;
-  document.getElementById("gameWrapper").style.transformOrigin = "top center";
+  gameWrapper.style.transform = `scale(${scale})`;
+  gameWrapper.style.transformOrigin = "top center";
 }
 
 function atualizarOrientacaoLayout() {

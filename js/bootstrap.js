@@ -16,14 +16,6 @@ if (tg) {
   tg.setBackgroundColor("#000000");
 }
 
-function ajustarEscala() {
-  const baseWidth = 420;
-  const scale = Math.min(window.innerWidth / baseWidth, 1);
-
-  document.getElementById("gameWrapper").style.transform = `scale(${scale})`;
-  document.getElementById("gameWrapper").style.transformOrigin = "top center";
-}
-
 function atualizarOrientacaoLayout() {
   const emRetrato = window.matchMedia("(orientation: portrait)").matches;
   document.body.classList.toggle("orientacao-vertical", emRetrato);
@@ -36,7 +28,5 @@ function tocar(audio, volume = 1) {
   audio.play().catch(() => {});
 }
 
-window.addEventListener("resize", ajustarEscala);
-window.addEventListener("load", ajustarEscala);
 window.addEventListener("resize", atualizarOrientacaoLayout);
 window.addEventListener("load", atualizarOrientacaoLayout);

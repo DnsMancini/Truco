@@ -6,7 +6,7 @@
   --viewport-height: 100dvh;
   --ui-z: 2000;
   --overlay-z: 3000;
-  --table-size: 796.8px;
+  --table-size: min(90vw, 90vh);
 }
 
 @supports (height: 100svh) {

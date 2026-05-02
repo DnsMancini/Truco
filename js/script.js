@@ -754,7 +754,7 @@ function renderMesa() {
   document.getElementById("mesaCartas").innerHTML = mesa
     .map(
       (m, i) => `
-      <div class="cartaMesa c${m.j} ${i === cartaVencedoraIndex ? "vencedor" : ""}">
+      <div class="cartaMesa c${m.j} ${i === cartaVencedoraIndex ? "vencedor" : ""} ${i === mesa.length - 1 ? "entrando" : ""}">
         ${m.coberta ? `<div class="carta virada"></div>` : renderCartaFrente(m.c)}
       </div>
     `,

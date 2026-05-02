@@ -402,8 +402,11 @@ body.orientacao-vertical .avisoOrientacao {
   align-items: center;
   justify-content: center;
   font-weight: bold;
+}
+
+.cartaMesa.entrando {
   opacity: 0;
-  animation: cartaNaMesa 0.85s cubic-bezier(0.2, 0.85, 0.2, 1) forwards;
+  animation: cartaNaMesa 0.45s cubic-bezier(0.2, 0.85, 0.2, 1) forwards;
 }
 
 @keyframes cartaNaMesa {

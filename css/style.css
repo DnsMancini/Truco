@@ -8,7 +8,8 @@ body {
 
 #gameWrapper {
   width: 100vw;
-  height: 100vh;
+  height: 100dvh;
+  min-height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -36,9 +37,8 @@ body {
   margin: 0;
   border-radius: 50%;
   position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  inset: 0;
+  margin: auto;
   background-color: #0a2b18;
   background-image: url("../img/mesa.png");
   background-size: cover;
@@ -51,11 +51,13 @@ body {
 
 #game {
   position: fixed;
-  top: 50%;
-  left: 50%;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
   width: 664px;
   height: 664px;
-  transform: translate(-50%, -50%);
+  margin: auto;
   pointer-events: none;
 }
 
@@ -199,7 +201,7 @@ body {
   content: "";
   position: absolute;
   left: 50%;
-  bottom: -10px;
+  bottom: 0;
   width: 14px;
   height: 14px;
   transform: translateX(-50%) rotate(45deg);
@@ -394,9 +396,8 @@ body {
 .virada::before {
   content: "";
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  inset: 0;
+  margin: auto;
   width: 50%;
   height: 60%;
   background: repeating-linear-gradient(
@@ -411,9 +412,8 @@ body {
 
 #mesaCartas {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  inset: 0;
+  margin: auto;
   width: 420px;
   height: 260px;
 }
@@ -440,7 +440,7 @@ body {
 }
 
 .c0 {
-  bottom: -30px;
+  bottom: 0;
   left: 50%;
   transform: translateX(-50%);
 }
@@ -450,7 +450,7 @@ body {
   transform: translateY(-50%);
 }
 .c2 {
-  top: -30px;
+  top: 0;
   left: 50%;
   transform: translateX(-50%);
 }
@@ -647,7 +647,7 @@ body.orientacao-vertical #placar {
 
 body.orientacao-vertical #painelRodada {
   width: min(88vw, 340px);
-  bottom: -126px;
+  bottom: calc(max(0px, env(safe-area-inset-bottom)) + 126px);
 }
 
 body.orientacao-vertical #placar {
@@ -682,7 +682,7 @@ body.orientacao-vertical #hand1 {
 }
 
 body.orientacao-vertical #hand2 {
-  top: -44px;
+  top: 12px;
 }
 
 body.orientacao-vertical #hand3 {
@@ -930,7 +930,6 @@ body.orientacao-vertical #btnCorrer {
   #gameWrapper {
     min-height: 100dvh;
     padding: 12px 0 calc(190px + env(safe-area-inset-bottom));
-    overflow: hidden;
     align-items: center;
     justify-content: center;
   }
@@ -951,7 +950,7 @@ body.orientacao-vertical #btnCorrer {
   }
 
   #painelRodada {
-    top: -98px;
+    top: 12px;
     padding: 10px 12px;
   }
 
@@ -979,7 +978,7 @@ body.orientacao-vertical #btnCorrer {
   }
 
   #hand2 {
-    top: -44px;
+    top: 12px;
   }
 
   #historicoRodadas {

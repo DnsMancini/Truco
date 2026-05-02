@@ -625,11 +625,11 @@ body.orientacao-vertical #placar {
 }
 
 body.orientacao-vertical #painelHistorico {
-  left: 12px;
+  left: 50%;
   width: 36px;
   min-height: 102px;
-  bottom: 14px;
-  transform: none;
+  bottom: calc(max(0px, env(safe-area-inset-bottom)) + 18px);
+  transform: translateX(calc(-50% - 170px));
 }
 
 body.orientacao-vertical #btnTruco {

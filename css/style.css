@@ -542,24 +542,24 @@ body.orientacao-vertical #painelHistorico {
   left: 50%;
   right: auto;
   top: auto;
-  bottom: -220px;
   transform: translateX(-50%);
-}
-
-body.orientacao-vertical #painelRodada {
-  width: min(28vw, 190px);
-  margin-left: -32vw;
-}
-
-body.orientacao-vertical #placar {
-  min-width: min(28vw, 190px);
   margin-left: 0;
 }
 
+body.orientacao-vertical #painelRodada {
+  width: min(88vw, 340px);
+  bottom: -126px;
+}
+
+body.orientacao-vertical #placar {
+  min-width: min(88vw, 340px);
+  bottom: -206px;
+}
+
 body.orientacao-vertical #painelHistorico {
-  width: min(28vw, 190px);
-  min-height: 120px;
-  margin-left: 32vw;
+  width: min(88vw, 340px);
+  min-height: 108px;
+  bottom: -344px;
 }
 
 body.orientacao-vertical #btnTruco {

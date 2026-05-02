@@ -120,7 +120,10 @@ function avancarStarterProximaMao() {
 }
 
 function atualizarTrucoStatus(msg) {
-  document.getElementById("trucoStatus").innerText = msg.replace(/^truco:\s*/i, "");
+  const trucoStatus = document.getElementById("trucoStatus");
+  if (trucoStatus) {
+    trucoStatus.innerText = msg.replace(/^truco:\s*/i, "");
+  }
 }
 
 function ocultarBalaoTruco() {
@@ -221,7 +224,10 @@ function encerrarPartidaPorPenalidade(timeVencedor) {
 }
 
 function atualizarPainelRodada() {
-  document.getElementById("infoRodada").innerText = `Rodada ${rodada} de 3`;
+  const infoRodada = document.getElementById("infoRodada");
+  if (infoRodada) {
+    infoRodada.innerText = `Rodada ${rodada} de 3`;
+  }
 }
 
 function getMaoStatusLabel() {

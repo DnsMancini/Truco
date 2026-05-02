@@ -433,6 +433,65 @@ body {
   transform: translateY(-50%);
 }
 
+
+.placar-times {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.placar-time {
+  position: relative;
+  width: 110px;
+  height: 62px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 6px;
+  box-sizing: border-box;
+}
+
+.placar-time--nos {
+  background-image: url("../img/bandeiraverde.png");
+}
+
+.placar-time--eles {
+  background-image: url("../img/bandeirabranca.png");
+}
+
+.placar-time-nome {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  color: #0d170e;
+  text-transform: uppercase;
+}
+
+.placar-time-pontos {
+  font-size: 30px;
+  line-height: 1;
+  font-weight: 900;
+  margin-top: 2px;
+  color: #0d170e;
+}
+
+.placar-time--eles .placar-time-nome,
+.placar-time--eles .placar-time-pontos {
+  color: #1f1f1f;
+}
+
+.placar-status {
+  display: block;
+  margin-top: 4px;
+  text-align: center;
+  font-size: 12px;
+  color: #f1c40f;
+}
 #placar {
   position: absolute;
   top: 16px;

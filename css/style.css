@@ -417,6 +417,11 @@ body {
   transform: rotate(var(--rot)) translateY(-18px) scale(1.05);
 }
 
+.playerCard.coberta-pendente {
+  transform: rotate(var(--rot)) translateY(-14px);
+  box-shadow: 0 0 0 3px rgba(241, 196, 15, 0.95), 0 8px 16px rgba(0, 0, 0, 0.5);
+}
+
 #mao {
   position: absolute;
   bottom: 10px;

@@ -27,6 +27,8 @@ const somDoze = new Audio("audio/Doze.mp3");
 
 let podeJogar = true;
 let pontos = [0, 0]; // [nos, eles]
+let cartaCobertaPendenteIndex = null;
+let longPressTimer = null;
 
 const VAL = ["4", "5", "6", "7", "Q", "J", "K", "A", "2", "3"];
 const NAIPES = ["♠", "♥", "♦", "♣"];
@@ -393,9 +395,11 @@ function render() {
   document.getElementById("mao").innerHTML = maos[0]
     .map((c, i) => {
       const rot = inclinacoesJogador[i] ?? 0;
+      const pendente = cartaCobertaPendenteIndex === i ? "coberta-pendente" : "";
 
       return `
-      <div class="carta playerCard"
+      <div class="carta playerCard ${pendente}"
+           data-index="${i}"
            onclick="jogar(${i})"
            style="--rot:${rot}deg;">
         ${renderCartaFrente(c)}
@@ -403,6 +407,8 @@ function render() {
       `;
     })
     .join("");
+
+  vincularLongPressCartaJogador();
 
   document.getElementById("hand1").innerHTML = maos[1]
     .map(
@@ -438,7 +444,14 @@ function jogar(i) {
 
   podeJogar = false;
 
-  mesa.push({ j: 0, c: maos[0].splice(i, 1)[0] });
+  const jogadaCoberta = cartaCobertaPendenteIndex === i;
+
+  if (cartaCobertaPendenteIndex !== null && cartaCobertaPendenteIndex !== i) {
+    cartaCobertaPendenteIndex = null;
+  }
+
+  mesa.push({ j: 0, c: maos[0].splice(i, 1)[0], coberta: jogadaCoberta });
+  cartaCobertaPendenteIndex = null;
   renderMesa();
   tocar(somJogarCarta, 0.7);
 
@@ -452,6 +465,41 @@ function jogar(i) {
 
   botPlayTimeout = setTimeout(botPlay, 600);
   render();
+}
+
+function podePrepararCartaCoberta() {
+  return turno === 0 && rodada > 1 && mesa.length < 4 && estadoTruco === "normal";
+}
+
+function alternarCartaCobertaPendente(i) {
+  if (!podePrepararCartaCoberta()) {
+    if (rodada === 1) mostrar("Não pode encobrir carta na primeira rodada.");
+    return;
+  }
+  cartaCobertaPendenteIndex = cartaCobertaPendenteIndex === i ? null : i;
+  render();
+}
+
+function vincularLongPressCartaJogador() {
+  const cartas = document.querySelectorAll("#mao .playerCard");
+  cartas.forEach((el) => {
+    const idx = Number(el.dataset.index);
+    const iniciarPress = (event) => {
+      event.preventDefault();
+      clearTimeout(longPressTimer);
+      longPressTimer = setTimeout(() => alternarCartaCobertaPendente(idx), 450);
+    };
+    const cancelarPress = () => {
+      clearTimeout(longPressTimer);
+      longPressTimer = null;
+    };
+    el.addEventListener("mousedown", iniciarPress);
+    el.addEventListener("touchstart", iniciarPress, { passive: false });
+    el.addEventListener("mouseup", cancelarPress);
+    el.addEventListener("mouseleave", cancelarPress);
+    el.addEventListener("touchend", cancelarPress);
+    el.addEventListener("touchcancel", cancelarPress);
+  });
 }
 function ordenar(mao, desc = true) {
   return [...mao].sort((a, b) =>
@@ -688,7 +736,7 @@ function renderMesa() {
     .map(
       (m, i) => `
       <div class="cartaMesa c${m.j} ${i === cartaVencedoraIndex ? "vencedor" : ""}">
-        ${renderCartaFrente(m.c)}
+        ${m.coberta ? `<div class="carta virada"></div>` : renderCartaFrente(m.c)}
       </div>
     `,
     )
@@ -710,7 +758,7 @@ function resolver() {
   cartaVencedoraIndex = -1;
 
   mesa.forEach((m, i) => {
-    let f = forcaCarta(m.c);
+    let f = m.coberta ? -1 : forcaCarta(m.c);
 
     if (f > maior) {
       maior = f;
@@ -895,6 +943,7 @@ function iniciar() {
   baralho = criarBaralho();
   maos = [[], [], [], []];
   mesa = [];
+  cartaCobertaPendenteIndex = null;
 
   // Limpa cartas visíveis da mão anterior antes da nova distribuição
   document.getElementById("mao").innerHTML = "";

@@ -890,12 +890,18 @@ function correr() {
 
   setTimeout(() => {
     let adversario = 1;
+    const pontosDaCorrida =
+      estadoTruco === "aguardando" ? getPontosRecusaTruco() : valorMao;
 
     if (jogoEncerrado) return;
 
-    adicionarPontos(adversario, valorMao);
+    adicionarPontos(adversario, pontosDaCorrida);
 
-    mostrar("Eles ganharam " + valorMao + " ponto(s)");
+    mostrar("Eles ganharam " + pontosDaCorrida + " ponto(s)");
+    if (estadoTruco === "aguardando") {
+      estadoTruco = "normal";
+      atualizarTrucoStatus("Truco recusado");
+    }
 
     if (jogoEncerrado) return;
 

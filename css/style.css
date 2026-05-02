@@ -586,6 +586,18 @@ body.orientacao-vertical .mesa {
 }
 
 
+
+body.orientacao-vertical #p1,
+body.orientacao-vertical #p2,
+body.orientacao-vertical #p3,
+body.orientacao-vertical #hand1,
+body.orientacao-vertical #hand2,
+body.orientacao-vertical #hand3,
+body.orientacao-vertical #mesaCartas,
+body.orientacao-vertical #vira {
+  margin-top: -15%;
+}
+
 body.orientacao-vertical #hand1 .carta,
 body.orientacao-vertical #hand2 .carta,
 body.orientacao-vertical #hand3 .carta {

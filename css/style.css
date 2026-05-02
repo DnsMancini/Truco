@@ -6,6 +6,7 @@
   --viewport-height: 100dvh;
   --ui-z: 2000;
   --overlay-z: 3000;
+  --table-size: 796.8px;
 }
 
 @supports (height: 100svh) {
@@ -48,8 +49,8 @@ body {
 }
 
 .mesa {
-  width: 664px;
-  height: 664px;
+  width: var(--table-size);
+  height: var(--table-size);
   margin: 0;
   border-radius: 50%;
   position: fixed;
@@ -70,8 +71,8 @@ body {
   position: fixed;
   top: 50%;
   left: 50%;
-  width: 664px;
-  height: 664px;
+  width: var(--table-size);
+  height: var(--table-size);
   transform: translate(-50%, -50%);
   pointer-events: none;
   z-index: 1000;
@@ -626,8 +627,8 @@ body.orientacao-vertical #gameWrapper {
 }
 
 body.orientacao-vertical .mesa {
-  width: min(92vw, 664px);
-  height: min(92vw, 664px);
+  width: min(92vw, var(--table-size));
+  height: min(92vw, var(--table-size));
   margin: 0;
 }
 

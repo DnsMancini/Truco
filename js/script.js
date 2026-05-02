@@ -1,5 +1,13 @@
 const somDistribuir = new Audio("audio/Distribuicaocartas.mp3");
 const somJogarCarta = new Audio("audio/jogarcarta.mp3");
+const tg = window.Telegram?.WebApp;
+
+if (tg) {
+  tg.ready();
+  tg.expand();
+  tg.setHeaderColor("#000000");
+  tg.setBackgroundColor("#000000");
+}
 let direcao = -1; // -1 = anti-horário
 let ultimoTimeQuePediuTruco = null;
 let starter = 0;

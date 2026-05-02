@@ -811,75 +811,26 @@ body.orientacao-vertical .avisoOrientacao {
 
 @media (max-width: 900px) and (orientation: landscape) {
   .mesa {
-    width: min(86dvh, 88vw);
-    height: min(86dvh, 88vw);
+
   }
 
   #painelRodada {
     top: 10px;
-    left: 6px;
-    width: 128px;
-    padding: 8px 9px;
+
   }
 
   #placar {
     top: 10px;
-    right: 6px;
-    left: auto;
-    min-width: 124px;
-    padding: 8px 9px;
-    font-size: 13px;
-  }
 
-  #painelHistorico {
-    left: 6px;
-    bottom: 8px;
-    width: 120px;
-    min-height: 78px;
-  }
-
-  .painelTitulo {
-    font-size: 14px;
-    padding: 4px 0;
-  }
-
-  #historicoRodadas {
-    font-size: 10px;
-    line-height: 1.3;
-  }
-
-  #p1 {
-    left: -26px;
-  }
-
-  #p3 {
-    right: -26px;
   }
 
   .avatar-bot1,
   .avatar-bot2 {
-    width: 72px;
-    height: 72px;
-  }
 
-  .carta {
-    width: 66px;
-    height: 96px;
   }
 
   #btnTruco,
   #btnCorrer {
-    right: 8px;
-    min-width: 100px;
-    height: 34px;
-    font-size: 10px;
-  }
 
-  #btnTruco {
-    bottom: 58px;
-  }
-
-  #btnCorrer {
-    bottom: 16px;
   }
 }

@@ -774,3 +774,34 @@ body.orientacao-vertical .avisoOrientacao {
     bottom: 24px;
   }
 }
+
+
+@media (orientation: landscape) and (max-height: 540px) {
+  body {
+    overflow-y: auto;
+  }
+
+  #gameWrapper {
+    height: 100dvh;
+    min-height: 100dvh;
+    padding: 8px 0;
+    overflow: visible;
+  }
+
+  .mesa {
+    width: min(92vh, 92vw);
+    height: min(92vh, 92vw);
+  }
+
+  #mao {
+    bottom: 4px;
+  }
+
+  #btnTruco {
+    bottom: 72px;
+  }
+
+  #btnCorrer {
+    bottom: 18px;
+  }
+}

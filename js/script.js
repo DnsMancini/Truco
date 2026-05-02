@@ -16,6 +16,45 @@ const BOT_PLAY_DELAY = 900;
 const BOT_PLAY_DELAY_AFTER_TRUCO = 1200;
 const NEXT_HAND_DELAY = 1800;
 
+function validarAssetsCriticos() {
+  const assets = [
+    "img/mesa.png",
+    "img/carta-copag-vermelha.png",
+    "img/voce.png",
+    "img/bot1.png",
+    "img/bot2.png",
+    "audio/Truco.mp3",
+    "audio/Distribuicaocartas.mp3",
+    "audio/jogarcarta.mp3",
+  ];
+
+  const falhas = [];
+
+  assets.forEach((src) => {
+    const ext = src.split(".").pop().toLowerCase();
+    const ehImagem = ["png", "jpg", "jpeg", "webp", "gif", "svg"].includes(ext);
+
+    if (ehImagem) {
+      const img = new Image();
+      img.onerror = () => falhas.push(src);
+      img.src = src;
+      return;
+    }
+
+    const audio = new Audio();
+    audio.onerror = () => falhas.push(src);
+    audio.src = src;
+  });
+
+  setTimeout(() => {
+    if (falhas.length) {
+      console.warn("Assets com falha de carregamento:", falhas);
+      mostrar("Falha ao carregar mídia do jogo. Recarregue a página.");
+    }
+  }, 700);
+}
+
+
 function tocar(audio, volume = 1) {
   audio.pause();
   audio.currentTime = 0;
@@ -1081,6 +1120,9 @@ function ajustarEscala() {
 }
 
 window.addEventListener("resize", ajustarEscala);
-window.addEventListener("load", ajustarEscala);
+window.addEventListener("load", () => {
+  ajustarEscala();
+  validarAssetsCriticos();
+});
 
 iniciar();

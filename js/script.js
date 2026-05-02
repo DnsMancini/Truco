@@ -9,6 +9,7 @@ let botPlayTimeout = null;
 let botPlayActive = false;
 let distribuindo = false;
 let jogoEncerrado = false;
+let maoDeOnzeAtiva = false;
 
 function tocar(audio, volume = 1) {
   audio.pause();
@@ -38,6 +39,12 @@ let valorMao = 1;
 
 function pedirTruco() {
   let meuTime = getTime(0);
+
+  if (maoDeOnzeAtiva) {
+    mostrar("Mão de 11: truco proibido! Você perdeu a partida.");
+    encerrarPartidaPorPenalidade(1);
+    return;
+  }
 
   if (turno !== 0) {
     mostrar("Só pode pedir truco na sua vez!");
@@ -101,6 +108,26 @@ function pedirTruco() {
 function atualizarTrucoStatus(msg) {
   const texto = msg.toLowerCase().startsWith("truco:") ? msg : `Truco: ${msg}`;
   document.getElementById("trucoStatus").innerText = texto;
+}
+
+function isMaoDeOnze() {
+  return (
+    (pontos[0] === 11 || pontos[1] === 11) && !(pontos[0] === 11 && pontos[1] === 11)
+  );
+}
+
+function encerrarPartidaPorPenalidade(timeVencedor) {
+  jogoEncerrado = true;
+  pontos[timeVencedor] = 12;
+  atualizarPlacar();
+  mostrarTelaFinal(timeVencedor === 0);
+
+  setTimeout(() => {
+    pontos = [0, 0];
+    jogoEncerrado = false;
+    atualizarPlacar();
+    iniciar();
+  }, 3000);
 }
 
 function atualizarPainelRodada() {
@@ -192,6 +219,8 @@ function distribuir() {
             distribuindo = false; // se você estiver usando flag
 
             atualizarControleJogador();
+
+            if (tratarDecisaoMaoDeOnze()) return;
 
             if (turno !== 0) {
               botPlayTimeout = setTimeout(botPlay, 600);
@@ -595,6 +624,43 @@ function correr() {
   }, 1000);
 }
 
+function tratarDecisaoMaoDeOnze() {
+  if (!maoDeOnzeAtiva) return false;
+
+  if (pontos[0] === 11) {
+    const vaiJogar = window.confirm(
+      "Mão de 11: jogar valendo 3 pontos?\nCancelar = correr e perder 1 ponto.",
+    );
+
+    if (!vaiJogar) {
+      pontos[0] = Math.max(0, pontos[0] - 1);
+      atualizarPlacar();
+      mostrar("Você correu na mão de 11 e perdeu 1 ponto.");
+      setTimeout(iniciar, 1200);
+      return true;
+    }
+
+    mostrar("Mão de 11 aceita! Esta mão vale 3 pontos.");
+    return false;
+  }
+
+  if (pontos[1] === 11) {
+    const elesJogam = Math.random() > 0.35;
+
+    if (!elesJogam) {
+      pontos[1] = Math.max(0, pontos[1] - 1);
+      atualizarPlacar();
+      mostrar("Eles correram na mão de 11 e perderam 1 ponto.");
+      setTimeout(iniciar, 1200);
+      return true;
+    }
+
+    mostrar("Eles aceitaram a mão de 11! Esta mão vale 3 pontos.");
+  }
+
+  return false;
+}
+
 function atualizarPlacar() {
   let label = getMaoStatusLabel();
   let html = "Nós: " + pontos[0] + " x " + pontos[1] + " Eles";
@@ -633,9 +699,10 @@ function iniciar() {
   atualizarControleJogador();
 
   nivelTruco = 0;
-  valorMao = 1;
+  maoDeOnzeAtiva = isMaoDeOnze();
+  valorMao = maoDeOnzeAtiva ? 3 : 1;
 
-  atualizarTrucoStatus("Nenhum");
+  atualizarTrucoStatus(maoDeOnzeAtiva ? "Mão de 11 (truco proibido)" : "Nenhum");
   atualizarPainelRodada();
 
   vira = baralho.pop();

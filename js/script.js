@@ -403,7 +403,6 @@ function render() {
       return `
       <div class="carta playerCard ${pendente}"
            data-index="${i}"
-           onclick="jogar(${i})"
            style="--rot:${rot}deg;">
         ${renderCartaFrente(c)}
       </div>
@@ -487,17 +486,31 @@ function vincularLongPressCartaJogador() {
   const cartas = document.querySelectorAll("#mao .playerCard");
   cartas.forEach((el) => {
     const idx = Number(el.dataset.index);
+    let longPressAtivo = false;
     const iniciarPress = (event) => {
-      event.preventDefault();
+      longPressAtivo = false;
       clearTimeout(longPressTimer);
-      longPressTimer = setTimeout(() => alternarCartaCobertaPendente(idx), 450);
+      longPressTimer = setTimeout(() => {
+        longPressAtivo = true;
+        alternarCartaCobertaPendente(idx);
+      }, 450);
     };
     const cancelarPress = () => {
       clearTimeout(longPressTimer);
       longPressTimer = null;
     };
+    const cliqueCarta = (event) => {
+      if (longPressAtivo) {
+        event.preventDefault();
+        longPressAtivo = false;
+        return;
+      }
+      jogar(idx);
+    };
+
+    el.addEventListener("click", cliqueCarta);
     el.addEventListener("mousedown", iniciarPress);
-    el.addEventListener("touchstart", iniciarPress, { passive: false });
+    el.addEventListener("touchstart", iniciarPress, { passive: true });
     el.addEventListener("mouseup", cancelarPress);
     el.addEventListener("mouseleave", cancelarPress);
     el.addEventListener("touchend", cancelarPress);

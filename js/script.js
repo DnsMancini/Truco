@@ -11,6 +11,7 @@ let distribuindo = false;
 let jogoEncerrado = false;
 let maoDeOnzeAtiva = false;
 let maoDeOnzeAceita = false;
+let botJaPediuTrucoNaMao = false;
 
 const BOT_PLAY_DELAY = 900;
 const BOT_PLAY_DELAY_AFTER_TRUCO = 1200;
@@ -591,7 +592,8 @@ function calcularForcaMediaMao(mao) {
 
 function botDevePedirTruco(j) {
   if (estadoTruco !== "normal" || maoDeOnzeAtiva || pontos[0] >= 11 || pontos[1] >= 11) return false;
-  if (nivelTruco >= 4) return false;
+  if (nivelTruco >= 4 || botJaPediuTrucoNaMao) return false;
+  if (rodada > 1) return false;
 
   const meuTime = getTime(j);
   if (ultimoTimeQuePediuTruco === meuTime) return false;
@@ -608,7 +610,7 @@ function botDevePedirTruco(j) {
   if (!(maoForte || pressaoFinal)) return false;
 
   // reduz frequência para não ficar chamando toda hora
-  const chanceBase = 0.4 + Math.min(0.2, pontosTime / 20);
+  const chanceBase = 0.18 + Math.min(0.12, pontosTime / 30);
   return Math.random() < chanceBase;
 }
 
@@ -646,6 +648,7 @@ function botPedirTruco(j) {
 
   const meuTime = getTime(j);
 
+  botJaPediuTrucoNaMao = true;
   estadoTruco = "aguardando";
 
   if (nivelTruco === 0) {
@@ -1045,6 +1048,7 @@ function iniciar() {
   atualizarControleJogador();
 
   nivelTruco = 0;
+  botJaPediuTrucoNaMao = false;
   maoDeOnzeAtiva = isMaoDeOnze();
   maoDeOnzeAceita = false;
   valorMao = maoDeOnzeAtiva ? 3 : 1;

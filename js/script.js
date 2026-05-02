@@ -635,7 +635,14 @@ function botResponderTruco(j) {
 }
 
 function botPedirTruco(j) {
-  if (maoDeOnzeAtiva || pontos[0] >= 11 || pontos[1] >= 11) return;
+  if (maoDeOnzeAtiva) {
+    const timeQueChamou = getTime(j);
+    mostrar(NOMES[j] + " chamou truco na mão de 11 e perdeu a partida!");
+    encerrarPartidaPorPenalidade(1 - timeQueChamou);
+    return;
+  }
+
+  if (pontos[0] >= 11 || pontos[1] >= 11) return;
 
   const meuTime = getTime(j);
 

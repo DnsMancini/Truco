@@ -38,9 +38,7 @@ function ajustarEscala() {
 
 function atualizarOrientacaoLayout() {
   const emRetrato = window.matchMedia("(orientation: portrait)").matches;
-  const larguraPequena = window.innerWidth <= 900;
-
-  document.body.classList.toggle("orientacao-vertical", emRetrato && larguraPequena);
+  document.body.classList.toggle("orientacao-vertical", emRetrato);
 }
 
 window.addEventListener("resize", ajustarEscala);

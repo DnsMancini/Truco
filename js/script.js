@@ -1138,18 +1138,4 @@ function proximoTurno() {
   turno = (turno + direcao + 4) % 4;
 }
 
-function ajustarEscala() {
-  const aviso = document.getElementById("avisoOrientacao");
-  const game = document.getElementById("gameWrapper");
-
-  if (!aviso || !game) return;
-
-  // O layout responsivo já trata portrait/landscape via CSS;
-  // aqui só garantimos que o jogo sempre permaneça visível.
-  aviso.style.display = "none";
-  game.style.display = "block";
-}
-window.addEventListener("resize", ajustarEscala);
-window.addEventListener("load", ajustarEscala);
-
 iniciar();

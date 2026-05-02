@@ -608,8 +608,7 @@ body.orientacao-vertical #mao {
 }
 
 body.orientacao-vertical #painelRodada,
-body.orientacao-vertical #placar,
-body.orientacao-vertical #painelHistorico {
+body.orientacao-vertical #placar {
   left: 50%;
   right: auto;
   top: auto;
@@ -632,11 +631,15 @@ body.orientacao-vertical #placar {
 }
 
 body.orientacao-vertical #painelHistorico {
+  position: fixed;
   left: 50%;
+  right: auto;
+  top: auto;
   width: 36px;
   min-height: 102px;
   bottom: calc(max(0px, env(safe-area-inset-bottom)) + 6px);
-  transform: translateX(178px);
+  transform: translateX(-50%);
+  margin-left: 0;
 }
 
 
@@ -935,10 +938,15 @@ body.orientacao-vertical #btnCorrer {
   }
 
   #painelHistorico {
-    left: 10px;
-    bottom: 6px;
+    position: fixed;
+    left: 50%;
+    right: auto;
+    top: auto;
+    bottom: calc(max(0px, env(safe-area-inset-bottom)) + 6px);
     width: 36px;
     min-height: 100px;
+    transform: translateX(-50%);
+    margin-left: 0;
   }
 
   #hand2 {

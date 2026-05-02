@@ -1,16 +1,3 @@
-const somDistribuir = new Audio("audio/Distribuicaocartas.mp3");
-const somJogarCarta = new Audio("audio/jogarcarta.mp3");
-const tg = window.Telegram?.WebApp;
-
-const isTelegram = !!tg;
-const isMobile = tg?.platform !== "tdesktop"; // desktop detectado corretamente
-
-if (tg) {
-  tg.ready();
-  tg.expand();
-  tg.setHeaderColor("#000000");
-  tg.setBackgroundColor("#000000");
-}
 let direcao = -1; // -1 = anti-horário
 let ultimoTimeQuePediuTruco = null;
 let starter = 0;
@@ -28,46 +15,10 @@ const BOT_PLAY_DELAY = 900;
 const BOT_PLAY_DELAY_AFTER_TRUCO = 1200;
 const NEXT_HAND_DELAY = 1800;
 
-function ajustarEscala() {
-  const baseWidth = 420; // largura ideal do teu jogo
-  const scale = Math.min(window.innerWidth / baseWidth, 1);
-
-  document.getElementById("gameWrapper").style.transform = `scale(${scale})`;
-  document.getElementById("gameWrapper").style.transformOrigin = "top center";
-}
-
-function atualizarOrientacaoLayout() {
-  const emRetrato = window.matchMedia("(orientation: portrait)").matches;
-  document.body.classList.toggle("orientacao-vertical", emRetrato);
-}
-
-window.addEventListener("resize", ajustarEscala);
-window.addEventListener("load", ajustarEscala);
-window.addEventListener("resize", atualizarOrientacaoLayout);
-window.addEventListener("load", atualizarOrientacaoLayout);
-
-function tocar(audio, volume = 1) {
-  audio.pause();
-  audio.currentTime = 0;
-
-  audio.volume = volume;
-
-  audio.play().catch(() => {});
-}
-
-const somTruco = new Audio("audio/Truco.mp3");
-const somSeis = new Audio("audio/Seis.mp3");
-const somNove = new Audio("audio/Nove.mp3");
-const somDoze = new Audio("audio/Doze.mp3");
-
 let podeJogar = true;
 let pontos = [0, 0]; // [nos, eles]
 let cartaCobertaPendenteIndex = null;
 let longPressTimer = null;
-
-const VAL = ["4", "5", "6", "7", "Q", "J", "K", "A", "2", "3"];
-const NAIPES = ["♠", "♥", "♦", "♣"];
-const NOMES = ["Você", "Bot 1", "Parceiro", "Bot 2"];
 
 /* 🔥 TRUCO */
 const trucoValores = [1, 3, 6, 9, 12];
@@ -294,42 +245,6 @@ let cartaVencedoraIndex = -1;
 function getTime(j) {
   return j % 2 === 0 ? 0 : 1;
 }
-function getValorCarta(c) {
-  return c.slice(0, -1);
-}
-function getNaipe(c) {
-  return c.slice(-1);
-}
-
-function getManilha() {
-  let idx = VAL.indexOf(getValorCarta(vira));
-  return VAL[(idx + 1) % VAL.length];
-}
-
-function forcaCarta(c) {
-  let v = getValorCarta(c);
-  let n = getNaipe(c);
-  if (v === getManilha()) {
-    const ordem = ["♦", "♠", "♥", "♣"];
-    return 100 + ordem.indexOf(n);
-  }
-  return VAL.indexOf(v);
-}
-
-function criarBaralho() {
-  let b = [];
-  for (let n of NAIPES) {
-    for (let v of VAL) {
-      b.push(v + n);
-    }
-  }
-  return b.sort(() => Math.random() - 0.5);
-}
-
-function getValor(c) {
-  return c.slice(0, -1);
-}
-
 function distribuir() {
   let totalCartas = 12;
   let entregues = 0;
@@ -424,31 +339,6 @@ function criarAnimacaoCarta(player, cartaValor) {
   setTimeout(() => {
     el.remove();
   }, 600);
-}
-
-function getClasseNaipe(carta) {
-  const naipe = getNaipe(carta);
-  return naipe === "♥" || naipe === "♦" ? "naipe-vermelho" : "naipe-preto";
-}
-
-function formatarCarta(carta) {
-  return `<span class="${getClasseNaipe(carta)}">${getValorCarta(carta)}${getNaipe(carta)}</span>`;
-}
-
-function renderCartaFrente(carta) {
-  return `
-    <div class="top-left">
-      ${formatarCarta(carta)}
-    </div>
-
-    <div class="center">
-      ${formatarCarta(carta)}
-    </div>
-
-    <div class="bottom-right">
-      ${formatarCarta(carta)}
-    </div>
-  `;
 }
 
 function render() {

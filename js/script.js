@@ -13,6 +13,7 @@ let maoDeOnzeAtiva = false;
 
 const BOT_PLAY_DELAY = 900;
 const BOT_PLAY_DELAY_AFTER_TRUCO = 1200;
+const NEXT_HAND_DELAY = 1800;
 
 function tocar(audio, volume = 1) {
   audio.pause();
@@ -837,7 +838,7 @@ function resolver() {
       setTimeout(() => {
         jogoAtivo = false;
         iniciar();
-      }, 200);
+      }, NEXT_HAND_DELAY);
       return;
     }
 

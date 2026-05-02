@@ -594,9 +594,15 @@ body.orientacao-vertical #p3,
 body.orientacao-vertical #hand1,
 body.orientacao-vertical #hand2,
 body.orientacao-vertical #hand3,
-body.orientacao-vertical #mesaCartas,
-body.orientacao-vertical #vira {
+body.orientacao-vertical #mesaCartas {
   margin-top: -15%;
+}
+
+body.orientacao-vertical #vira {
+  top: 38%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin-top: 0;
 }
 
 body.orientacao-vertical #hand1 .carta,
@@ -637,11 +643,29 @@ body.orientacao-vertical #painelRodada {
 
 body.orientacao-vertical #placar {
   min-width: 0;
-  top: 0;
-  right: 0;
+  top: 10px;
+  right: 10px;
   left: auto;
   bottom: auto;
   transform: none;
+}
+
+body.orientacao-vertical .placar-times {
+  gap: 2px;
+}
+
+body.orientacao-vertical .placar-time {
+  width: 132px;
+  height: 74px;
+  padding-top: 12px;
+}
+
+body.orientacao-vertical .placar-time-nome {
+  font-size: 10px;
+}
+
+body.orientacao-vertical .placar-time-pontos {
+  font-size: 24px;
 }
 
 body.orientacao-vertical #painelHistorico {

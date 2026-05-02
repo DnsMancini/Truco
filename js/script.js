@@ -568,7 +568,7 @@ function calcularForcaMediaMao(mao) {
 }
 
 function botDevePedirTruco(j) {
-  if (estadoTruco !== "normal" || maoDeOnzeAtiva) return false;
+  if (estadoTruco !== "normal" || maoDeOnzeAtiva || pontos[0] >= 11 || pontos[1] >= 11) return false;
   if (nivelTruco >= 4) return false;
 
   const meuTime = getTime(j);
@@ -613,6 +613,8 @@ function botResponderTruco(j) {
 }
 
 function botPedirTruco(j) {
+  if (maoDeOnzeAtiva || pontos[0] >= 11 || pontos[1] >= 11) return;
+
   const meuTime = getTime(j);
 
   estadoTruco = "aguardando";

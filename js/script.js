@@ -129,8 +129,13 @@ function pedirTruco() {
       botPlayTimeout = null;
     }
     atualizarTrucoStatus("Truco recusado");
+    avancarStarterProximaMao();
     setTimeout(iniciar, 1500);
   }, 800);
+}
+
+function avancarStarterProximaMao() {
+  starter = (starter + direcao + 4) % 4;
 }
 
 function atualizarTrucoStatus(msg) {
@@ -682,6 +687,7 @@ function botPedirTruco(j) {
         botPlayTimeout = null;
       }
 
+      avancarStarterProximaMao();
       setTimeout(iniciar, 1200);
     }, 250);
     return;
@@ -710,6 +716,7 @@ function botPedirTruco(j) {
           botPlayTimeout = null;
         }
 
+        avancarStarterProximaMao();
         setTimeout(iniciar, 1200);
       },
     );
@@ -857,7 +864,7 @@ function resolver() {
       if (jogoEncerrado) return;
 
       // próximo starter (rotação horário)
-      starter = (starter + direcao + 4) % 4;
+      avancarStarterProximaMao();
 
       setTimeout(() => {
         jogoAtivo = false;
@@ -935,6 +942,7 @@ function correr() {
       botPlayTimeout = null;
     }
 
+    avancarStarterProximaMao();
     setTimeout(iniciar, 1500);
   }, 1000);
 }
@@ -952,6 +960,7 @@ function tratarDecisaoMaoDeOnze() {
       adicionarPontos(1, 1);
 
       if (!jogoEncerrado) {
+        avancarStarterProximaMao();
         setTimeout(iniciar, 1200);
       }
       return true;
@@ -970,6 +979,7 @@ function tratarDecisaoMaoDeOnze() {
       adicionarPontos(0, 1);
 
       if (!jogoEncerrado) {
+        avancarStarterProximaMao();
         setTimeout(iniciar, 1200);
       }
       return true;

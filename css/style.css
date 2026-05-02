@@ -706,6 +706,8 @@ body.orientacao-vertical #hand1 {
 body.orientacao-vertical #hand2 {
   top: 20px;
   left: 50%;
+  transform: translate(-50%, -60%);
+}
 
 body.orientacao-vertical #hand3 {
   right: 0;

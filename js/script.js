@@ -96,7 +96,15 @@ function pedirTruco() {
   mostrar("TRUCO! Agora vale " + valorMao);
 
   setTimeout(() => {
-    const resposta = botResponderTruco(turno === 0 ? 1 : turno);
+    const adversarios = [1, 3].filter((idx) => maos[idx] && maos[idx].length);
+    const botRespondente =
+      adversarios.length > 1
+        ? adversarios.reduce((a, b) =>
+            calcularForcaMediaMao(maos[a]) >= calcularForcaMediaMao(maos[b]) ? a : b,
+          )
+        : adversarios[0] ?? 1;
+
+    const resposta = botResponderTruco(botRespondente);
 
     if (resposta === "aceitar") {
       mostrar("Aceitaram!");
@@ -270,10 +278,6 @@ function getValor(c) {
   return c.slice(0, -1);
 }
 
-function getNaipe(c) {
-  return c.slice(-1);
-}
-
 function distribuir() {
   let totalCartas = 12;
   let entregues = 0;
@@ -444,8 +448,6 @@ function jogar(i) {
   if (distribuindo) return;
 
   if (!jogoAtivo || !podeJogar || estadoTruco !== "normal") return;
-
-  if (!podeJogar) return;
 
   podeJogar = false;
 

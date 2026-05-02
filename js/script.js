@@ -37,6 +37,11 @@ const trucoValores = [1, 3, 6, 9, 12];
 let nivelTruco = 0;
 let valorMao = 1;
 
+function getPontosRecusaTruco() {
+  if (valorMao <= 1) return 1;
+  return trucoValores[Math.max(0, nivelTruco - 1)];
+}
+
 function pedirTruco() {
   let meuTime = getTime(0);
 
@@ -94,7 +99,7 @@ function pedirTruco() {
 
     mostrar("Eles correram!");
     estadoTruco = "normal";
-    adicionarPontos(meuTime, valorMao);
+    adicionarPontos(meuTime, getPontosRecusaTruco());
     botPlayActive = false;
     if (botPlayTimeout) {
       clearTimeout(botPlayTimeout);
@@ -539,7 +544,7 @@ function botPedirTruco(j) {
 
       estadoTruco = "normal";
       mostrar("Eles correram!");
-      adicionarPontos(meuTime, valorMao);
+      adicionarPontos(meuTime, getPontosRecusaTruco());
       atualizarTrucoStatus("Truco recusado");
       botPlayActive = false;
 
@@ -569,7 +574,7 @@ Cancelar = correr`,
 
     estadoTruco = "normal";
     mostrar("Você correu!");
-    adicionarPontos(meuTime, valorMao);
+    adicionarPontos(meuTime, getPontosRecusaTruco());
     atualizarTrucoStatus("Truco recusado");
     botPlayActive = false;
 
@@ -769,9 +774,9 @@ function correr() {
 
     if (jogoEncerrado) return;
 
-    adicionarPontos(adversario, valorMao);
+    adicionarPontos(adversario, getPontosRecusaTruco());
 
-    mostrar("Eles ganharam " + valorMao + " ponto(s)");
+    mostrar("Eles ganharam " + getPontosRecusaTruco() + " ponto(s)");
 
     if (jogoEncerrado) return;
 

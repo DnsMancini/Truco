@@ -582,6 +582,7 @@ body.orientacao-vertical .mesa {
   width: min(92vw, 664px);
   height: min(92vw, 664px);
   margin: 0;
+  transform: translateY(-15%);
 }
 
 

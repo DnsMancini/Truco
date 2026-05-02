@@ -432,11 +432,16 @@ body {
 }
 
 #mesaCartas {
+  --centro-x: 50%;
+  --centro-y: 50%;
+  --offset-y: clamp(38px, 8%, 52px);
+  --offset-x: clamp(52px, 12%, 68px);
   position: absolute;
-  inset: 0;
-  margin: auto;
-  width: 420px;
-  height: 260px;
+  top: var(--centro-y);
+  left: var(--centro-x);
+  width: min(420px, 76%);
+  height: min(260px, 52%);
+  transform: translate(-50%, -50%);
 }
 
 .cartaMesa.entrando {
@@ -461,23 +466,23 @@ body {
 }
 
 .c0 {
-  top: calc(50% + 42px);
+  top: calc(50% + var(--offset-y));
   left: 50%;
   transform: translate(-50%, -50%);
 }
 .c1 {
   top: 50%;
-  left: calc(50% - 56px);
+  left: calc(50% - var(--offset-x));
   transform: translate(-50%, -50%);
 }
 .c2 {
-  top: calc(50% - 42px);
+  top: calc(50% - var(--offset-y));
   left: 50%;
   transform: translate(-50%, -50%);
 }
 .c3 {
   top: 50%;
-  left: calc(50% + 56px);
+  left: calc(50% + var(--offset-x));
   transform: translate(-50%, -50%);
 }
 

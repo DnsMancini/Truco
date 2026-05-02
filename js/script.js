@@ -1128,31 +1128,15 @@ function proximoTurno() {
 }
 
 function ajustarEscala() {
-  const tg = window.Telegram?.WebApp;
-
-  const isDesktopTelegram = tg?.platform === "tdesktop";
-  const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-
-  const isVertical = window.innerHeight > window.innerWidth;
-
   const aviso = document.getElementById("avisoOrientacao");
   const game = document.getElementById("gameWrapper");
 
-  // 🔥 DESKTOP (inclusive Telegram Desktop) nunca bloqueia
-  if (isDesktopTelegram || !isMobile) {
-    aviso.style.display = "none";
-    game.style.display = "block";
-    return;
-  }
+  if (!aviso || !game) return;
 
-  // 📱 celular normal
-  if (isVertical) {
-    aviso.style.display = "flex";
-    game.style.display = "none";
-  } else {
-    aviso.style.display = "none";
-    game.style.display = "block";
-  }
+  // O layout responsivo já trata portrait/landscape via CSS;
+  // aqui só garantimos que o jogo sempre permaneça visível.
+  aviso.style.display = "none";
+  game.style.display = "block";
 }
 window.addEventListener("resize", ajustarEscala);
 window.addEventListener("load", ajustarEscala);

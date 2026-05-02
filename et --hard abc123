@@ -1,0 +1,634 @@
+[33mcommit ca9291a7f4a9cd944569a8a416815c80184b2661[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Author: Mancini <dns.mancini@gmail.com>
+Date:   Fri May 1 23:19:53 2026 -0300
+
+    restauracao
+
+[33mcommit 7e2ece82468982dab980083d3db45de82adcf0b8[m
+Merge: ae23e07 57484f7
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 23:15:51 2026 -0300
+
+    Merge pull request #43 from DnsMancini/codex/corrigir-layout-com-espacos-removidos
+    
+    Restaurar espaçamento lateral e preservar tamanho da mesa para evitar sobreposição
+
+[33mcommit 57484f78bbf9c0d2abc406cb94603517c8d16ab9[m
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 23:15:30 2026 -0300
+
+    Corrige espaçamento do layout para evitar sobreposição
+
+[33mcommit ae23e079426f0555187dcc702c854e656c1b8f7e[m
+Merge: b870f8b c264a68
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 23:10:59 2026 -0300
+
+    Merge pull request #42 from DnsMancini/codex/remover-espaco-vazio-no-layout
+    
+    Ajusta posicionamento da mesa no mobile em landscape
+
+[33mcommit c264a68ddf56798ac3d12c6dbd12641b8ad5e883[m
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 23:10:41 2026 -0300
+
+    Ajusta layout mobile para remover espaço vazio no topo
+
+[33mcommit b870f8b7f87a857715e91bcce05dc8a007589983[m
+Merge: 0d6ec09 a23b7f2
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 23:05:37 2026 -0300
+
+    Merge pull request #41 from DnsMancini/codex/fix-display-issue-on-mobile-horizontal
+    
+    Ajusta layout para evitar corte inferior no celular em modo horizontal
+
+[33mcommit a23b7f2b17a9a72007fe5b6c523034f1fb8d7eea[m
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 23:05:21 2026 -0300
+
+    Ajusta corte inferior em celular horizontal
+
+[33mcommit 0d6ec09d2ddc0cb85d2821d31123b2b6c306873c[m
+Merge: d45f322 6c6ee14
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 23:02:52 2026 -0300
+
+    Merge pull request #40 from DnsMancini/codex/alterar-velocidade-da-animacao-das-cartas
+    
+    Deixa animação das cartas na mesa mais lenta
+
+[33mcommit 6c6ee14c49129f853b45e6582816396e3432fe78[m
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 23:02:05 2026 -0300
+
+    Deixa animação de carta na mesa mais lenta
+
+[33mcommit d45f3221ea28a4332ba4c7cc1522eb4133a2b5a1[m
+Merge: fea67e6 692d455
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 22:58:46 2026 -0300
+
+    Merge pull request #39 from DnsMancini/codex/fix-game-orientation-to-horizontal-only
+    
+    Forçar orientação horizontal e centralizar o jogo na tela
+
+[33mcommit 692d4553d464bb5fcfd5a99690a191f3d573efc8[m
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 22:58:27 2026 -0300
+
+    Força modo horizontal e centraliza jogo na tela
+
+[33mcommit fea67e651bf575cc39dc3b40db915ac5549521c5[m
+Merge: 1a67d95 bb8c822
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 22:52:19 2026 -0300
+
+    Merge pull request #38 from DnsMancini/codex/ajustar-exibicao-do-jogo-em-tela-vertical
+    
+    Ajusta layout para caber em celular na vertical
+
+[33mcommit bb8c822544dfdfd4941190356a7d6c181623841c[m
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 22:52:05 2026 -0300
+
+    Ajusta layout para caber em celular vertical
+
+[33mcommit 1a67d959fec300d86c4c50420f6926f81b9f1383[m
+Merge: e7b5dbe 53ac94c
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 22:51:30 2026 -0300
+
+    Merge pull request #37 from DnsMancini/codex/add-delay-after-match-ends
+    
+    Adicionar atraso antes de iniciar próxima mão após vitória
+
+[33mcommit 53ac94cc500f3744e5d970606306cafa6cf15a62[m
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 22:51:10 2026 -0300
+
+    Add delay before starting next hand after win
+
+[33mcommit e7b5dbea83eb81a44348ee4512c23f4df1fd0d4d[m
+Merge: fe84b2a 4bfc630
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 22:47:17 2026 -0300
+
+    Merge pull request #36 from DnsMancini/codex/fix-card-not-playing-on-mobile-browser
+    
+    Fix mobile card tap handling
+
+[33mcommit 4bfc630cc17930ddfb8ba8a8cd3f512f62ad839b[m
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 22:46:11 2026 -0300
+
+    Fix mobile card tap handling
+
+[33mcommit fe84b2afbc1035afb4a3b5bcc69268de8af55602[m
+Merge: bd03b39 3ce1b69
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 22:43:17 2026 -0300
+
+    Merge pull request #35 from DnsMancini/codex/increase-bot-decision-interval
+    
+    Ajusta intervalo de jogada dos bots
+
+[33mcommit 3ce1b6941ce850cf67d16a7acaa97a8e0a0a7dd1[m
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 22:42:56 2026 -0300
+
+    Ajusta intervalo de jogada dos bots após truco
+
+[33mcommit bd03b3958835dc3328e77492889dc15111431e8b[m
+Merge: 86f74a2 ff0886f
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 22:26:39 2026 -0300
+
+    Merge pull request #32 from DnsMancini/codex/improve-player-truco-balloons-design
+    
+    Melhora visual dos balões de truco
+
+[33mcommit ff0886ffb309cd3e8321b2c7f0bf6db7d0eed329[m
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 22:26:23 2026 -0300
+
+    Aprimora visual dos balões de truco
+
+[33mcommit 86f74a2a4498da20b80df6cdd95757f6bce921ca[m
+Merge: 1af1a2b 5dbae70
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 22:20:12 2026 -0300
+
+    Merge pull request #30 from DnsMancini/codex/add-cover-card-feature-for-truco
+    
+    Adiciona mecânica de carta coberta com long press
+
+[33mcommit 5dbae709a1a99bb7fb20052ba7bd39b4b3e5c309[m
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 22:19:51 2026 -0300
+
+    Adiciona suporte a carta coberta com long press
+
+[33mcommit 1af1a2bdcb88796cc26ac4d6b942f3bb74dbfd4c[m
+Merge: e7cb43a a9f6498
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 22:08:46 2026 -0300
+
+    Merge pull request #29 from DnsMancini/codex/add-balloon-option-for-truco-calls
+    
+    Troca confirmação de truco por balão sobre o jogador pedinte
+
+[33mcommit a9f649861cf0b446e5c0709c7e338bf36a1e18bb[m
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 22:08:25 2026 -0300
+
+    Troca confirmação de truco por balão no jogador
+
+[33mcommit e7cb43af2c61840209256eedcdcbe1456aa39c7c[m
+Merge: 8e1d2ef 8263fb5
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 22:02:34 2026 -0300
+
+    Merge pull request #28 from DnsMancini/codex/fix-previous-round-cards-display
+    
+    Corrige exibição de cartas antigas durante nova distribuição
+
+[33mcommit 8263fb51dbb7ac4a668355f5a79d120204edc688[m
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 22:02:22 2026 -0300
+
+    Corrige cartas visíveis da rodada anterior na distribuição
+
+[33mcommit 8e1d2efea58fd2dacba9573ec419162ad80c7e13[m
+Merge: 99063c6 012b816
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 21:58:12 2026 -0300
+
+    Merge pull request #27 from DnsMancini/codex/update-scoring-rules-for-truco
+    
+    Ajusta pontuação ao correr/recusar truco (1/3/6/9)
+
+[33mcommit 012b8161f07dfc029f43fb717ac9db1867350753[m
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 21:57:53 2026 -0300
+
+    Ajusta pontuação ao correr após aumento do truco
+
+[33mcommit 99063c637103abc5484ae3fec1df99c0230ef605[m
+Merge: a488826 275bdd0
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 21:38:31 2026 -0300
+
+    Merge pull request #26 from DnsMancini/codex/limit-game-to-12-points-for-victory
+    
+    Limita partida a 12 pontos e finaliza com vencedor
+
+[33mcommit 275bdd0b946136b1f014fec6de00861aa0c4878a[m
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 21:38:06 2026 -0300
+
+    Limita placar a 12 e exibe vencedor ao finalizar
+
+[33mcommit a4888265439acacd526fa1b9597d7d2bb63abd58[m
+Merge: bd07f18 8508349
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 21:34:33 2026 -0300
+
+    Merge pull request #25 from DnsMancini/codex/fix-bot-logic-in-truco-game
+    
+    Respeitar carta vencedora do parceiro na escolha do bot
+
+[33mcommit 85083493db6110701d6d689b5815eb496f7d65df[m
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 21:33:38 2026 -0300
+
+    Corrige decisão do bot para respeitar carta vencedora do parceiro
+
+[33mcommit bd07f18065e51a7e1dab1121daeeab38814445c1[m
+Merge: cd24c69 ade2aa8
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 21:28:51 2026 -0300
+
+    Merge pull request #24 from DnsMancini/codex/corrigir-logica-de-aceitacao-de-truco
+    
+    Have bots respond when partner requests truco (avoid prompting player)
+
+[33mcommit ade2aa8cabcacc9201b92bd742dd6317c71e8519[m
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 21:28:21 2026 -0300
+
+    Corrige resposta de truco quando parceiro pede
+
+[33mcommit cd24c695bf146c16ba9d5ad9ff6da6ec91285f47[m
+Merge: 4db02b5 3d7d591
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 21:14:03 2026 -0300
+
+    Merge pull request #23 from DnsMancini/codex/improve-bot-intelligence-for-truco
+    
+    Melhora IA dos bots e pedidos de truco
+
+[33mcommit 3d7d59106b464ff094e42cc4dab0e6c209f0e3a3[m
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 21:13:41 2026 -0300
+
+    Melhora IA dos bots e pedidos de truco
+
+[33mcommit 4db02b5441def59477487a3b9bcd6af041f728fe[m
+Merge: 8f23452 814e2c2
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 21:09:49 2026 -0300
+
+    Merge pull request #22 from DnsMancini/codex/implementar-regra-mao-de-11-no-truco
+    
+    Implementa regra da mão de 11 no Truco
+
+[33mcommit 814e2c278f5fd3f9ea6598c6f38d4b3f9a45c478[m
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 21:09:27 2026 -0300
+
+    Implementa regra da mão de 11
+
+[33mcommit 8f2345272f0f8439059e8b77e37b72da3f733cde[m
+Merge: e333720 db23112
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 21:05:12 2026 -0300
+
+    Merge pull request #21 from DnsMancini/codex/ajustar-legibilidade-das-cartas-no-navegador
+    
+    Improve Copag card-back readability on desktop browsers
+
+[33mcommit db23112381a5c39ed43b11a1e615845135925ac9[m
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 21:04:54 2026 -0300
+
+    Improve Copag card back readability on desktop
+
+[33mcommit e333720bf9f1b0e63902c5b1fd52c5c76e904a3d[m
+Merge: 08c8ca8 fb64629
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 21:01:37 2026 -0300
+
+    Merge pull request #20 from DnsMancini/codex/align-historico-word-in-panel
+    
+    Centraliza título do painel de histórico
+
+[33mcommit fb646298391a235d2d7202dccde74968fb18dfd6[m
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 21:01:16 2026 -0300
+
+    Centraliza título do painel de histórico
+
+[33mcommit 08c8ca8c7a909778edf99b6e0b8d6b2ef37ca4c4[m
+Merge: 2dbedd1 51266ff
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 20:58:17 2026 -0300
+
+    Merge pull request #19 from DnsMancini/codex/increase-bot1-and-bot2-size-by-50%
+    
+    Aumenta avatares dos bots 50% e reposiciona fora das cartas
+
+[33mcommit 51266ff167182a69488550bba6561ae4a4238975[m
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 20:57:29 2026 -0300
+
+    Aumenta avatares bot1/bot2 e reposiciona fora das cartas
+
+[33mcommit 2dbedd1c008adb8bb378173d75bee45272abbca3[m
+Merge: 36b7bd4 8e225cf
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 20:54:19 2026 -0300
+
+    Merge pull request #18 from DnsMancini/codex/ajustar-espacos-em-paineis-historicos
+    
+    Ajusta espaços ociosos nos painéis de placar e histórico
+
+[33mcommit 8e225cf751c67d37c1f9582f0a6d06a82484ff71[m
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 20:53:47 2026 -0300
+
+    Ajusta espaços ociosos nos painéis de placar e histórico
+
+[33mcommit 36b7bd47567c95fb077482aa2fe81f99e74a8569[m
+Merge: 642a9c4 c79353e
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 20:50:53 2026 -0300
+
+    Merge pull request #17 from DnsMancini/codex/aumentar-imagens-de-bo1-e-bot2-75%
+    
+    Aumenta avatares do Bot 1 e Bot 2 em 75%
+
+[33mcommit c79353e235e3a69bd0c7069d11376e1e966a1d10[m
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 20:50:33 2026 -0300
+
+    Aumenta avatares do Bot 1 e Bot 2 em 75%
+
+[33mcommit 642a9c4d6945b0b04edfd566226a1add92924eff[m
+Merge: 5c2afd5 c0b180a
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 20:46:53 2026 -0300
+
+    Merge pull request #16 from DnsMancini/codex/improve-design-of-truco-and-correr-buttons
+    
+    Melhora visual dos botões Truco e Correr
+
+[33mcommit c0b180a19445316990d88192236d2a449fc31713[m
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 20:46:32 2026 -0300
+
+    Melhora visual dos botões Truco e Correr
+
+[33mcommit 5c2afd5ed91b29ce01a2eee9c6a8b15abdcc02dc[m
+Merge: d546f72 d3d6951
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 20:42:01 2026 -0300
+
+    Merge pull request #15 from DnsMancini/codex/utilizar-imagem-bo1-e-bot2-nos-jogadores
+    
+    Adicionar avatares de imagem para Você, Bot 1 e Bot 2
+
+[33mcommit d3d695189fd2039b60b8cd63cfbe85b348d9e06b[m
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 20:41:43 2026 -0300
+
+    Adicionar avatares de Você, Bot 1 e Bot 2 na mesa
+
+[33mcommit d546f72898bff4aa1dc600f7b70edb36266edda8[m
+Merge: 11b18ca 197c230
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 20:38:40 2026 -0300
+
+    Merge pull request #14 from DnsMancini/codex/increase-button-size-by-10%-and-reposition
+    
+    Ajusta botões Truco e Correr no canto inferior direito
+
+[33mcommit 197c2306ec992d1febfa682c4117c923f5884231[m
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 20:38:20 2026 -0300
+
+    Ajusta botões Truco e Correr no canto inferior direito
+
+[33mcommit 11b18ca93a83bcdb358850fff5e2a7a581c97704[m
+Merge: 41e4e53 a8dddf3
+Author: Mancini <dns.mancini@gmail.com>
+Date:   Fri May 1 20:37:42 2026 -0300
+
+    Merge branch 'main' of https://github.com/DnsMancini/Truco
+
+[33mcommit 41e4e536855837ad125a0c602c95246c746885bb[m
+Author: Mancini <dns.mancini@gmail.com>
+Date:   Fri May 1 20:36:56 2026 -0300
+
+    Imagem Jogadores
+
+[33mcommit a8dddf38e60076f56e64d1103e0c7ba14e5f6ae9[m
+Merge: 21e1fe0 675808b
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 20:30:51 2026 -0300
+
+    Merge pull request #13 from DnsMancini/codex/fix-button-alignment-to-match-image-a26ulr
+    
+    Update styling and positioning for action buttons and add hover/active states
+
+[33mcommit 675808b72e96ec630662a2ed5ce2c0c28e7c6258[m
+Merge: 87b5fc9 21e1fe0
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 20:30:38 2026 -0300
+
+    Merge branch 'main' into codex/fix-button-alignment-to-match-image-a26ulr
+
+[33mcommit 87b5fc9ab1bc695db5a6784f32e61bea84f8f69c[m
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 20:28:40 2026 -0300
+
+    Resolve conflito de estilos dos botões de ação
+
+[33mcommit 34115f8ae75088dd23d74474afa810039e944bcc[m
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 20:24:55 2026 -0300
+
+    Corrige conflito de posicionamento dos botões de ação
+
+[33mcommit a292130c91ef9cf262d9c3ee29ff1da7cd91f509[m
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 20:21:50 2026 -0300
+
+    Reduz tamanho dos botões Truco e Correr
+
+[33mcommit 21e1fe06ea390b3c0f151f29df82e1a5711cfa0a[m
+Merge: c8d5964 d77f223
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 20:16:02 2026 -0300
+
+    Merge pull request #12 from DnsMancini/codex/fix-button-alignment-to-match-image
+    
+    Ajusta layout dos botões Truco e Correr para corresponder ao mockup
+
+[33mcommit d77f2235c95236e3108a7fd07650ab56498878f2[m
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 20:12:55 2026 -0300
+
+    Ajusta estilo e posição dos botões Truco e Correr
+
+[33mcommit c8d59648a9d74e2d26a41cfd188d3d54665ec00a[m
+Merge: bdd3a8e 9fd14e7
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 20:02:32 2026 -0300
+
+    Merge pull request #11 from DnsMancini/codex/adicionar-painel-rodada-com-historico
+    
+    UI: adicionar painéis Rodada e Histórico e ajustar layout/Truco
+
+[33mcommit 9fd14e72a115c0115ca058398d0faa5414781690[m
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 20:00:36 2026 -0300
+
+    Ajusta painéis de rodada, placar e histórico para layout de referência
+
+[33mcommit bdd3a8e154c78610d860c652c74c5b6697c09a38[m
+Merge: 0da1ad2 bb4f571
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 19:53:25 2026 -0300
+
+    Merge pull request #10 from DnsMancini/codex/fix-spacing-between-bot-1-and-bot-2
+    
+    Ajusta espaçamento das cartas dos bots laterais
+
+[33mcommit bb4f5718569ba99b8eaa8cc891b89ba601d0cf4e[m
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 19:53:09 2026 -0300
+
+    Ajusta espaçamento das cartas dos bots laterais
+
+[33mcommit 0da1ad22d36ee9840dc3115b13b4db499ab24e77[m
+Merge: a17f03d 7176100
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 19:49:58 2026 -0300
+
+    Merge pull request #9 from DnsMancini/codex/add-bot-1-and-bot-2-with-partner-cards
+    
+    Remove rotation on side hands' card elements
+
+[33mcommit 71761000a3f2d887f31b1a8b802c1b497c00a2cb[m
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 19:49:33 2026 -0300
+
+    Restaura rotação original das cartas laterais
+
+[33mcommit a17f03d5ee9edb19413637ab474e870843308805[m
+Merge: ccc7cf4 c1d62fd
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 19:41:58 2026 -0300
+
+    Merge pull request #8 from DnsMancini/codex/set-card-distance-and-angle
+    
+    Ajusta distância e inclinação das cartas para leque consistente
+
+[33mcommit c1d62fd97dea87da4c10f20624ebbc51d59811a4[m
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 19:41:14 2026 -0300
+
+    Ajusta espaçamento e inclinação das cartas
+
+[33mcommit ccc7cf430a989d44eaf1b0b0d32ab39bee24539f[m
+Merge: 7b23e2a f79a69d
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 19:18:16 2026 -0300
+
+    Merge pull request #6 from DnsMancini/codex/usar-imagem-mesa.png-como-mesa-do-jogo
+    
+    Use mesa.png as game table background
+
+[33mcommit f79a69d32624ec7fbf98fa56ef0323ce481c805e[m
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 19:17:54 2026 -0300
+
+    Use mesa.png as game table background
+
+[33mcommit 7b23e2af78b043617d8c5ea3622e978debc27ae2[m
+Author: Mancini <dns.mancini@gmail.com>
+Date:   Fri May 1 19:15:05 2026 -0300
+
+    adicao de png
+
+[33mcommit 7550651a1f65de846a2b861a848c6cc5ff0759f4[m
+Merge: b74bd55 9bda39c
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 19:13:03 2026 -0300
+
+    Merge pull request #5 from DnsMancini/codex/position-bot-1-and-bot-2-cards-centrally
+    
+    Aproxima cartas jogadas dos bots ao centro da mesa
+
+[33mcommit 9bda39c1a8b62d05070567f904ccb5553e28fba9[m
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 19:12:37 2026 -0300
+
+    Aproxima cartas jogadas dos bots ao centro da mesa
+
+[33mcommit b74bd55359be1f636d15bd7ba5d69a395d9f807c[m
+Merge: e47319f 143e196
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 19:08:42 2026 -0300
+
+    Merge pull request #4 from DnsMancini/codex/ajustar-posicao-das-cartas
+    
+    Ajusta posição das cartas do jogador e do parceiro
+
+[33mcommit 143e1962bc2fb3120041a6a1f697365ef60a7fdb[m
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 19:08:20 2026 -0300
+
+    Ajusta posição das cartas de você e parceiro na mesa
+
+[33mcommit e47319f4ca530e993a5ce3b75711ef353f7a51a3[m
+Merge: d87402d a45e953
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 18:59:06 2026 -0300
+
+    Merge pull request #3 from DnsMancini/codex/add-central-card-on-the-table
+    
+    Padroniza carta vira com visual das cartas da mão
+
+[33mcommit a45e953af09db496ec00ef026b19c0d92cc0ac72[m
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 18:58:38 2026 -0300
+
+    Padroniza carta vira com visual das cartas da mão
+
+[33mcommit d87402d6fd018d380ee8434c79e8b6ef68282df3[m
+Merge: db5895c 9b5d338
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 18:54:11 2026 -0300
+
+    Merge pull request #2 from DnsMancini/codex/set-hearts-and-diamonds-red-for-card
+    
+    Corrige cor da carta vira para naipes vermelhos
+
+[33mcommit 9b5d33857e47f014c50ba36ea129f3280efd98dd[m
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 18:53:55 2026 -0300
+
+    Corrige cor da carta vira para copas e ouros
+
+[33mcommit db5895c3834bcae028904f3e6015a68541bcd98b[m
+Merge: 13d5e2b 1a2c8f0
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 18:44:02 2026 -0300
+
+    Merge pull request #1 from DnsMancini/codex/change-ouros-and-copas-to-red
+    
+    Corrige cor de copas e ouros para vermelho nas cartas
+
+[33mcommit 1a2c8f0e962b8fbc74f575968d2f56e8b2c82f22[m
+Author: DnsMancini <103829552+DnsMancini@users.noreply.github.com>
+Date:   Fri May 1 18:43:34 2026 -0300
+
+    Corrige cor dos naipes de ouros e copas
+
+[33mcommit 13d5e2bce7c3e6fb3db44982cba771ef7fbe8142[m
+Author: Mancini <dns.mancini@gmail.com>
+Date:   Fri May 1 17:25:17 2026 -0300
+
+    primeiro commit

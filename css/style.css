@@ -123,16 +123,22 @@ body {
 .balaoTruco {
   position: absolute;
   z-index: 2400;
-  min-width: 150px;
-  max-width: 210px;
-  background: #fff9e8;
-  color: #1a1a1a;
-  border-radius: 12px;
-  border: 2px solid #f1c40f;
-  padding: 10px 10px 12px;
-  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.5);
+  min-width: 160px;
+  max-width: 230px;
+  background: linear-gradient(155deg, rgba(12, 23, 31, 0.86), rgba(8, 14, 20, 0.94));
+  color: #f8fbff;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  padding: 11px 12px 13px;
+  box-shadow:
+    0 14px 34px rgba(0, 0, 0, 0.52),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
   text-align: center;
   font-size: 12px;
+  line-height: 1.35;
+  letter-spacing: 0.2px;
   font-weight: 700;
 }
 
@@ -141,13 +147,12 @@ body {
   position: absolute;
   left: 50%;
   bottom: -10px;
-  width: 0;
-  height: 0;
-  transform: translateX(-50%);
-  border-left: 9px solid transparent;
-  border-right: 9px solid transparent;
-  border-top: 10px solid #fff9e8;
-  filter: drop-shadow(0 1px 0 #f1c40f);
+  width: 14px;
+  height: 14px;
+  transform: translateX(-50%) rotate(45deg);
+  background: rgba(8, 14, 20, 0.93);
+  border-right: 1px solid rgba(255, 255, 255, 0.24);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.24);
 }
 
 .balaoTrucoAcoes {
@@ -168,11 +173,13 @@ body {
 }
 
 #btnBalaoSim {
-  background: #1f8f4f;
+  background: linear-gradient(180deg, #23a85d 0%, #1d7f48 100%);
+  box-shadow: 0 6px 14px rgba(7, 68, 35, 0.45);
 }
 
 #btnBalaoNao {
-  background: #c2362e;
+  background: linear-gradient(180deg, #e05047 0%, #b4322a 100%);
+  box-shadow: 0 6px 14px rgba(88, 20, 16, 0.42);
 }
 
 .oculto {

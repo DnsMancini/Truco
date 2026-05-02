@@ -807,3 +807,79 @@ body.orientacao-vertical .avisoOrientacao {
     bottom: 18px;
   }
 }
+
+
+@media (max-width: 900px) and (orientation: landscape) {
+  .mesa {
+    width: min(100vw, 100dvh);
+    height: min(100vw, 100dvh);
+  }
+
+  #painelRodada {
+    top: 10px;
+    left: 10px;
+    width: 146px;
+    padding: 10px 11px;
+  }
+
+  #placar {
+    top: 10px;
+    right: 10px;
+    left: auto;
+    min-width: 142px;
+    padding: 10px 11px;
+    font-size: 15px;
+  }
+
+  #painelHistorico {
+    left: 10px;
+    bottom: 10px;
+    width: 130px;
+    min-height: 92px;
+  }
+
+  .painelTitulo {
+    font-size: 16px;
+    padding: 6px 0;
+  }
+
+  #historicoRodadas {
+    font-size: 11px;
+    line-height: 1.4;
+  }
+
+  #p1 {
+    left: -36px;
+  }
+
+  #p3 {
+    right: -36px;
+  }
+
+  .avatar-bot1,
+  .avatar-bot2 {
+    width: 84px;
+    height: 84px;
+  }
+
+  .carta {
+    width: 72px;
+    height: 106px;
+  }
+
+  #btnTruco,
+  #btnCorrer {
+    right: 10px;
+    min-width: 108px;
+    height: 38px;
+    font-size: 11px;
+  }
+
+  #btnTruco {
+    bottom: 66px;
+  }
+
+  #btnCorrer {
+    bottom: 18px;
+  }
+}

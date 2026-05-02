@@ -436,10 +436,11 @@ body {
 
 .placar-times {
   display: flex;
+  gap: 6px;
 }
 
 .placar-time + .placar-time {
-  margin-left: -18px;
+  margin-left: 0;
 }
 
 .placar-time {
@@ -495,9 +496,9 @@ body {
   color: #f1c40f;
 }
 #placar {
-  position: absolute;
-  top: 16px;
-  right: -172px;
+  position: fixed;
+  top: 0;
+  right: 0;
   left: auto;
   min-width: 0;
   background: transparent;

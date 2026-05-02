@@ -341,7 +341,7 @@ body {
   flex-direction: column;
 }
 #hand2 {
-  top: 0;
+  top: 20px;
   left: 50%;
   transform: translateX(-50%);
 }
@@ -704,7 +704,7 @@ body.orientacao-vertical #hand1 {
 }
 
 body.orientacao-vertical #hand2 {
-  top: 0;
+  top: 20px;
   left: 50%;
   transform: translateX(-50%);
 }

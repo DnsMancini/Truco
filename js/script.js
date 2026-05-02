@@ -120,8 +120,7 @@ function avancarStarterProximaMao() {
 }
 
 function atualizarTrucoStatus(msg) {
-  const texto = msg.toLowerCase().startsWith("truco:") ? msg : `Truco: ${msg}`;
-  document.getElementById("trucoStatus").innerText = texto;
+  document.getElementById("trucoStatus").innerText = msg.replace(/^truco:\s*/i, "");
 }
 
 function ocultarBalaoTruco() {

@@ -592,7 +592,24 @@ body.orientacao-vertical #mao .carta {
 }
 
 body.orientacao-vertical #mao {
-  bottom: max(6px, env(safe-area-inset-bottom));
+  position: fixed;
+  left: 0;
+  right: 0;
+  width: 100%;
+  bottom: max(0px, env(safe-area-inset-bottom));
+  z-index: 2100;
+}
+
+body.orientacao-vertical #p0 {
+  position: fixed;
+  left: 50%;
+  bottom: calc(max(0px, env(safe-area-inset-bottom)) + 122px);
+  transform: translateX(-50%);
+  z-index: 2200;
+}
+
+body.orientacao-vertical #p0 .avatar {
+  margin-bottom: 2px;
 }
 
 body.orientacao-vertical #painelRodada,
@@ -620,11 +637,11 @@ body.orientacao-vertical #placar {
 }
 
 body.orientacao-vertical #painelHistorico {
-  left: 12px;
+  left: 50%;
   width: 36px;
   min-height: 102px;
-  bottom: 14px;
-  transform: none;
+  bottom: calc(max(0px, env(safe-area-inset-bottom)) + 18px);
+  transform: translateX(calc(-50% - 170px));
 }
 
 body.orientacao-vertical #btnTruco {

@@ -540,14 +540,15 @@ body {
 
 #painelHistorico {
   position: absolute;
-  left: 16px;
-  bottom: 8px;
+  left: 50%;
+  bottom: 20px;
   width: 44px;
   min-height: 132px;
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  z-index: 1200;
+  transform: translateX(210px);
+  z-index: 2200;
 }
 
 @media (max-width: 1200px), (max-height: 760px) {
@@ -567,10 +568,11 @@ body {
   }
 
   #painelHistorico {
-    left: 12px;
-    bottom: 8px;
+    left: 50%;
+    bottom: 20px;
     width: 40px;
     min-height: 110px;
+    transform: translateX(188px);
   }
 }
 body.orientacao-vertical #gameWrapper {
@@ -634,7 +636,7 @@ body.orientacao-vertical #painelHistorico {
   width: 36px;
   min-height: 102px;
   bottom: calc(max(0px, env(safe-area-inset-bottom)) + 6px);
-  transform: translateX(calc(-50% - 170px));
+  transform: translateX(178px);
 }
 
 
@@ -703,7 +705,7 @@ body.orientacao-vertical #btnCorrer {
   background: radial-gradient(circle at 30% 26%, #80f5b1 0%, #2ecc71 48%, #1b7741 100%);
 }
 .bolinha-azul {
-  background: radial-gradient(circle at 30% 26%, #9fd8ff 0%, #3498db 48%, #1b4f75 100%);
+  background: radial-gradient(circle at 30% 26%, #ff8f8f 0%, #c1121f 50%, #5b0a0f 100%);
 }
 .bolinha-branca {
   background: radial-gradient(circle at 30% 26%, #ffffff 0%, #ececec 56%, #b8b8b8 100%);

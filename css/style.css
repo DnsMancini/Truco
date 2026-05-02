@@ -578,6 +578,15 @@ body.orientacao-vertical .mesa {
   margin-bottom: 230px;
 }
 
+
+body.orientacao-vertical #mao .carta,
+body.orientacao-vertical #hand1 .carta,
+body.orientacao-vertical #hand2 .carta,
+body.orientacao-vertical #hand3 .carta {
+  width: 63.75px;
+  height: 93.75px;
+}
+
 body.orientacao-vertical #painelRodada,
 body.orientacao-vertical #placar,
 body.orientacao-vertical #painelHistorico {

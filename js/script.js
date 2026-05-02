@@ -138,6 +138,18 @@ function atualizarTrucoStatus(msg) {
   document.getElementById("trucoStatus").innerText = texto;
 }
 
+function ocultarBalaoTruco() {
+  const balao = document.getElementById("balaoTruco");
+  const btnSim = document.getElementById("btnBalaoSim");
+  const btnNao = document.getElementById("btnBalaoNao");
+
+  if (!balao) return;
+
+  if (btnSim) btnSim.onclick = null;
+  if (btnNao) btnNao.onclick = null;
+  balao.classList.add("oculto");
+}
+
 function mostrarBalaoTruco(jogadorIdx, texto, onResposta) {
   const balao = document.getElementById("balaoTruco");
   const balaoTexto = document.getElementById("balaoTrucoTexto");
@@ -164,9 +176,7 @@ function mostrarBalaoTruco(jogadorIdx, texto, onResposta) {
   balao.style.transform = "translateX(-50%)";
 
   const limpar = () => {
-    btnSim.onclick = null;
-    btnNao.onclick = null;
-    balao.classList.add("oculto");
+    ocultarBalaoTruco();
   };
 
   btnSim.onclick = () => {
@@ -897,6 +907,7 @@ function verificarFimMao() {
   return false;
 }
 function correr() {
+  ocultarBalaoTruco();
   mostrar("Você correu!");
 
   setTimeout(() => {

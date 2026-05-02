@@ -39,7 +39,7 @@ body {
   background-color: #0a2b18;
   background-image: url("../img/mesa.png");
   background-size: cover;
-  background-position: center;
+  background-position: center 56%;
   background-repeat: no-repeat;
   box-shadow:
     inset 0 0 80px rgba(0, 0, 0, 0.9),
@@ -253,7 +253,7 @@ body {
 .avatar-bot1,
 .avatar-bot2 {
   background-size: cover;
-  background-position: center;
+  background-position: center 56%;
   background-repeat: no-repeat;
 }
 
@@ -311,7 +311,7 @@ body {
 
   background-color: white; /* <- importante fallback */
   background-size: contain;
-  background-position: center;
+  background-position: center 56%;
   background-repeat: no-repeat;
 
   border-radius: 12px;
@@ -443,7 +443,7 @@ body {
   width: 110px;
   height: 62px;
   background-size: cover;
-  background-position: center;
+  background-position: center 56%;
   background-repeat: no-repeat;
   text-align: center;
   display: flex;

@@ -337,7 +337,7 @@ body {
   position: fixed;
   left: calc(8px + var(--safe-left));
   top: 50%;
-  transform: translateY(-50%);
+  transform: translate(50%, -50%);
   flex-direction: column;
 }
 #hand2 {
@@ -700,7 +700,7 @@ body.orientacao-vertical #p3 {
 body.orientacao-vertical #hand1 {
   left: max(calc(var(--safe-left) + 5vw), calc(var(--safe-left) + 8px));
   top: 50%;
-  transform: translateY(-50%);
+  transform: translate(50%, -50%);
 }
 
 body.orientacao-vertical #hand2 {
@@ -1005,7 +1005,7 @@ body.orientacao-vertical #btnCorrer {
   #hand1 {
     left: max(calc(var(--safe-left) + 5vw), calc(var(--safe-left) + 8px));
     top: 50%;
-    transform: translateY(-50%);
+    transform: translate(50%, -50%);
   }
 
   #hand2 {

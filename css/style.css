@@ -610,7 +610,11 @@ body.orientacao-vertical #painelRodada {
 
 body.orientacao-vertical #placar {
   min-width: 0;
-  bottom: -206px;
+  top: 12px;
+  right: 12px;
+  left: auto;
+  bottom: auto;
+  transform: none;
 }
 
 body.orientacao-vertical #painelHistorico {
@@ -860,10 +864,14 @@ body.orientacao-vertical #btnCorrer {
   }
 
   #placar {
-    top: auto;
-    bottom: -98px;
+    top: 12px;
+    right: 12px;
+    left: auto;
+    bottom: auto;
+    transform: none;
     padding: 0;
-    text-align: center;
+    text-align: right;
+    width: auto;
   }
 
   #painelHistorico {

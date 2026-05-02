@@ -535,8 +535,8 @@ body {
 
 #painelHistorico {
   position: absolute;
-  left: calc(50% + 140px);
-  bottom: 24px;
+  left: 16px;
+  bottom: 20px;
   width: 40px;
   min-height: 120px;
   display: flex;
@@ -562,8 +562,8 @@ body {
   }
 
   #painelHistorico {
-    left: calc(50% + 122px);
-    bottom: 18px;
+    left: 12px;
+    bottom: 14px;
     width: 36px;
     min-height: 102px;
   }
@@ -612,10 +612,10 @@ body.orientacao-vertical #placar {
 }
 
 body.orientacao-vertical #painelHistorico {
-  left: calc(50% + 138px);
+  left: 12px;
   width: 36px;
   min-height: 102px;
-  bottom: 22px;
+  bottom: 14px;
   transform: none;
 }
 
@@ -872,8 +872,8 @@ body.orientacao-vertical #btnCorrer {
   }
 
   #painelHistorico {
-    left: calc(50% + 116px);
-    bottom: 16px;
+    left: 10px;
+    bottom: 12px;
     width: 34px;
     min-height: 96px;
   }

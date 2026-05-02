@@ -507,6 +507,10 @@ function ordenar(mao, desc = true) {
   );
 }
 
+function forcaCartaMesa(movimentoMesa) {
+  return movimentoMesa.coberta ? -1 : forcaCarta(movimentoMesa.c);
+}
+
 function botEscolherCarta(j) {
   let mao = maos[j];
   let melhor = ordenar(mao, true);
@@ -515,7 +519,7 @@ function botEscolherCarta(j) {
   if (!mesa.length) return melhor[0];
 
   const cartaVencedoraMesa = mesa.reduce((atualVencedora, proxima) =>
-    forcaCarta(proxima.c) > forcaCarta(atualVencedora.c) ? proxima : atualVencedora,
+    forcaCartaMesa(proxima) > forcaCartaMesa(atualVencedora) ? proxima : atualVencedora,
   );
 
   const meuTime = getTime(j);
@@ -527,7 +531,7 @@ function botEscolherCarta(j) {
   }
 
   // Adversário está ganhando: joga a menor carta que vence a atual vencedora
-  const forcaVencedora = forcaCarta(cartaVencedoraMesa.c);
+  const forcaVencedora = forcaCartaMesa(cartaVencedoraMesa);
   const menorCartaQueGanha = pior.find((c) => forcaCarta(c) > forcaVencedora);
 
   // Se não houver carta que ganhe, descarta a mais fraca

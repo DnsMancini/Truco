@@ -438,12 +438,16 @@ body {
   display: flex;
 }
 
+.placar-time + .placar-time {
+  margin-left: -18px;
+}
+
 .placar-time {
   position: relative;
   width: 110px;
   height: 62px;
-  background-size: cover;
-  background-position: center 56%;
+  background-size: contain;
+  background-position: center;
   background-repeat: no-repeat;
   text-align: center;
   display: flex;
@@ -493,7 +497,7 @@ body {
 #placar {
   position: absolute;
   top: 16px;
-  right: -186px;
+  right: -172px;
   left: auto;
   min-width: 0;
   background: transparent;

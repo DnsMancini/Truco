@@ -115,6 +115,47 @@ function atualizarTrucoStatus(msg) {
   document.getElementById("trucoStatus").innerText = texto;
 }
 
+function mostrarBalaoTruco(jogadorIdx, texto, onResposta) {
+  const balao = document.getElementById("balaoTruco");
+  const balaoTexto = document.getElementById("balaoTrucoTexto");
+  const btnSim = document.getElementById("btnBalaoSim");
+  const btnNao = document.getElementById("btnBalaoNao");
+  const jogador = document.getElementById(`p${jogadorIdx}`);
+  const mesaEl = document.querySelector(".mesa");
+
+  if (!balao || !jogador || !mesaEl) {
+    onResposta(false);
+    return;
+  }
+
+  balaoTexto.innerText = texto;
+  balao.classList.remove("oculto");
+
+  const mesaRect = mesaEl.getBoundingClientRect();
+  const jogadorRect = jogador.getBoundingClientRect();
+  const topo = jogadorRect.top - mesaRect.top - 80;
+  const esquerda = jogadorRect.left - mesaRect.left + jogadorRect.width / 2;
+
+  balao.style.top = `${Math.max(8, topo)}px`;
+  balao.style.left = `${esquerda}px`;
+  balao.style.transform = "translateX(-50%)";
+
+  const limpar = () => {
+    btnSim.onclick = null;
+    btnNao.onclick = null;
+    balao.classList.add("oculto");
+  };
+
+  btnSim.onclick = () => {
+    limpar();
+    onResposta(true);
+  };
+  btnNao.onclick = () => {
+    limpar();
+    onResposta(false);
+  };
+}
+
 function isMaoDeOnze() {
   return (
     (pontos[0] === 11 || pontos[1] === 11) && !(pontos[0] === 11 && pontos[1] === 11)
@@ -559,31 +600,31 @@ function botPedirTruco(j) {
   }
 
   setTimeout(() => {
-    const aceitar = window.confirm(
-      `${NOMES[j]} pediu truco!
-OK = aceitar (${valorMao} pontos)
-Cancelar = correr`,
+    mostrarBalaoTruco(
+      j,
+      `${NOMES[j]} pediu truco! Vale ${valorMao} pontos. Aceitar?`,
+      (aceitar) => {
+        if (aceitar) {
+          estadoTruco = "normal";
+          atualizarTrucoStatus("Truco aceito! Valor " + valorMao);
+          botPlayTimeout = setTimeout(botPlay, 600);
+          return;
+        }
+
+        estadoTruco = "normal";
+        mostrar("Você correu!");
+        adicionarPontos(meuTime, getPontosRecusaTruco());
+        atualizarTrucoStatus("Truco recusado");
+        botPlayActive = false;
+
+        if (botPlayTimeout) {
+          clearTimeout(botPlayTimeout);
+          botPlayTimeout = null;
+        }
+
+        setTimeout(iniciar, 1200);
+      },
     );
-
-    if (aceitar) {
-      estadoTruco = "normal";
-      atualizarTrucoStatus("Truco aceito! Valor " + valorMao);
-      botPlayTimeout = setTimeout(botPlay, 600);
-      return;
-    }
-
-    estadoTruco = "normal";
-    mostrar("Você correu!");
-    adicionarPontos(meuTime, getPontosRecusaTruco());
-    atualizarTrucoStatus("Truco recusado");
-    botPlayActive = false;
-
-    if (botPlayTimeout) {
-      clearTimeout(botPlayTimeout);
-      botPlayTimeout = null;
-    }
-
-    setTimeout(iniciar, 1200);
   }, 250);
 }
 

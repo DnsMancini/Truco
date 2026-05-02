@@ -1125,25 +1125,27 @@ function proximoTurno() {
 }
 
 function ajustarEscala() {
+  const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
   const isVertical = window.innerHeight > window.innerWidth;
-  document.body.classList.toggle("orientacao-vertical", isVertical);
 
-  if (isVertical) return;
+  const aviso = document.getElementById("avisoOrientacao");
+  const game = document.getElementById("gameWrapper");
 
-  const mesa = document.querySelector(".mesa");
-  if (!mesa) return;
+  // 🔥 no desktop nunca bloqueia
+  if (!isMobile) {
+    aviso.style.display = "none";
+    game.style.display = "block";
+    return;
+  }
 
-  const w = window.innerWidth;
-  const h = window.innerHeight;
-
-  // 664 da mesa + painéis laterais e folga de bordas
-  const baseW = 1040;
-  const baseH = 760;
-
-  const scale = Math.min(w / baseW, h / baseH);
-
-  mesa.style.transform = `scale(${scale})`;
-  mesa.style.transformOrigin = "center center";
+  // 📱 no celular aplica regra de orientação
+  if (isVertical) {
+    aviso.style.display = "flex";
+    game.style.display = "none";
+  } else {
+    aviso.style.display = "none";
+    game.style.display = "block";
+  }
 }
 
 window.addEventListener("resize", ajustarEscala);

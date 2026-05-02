@@ -335,9 +335,9 @@ body {
 
 #hand1 {
   position: fixed;
-  left: calc(8px + var(--safe-left));
+  left: 0;
   top: 50%;
-  transform: translate(50%, -50%);
+  transform: translate(0, -50%);
   flex-direction: column;
 }
 #hand2 {
@@ -347,9 +347,9 @@ body {
 }
 #hand3 {
   position: fixed;
-  right: calc(8px + var(--safe-right));
+  right: 0;
   top: 50%;
-  transform: translateY(-50%);
+  transform: translate(0, -50%);
   flex-direction: column;
 }
 
@@ -698,9 +698,9 @@ body.orientacao-vertical #p3 {
 }
 
 body.orientacao-vertical #hand1 {
-  left: max(calc(var(--safe-left) + 5vw), calc(var(--safe-left) + 8px));
+  left: 0;
   top: 50%;
-  transform: translate(50%, -50%);
+  transform: translate(0, -50%);
 }
 
 body.orientacao-vertical #hand2 {
@@ -710,9 +710,9 @@ body.orientacao-vertical #hand2 {
 }
 
 body.orientacao-vertical #hand3 {
-  right: max(calc(var(--safe-right) + 5vw), calc(var(--safe-right) + 8px));
+  right: 0;
   top: 50%;
-  transform: translateY(-50%);
+  transform: translate(0, -50%);
 }
 
 body.orientacao-vertical #btnTruco {
@@ -1003,9 +1003,9 @@ body.orientacao-vertical #btnCorrer {
   }
 
   #hand1 {
-    left: max(calc(var(--safe-left) + 5vw), calc(var(--safe-left) + 8px));
+    left: 0;
     top: 50%;
-    transform: translate(50%, -50%);
+    transform: translate(0, -50%);
   }
 
   #hand2 {
@@ -1015,9 +1015,9 @@ body.orientacao-vertical #btnCorrer {
   }
 
   #hand3 {
-    right: max(calc(var(--safe-right) + 5vw), calc(var(--safe-right) + 8px));
+    right: 0;
     top: 50%;
-    transform: translateY(-50%);
+    transform: translate(0, -50%);
   }
 
   #historicoRodadas {

@@ -486,6 +486,38 @@ function botPedirTruco(j) {
   atualizarTrucoStatus("Bot pediu truco! Valor " + valorMao);
   mostrar(NOMES[j] + " pediu truco! Agora vale " + valorMao);
 
+  // Se quem pediu foi seu parceiro, quem responde é o time adversário (bot),
+  // não o jogador.
+  if (meuTime === 0) {
+    setTimeout(() => {
+      const botAdversario = maos[1] && maos[1].length ? 1 : 3;
+      const resposta = botResponderTruco(botAdversario);
+
+      if (resposta === "aceitar") {
+        estadoTruco = "normal";
+        mostrar("Eles aceitaram!");
+        atualizarTrucoStatus("Truco aceito! Valor " + valorMao);
+        botPlayTimeout = setTimeout(botPlay, 600);
+        return;
+      }
+
+      estadoTruco = "normal";
+      mostrar("Eles correram!");
+      pontos[meuTime] += valorMao;
+      atualizarPlacar();
+      atualizarTrucoStatus("Truco recusado");
+      botPlayActive = false;
+
+      if (botPlayTimeout) {
+        clearTimeout(botPlayTimeout);
+        botPlayTimeout = null;
+      }
+
+      setTimeout(iniciar, 1200);
+    }, 250);
+    return;
+  }
+
   setTimeout(() => {
     const aceitar = window.confirm(
       `${NOMES[j]} pediu truco!

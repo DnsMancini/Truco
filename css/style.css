@@ -398,19 +398,6 @@ body.orientacao-vertical .avisoOrientacao {
   height: 260px;
 }
 
-.cartaMesa {
-  width: 60px;
-  height: 85px;
-  background: white;
-  color: black;
-  border-radius: 10px;
-  position: absolute;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-}
-
 .cartaMesa.entrando {
   opacity: 0;
   animation: cartaNaMesa 0.45s cubic-bezier(0.2, 0.85, 0.2, 1) forwards;
@@ -508,6 +495,41 @@ body.orientacao-vertical .avisoOrientacao {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.55);
   overflow: hidden;
   z-index: 1200;
+}
+
+@media (max-width: 1200px), (max-height: 760px) {
+  #painelRodada {
+    left: 12px;
+    top: 12px;
+    width: 156px;
+    padding: 10px 12px;
+  }
+
+  #placar {
+    right: 12px;
+    top: 12px;
+    min-width: 156px;
+    padding: 10px 12px;
+    font-size: 15px;
+  }
+
+  #painelHistorico {
+    left: 12px;
+    bottom: 12px;
+    width: 140px;
+    min-height: 96px;
+  }
+
+  .painelTitulo {
+    font-size: 18px;
+    padding: 6px 0;
+  }
+
+  #historicoRodadas {
+    font-size: 12px;
+    line-height: 1.5;
+    padding: 6px 8px;
+  }
 }
 
 .painelTitulo {
@@ -655,14 +677,6 @@ body.orientacao-vertical .avisoOrientacao {
 .carta.playerCard .top-left,
 .carta.playerCard .bottom-right {
   font-size: 14px;
-}
-
-#gameWrapper {
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .naipe-vermelho {

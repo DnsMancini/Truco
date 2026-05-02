@@ -460,24 +460,24 @@ body {
 }
 
 .c0 {
-  bottom: 0;
+  top: calc(50% + 42px);
   left: 50%;
-  transform: translateX(-50%);
+  transform: translate(-50%, -50%);
 }
 .c1 {
-  left: 35px;
   top: 50%;
-  transform: translateY(-50%);
+  left: calc(50% - 56px);
+  transform: translate(-50%, -50%);
 }
 .c2 {
-  top: 0;
+  top: calc(50% - 42px);
   left: 50%;
-  transform: translateX(-50%);
+  transform: translate(-50%, -50%);
 }
 .c3 {
-  right: 35px;
   top: 50%;
-  transform: translateY(-50%);
+  left: calc(50% + 56px);
+  transform: translate(-50%, -50%);
 }
 
 
@@ -492,26 +492,46 @@ body {
 }
 
 .placar-time {
+  --flag-offset-x: 0px;
+  --flag-offset-y: 0px;
+  --flag-scale: 1;
   position: relative;
-  width: 165px;
-  height: 93px;
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
+  width: clamp(132px, 18vw, 165px);
+  aspect-ratio: 165 / 93;
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding-top: 25px;
+  padding-top: clamp(18px, 2.6vw, 25px);
   box-sizing: border-box;
+  isolation: isolate;
 }
 
-.placar-time--nos {
+.placar-time::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  transform: translate(
+      calc(-50% + var(--flag-offset-x)),
+      calc(-50% + var(--flag-offset-y))
+    )
+    scale(var(--flag-scale));
+  transform-origin: center;
+  z-index: -1;
+}
+
+.placar-time--nos::before {
   background-image: url("../img/bandeiraverde.png");
 }
 
-.placar-time--eles {
+.placar-time--eles::before {
   background-image: url("../img/bandeirabranca.png");
 }
 

@@ -243,7 +243,7 @@ let baralho = [],
 let rodada = 1,
   resultadoRodadas = [],
   vencedorRodadaJogador = [],
-  primeiroTurno = 0;
+  primeiroTurno = starter;
 let cartaVencedoraIndex = -1;
 
 function getTime(j) {
@@ -804,6 +804,7 @@ function resolver() {
     vencedorRodadaJogador.push(null);
     mostrar("Empate (amarrado)");
     cartaVencedoraIndex = -1;
+    primeiroTurno = mesa[0]?.j ?? primeiroTurno;
   } else {
     let j = vencedores[0].j;
 
@@ -999,7 +1000,7 @@ function iniciar() {
   rodada = 1;
   resultadoRodadas = [];
   vencedorRodadaJogador = [];
-  primeiroTurno = 0;
+  primeiroTurno = starter;
   ultimoTimeQuePediuTruco = null;
   jogoAtivo = true;
 

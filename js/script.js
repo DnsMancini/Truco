@@ -83,25 +83,26 @@ function pedirTruco() {
   mostrar("TRUCO! Agora vale " + valorMao);
 
   setTimeout(() => {
-    // 🔥 simulação simples de resposta do bot
-    let aceita = Math.random() > 0.3;
+    const resposta = botResponderTruco(turno === 0 ? 1 : turno);
 
-    if (aceita) {
+    if (resposta === "aceitar") {
       mostrar("Aceitaram!");
       estadoTruco = "normal";
       atualizarTrucoStatus("Truco aceito! Valor " + valorMao);
-    } else {
-      mostrar("Eles correram!");
-      pontos[meuTime] += valorMao;
-      atualizarPlacar();
-      botPlayActive = false;
-      if (botPlayTimeout) {
-        clearTimeout(botPlayTimeout);
-        botPlayTimeout = null;
-      }
-      atualizarTrucoStatus("Truco recusado");
-      setTimeout(iniciar, 1500);
+      return;
     }
+
+    mostrar("Eles correram!");
+    estadoTruco = "normal";
+    pontos[meuTime] += valorMao;
+    atualizarPlacar();
+    botPlayActive = false;
+    if (botPlayTimeout) {
+      clearTimeout(botPlayTimeout);
+      botPlayTimeout = null;
+    }
+    atualizarTrucoStatus("Truco recusado");
+    setTimeout(iniciar, 1500);
   }, 800);
 }
 
@@ -403,6 +404,118 @@ function botEscolherCarta(j) {
   return melhor[0];
 }
 
+
+function calcularForcaMediaMao(mao) {
+  if (!mao || !mao.length) return 0;
+
+  const valores = mao.map((c) => forcaCarta(c));
+  const soma = valores.reduce((acc, v) => acc + v, 0);
+  const melhor = Math.max(...valores);
+
+  // Dá peso maior para a melhor carta e para média geral da mão
+  return soma / valores.length + melhor * 0.35;
+}
+
+function botDevePedirTruco(j) {
+  if (estadoTruco !== "normal" || maoDeOnzeAtiva) return false;
+  if (nivelTruco >= 4) return false;
+
+  const meuTime = getTime(j);
+  if (ultimoTimeQuePediuTruco === meuTime) return false;
+
+  const forcaMao = calcularForcaMediaMao(maos[j]);
+  const melhorCarta = Math.max(...maos[j].map((c) => forcaCarta(c)));
+  const pontosTime = pontos[meuTime];
+  const pontosOponente = pontos[1 - meuTime];
+
+  // Situação agressiva: mão forte ou adversário muito perto de fechar o jogo
+  const maoForte = forcaMao >= 7.4 || melhorCarta >= 100;
+  const pressaoFinal = pontosOponente >= 10 && forcaMao >= 6.2;
+
+  if (!(maoForte || pressaoFinal)) return false;
+
+  // reduz frequência para não ficar chamando toda hora
+  const chanceBase = 0.4 + Math.min(0.2, pontosTime / 20);
+  return Math.random() < chanceBase;
+}
+
+function botResponderTruco(j) {
+  const forcaMao = calcularForcaMediaMao(maos[j]);
+  const melhorCarta = Math.max(...maos[j].map((c) => forcaCarta(c)));
+  const pontosMeuTime = pontos[getTime(j)];
+  const pontosRival = pontos[1 - getTime(j)];
+
+  // mão forte: costuma aceitar
+  if (melhorCarta >= 100 || forcaMao >= 7.8) {
+    return "aceitar";
+  }
+
+  // mão média: aceita mais quando está atrás no placar
+  if (forcaMao >= 6.2) {
+    const precisaBuscar = pontosMeuTime < pontosRival;
+    if (precisaBuscar || Math.random() < 0.6) return "aceitar";
+    return "correr";
+  }
+
+  // mão fraca: geralmente corre
+  return Math.random() < 0.2 ? "aceitar" : "correr";
+}
+
+function botPedirTruco(j) {
+  const meuTime = getTime(j);
+
+  estadoTruco = "aguardando";
+
+  if (nivelTruco === 0) {
+    tocar(somTruco);
+    valorMao = 3;
+  } else if (nivelTruco === 1) {
+    tocar(somSeis);
+    valorMao = 6;
+  } else if (nivelTruco === 2) {
+    tocar(somNove);
+    valorMao = 9;
+  } else if (nivelTruco === 3) {
+    tocar(somDoze);
+    valorMao = 12;
+  }
+
+  nivelTruco++;
+  ultimoTimeQuePediuTruco = meuTime;
+
+  atualizarTrucoStatus("Bot pediu truco! Valor " + valorMao);
+  mostrar(NOMES[j] + " pediu truco! Agora vale " + valorMao);
+
+  setTimeout(() => {
+    const aceitar = window.confirm(
+      `${NOMES[j]} pediu truco!
+OK = aceitar (${valorMao} pontos)
+Cancelar = correr`,
+    );
+
+    if (aceitar) {
+      estadoTruco = "normal";
+      atualizarTrucoStatus("Truco aceito! Valor " + valorMao);
+      botPlayTimeout = setTimeout(botPlay, 600);
+      return;
+    }
+
+    estadoTruco = "normal";
+    mostrar("Você correu!");
+    pontos[meuTime] += valorMao;
+    atualizarPlacar();
+    atualizarTrucoStatus("Truco recusado");
+    botPlayActive = false;
+
+    if (botPlayTimeout) {
+      clearTimeout(botPlayTimeout);
+      botPlayTimeout = null;
+    }
+
+    setTimeout(iniciar, 1200);
+  }, 250);
+}
+
 function botPlay() {
   if (distribuindo) return;
 
@@ -423,6 +536,12 @@ function botPlay() {
   if (!maos[turno] || maos[turno].length === 0) {
     botPlayActive = false;
     setTimeout(resolver, 500);
+    return;
+  }
+
+  if (botDevePedirTruco(turno)) {
+    botPlayActive = false;
+    botPedirTruco(turno);
     return;
   }
 

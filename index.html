@@ -68,26 +68,6 @@
   <div id="textoFinal"></div>
 </div>
 
-<script>
-function checkOrientation() {
-  const aviso = document.getElementById("avisoOrientacao");
-  const game = document.getElementById("gameWrapper");
-
-  if (window.innerHeight > window.innerWidth) {
-    // vertical
-    aviso.style.display = "flex";
-    game.style.display = "none";
-  } else {
-    // horizontal
-    aviso.style.display = "none";
-    game.style.display = "block";
-  }
-}
-
-window.addEventListener("resize", checkOrientation);
-window.addEventListener("load", checkOrientation);
-</script>
-
 <script src="js/script.js"></script>
 
 </body>

@@ -698,15 +698,21 @@ body.orientacao-vertical #p3 {
 }
 
 body.orientacao-vertical #hand1 {
-  left: 0;
+  left: max(calc(var(--safe-left) + 5vw), calc(var(--safe-left) + 8px));
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 body.orientacao-vertical #hand2 {
-  top: 12px;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 body.orientacao-vertical #hand3 {
-  right: 0;
+  right: max(calc(var(--safe-right) + 5vw), calc(var(--safe-right) + 8px));
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 body.orientacao-vertical #btnTruco {
@@ -996,8 +1002,22 @@ body.orientacao-vertical #btnCorrer {
     margin-left: 0;
   }
 
+  #hand1 {
+    left: max(calc(var(--safe-left) + 5vw), calc(var(--safe-left) + 8px));
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
   #hand2 {
-    top: 12px;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  #hand3 {
+    right: max(calc(var(--safe-right) + 5vw), calc(var(--safe-right) + 8px));
+    top: 50%;
+    transform: translateY(-50%);
   }
 
   #historicoRodadas {

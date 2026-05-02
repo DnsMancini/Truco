@@ -46,13 +46,6 @@ body {
     0 30px 80px rgba(0, 0, 0, 0.9);
 }
 
-body.orientacao-vertical #gameWrapper {
-  display: none;
-}
-
-body.orientacao-vertical .avisoOrientacao {
-  display: flex;
-}
 
 #btnTruco,
 #btnCorrer {
@@ -398,19 +391,6 @@ body.orientacao-vertical .avisoOrientacao {
   height: 260px;
 }
 
-.cartaMesa {
-  width: 60px;
-  height: 85px;
-  background: white;
-  color: black;
-  border-radius: 10px;
-  position: absolute;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-}
-
 .cartaMesa.entrando {
   opacity: 0;
   animation: cartaNaMesa 0.45s cubic-bezier(0.2, 0.85, 0.2, 1) forwards;
@@ -458,7 +438,7 @@ body.orientacao-vertical .avisoOrientacao {
   top: 16px;
   right: -172px;
   left: auto;
-  min-width: 172px;
+  min-width: 86px;
   background: linear-gradient(155deg, rgba(20, 20, 20, 0.95), rgba(5, 5, 5, 0.9));
   padding: 12px 14px;
   border-radius: 10px;
@@ -500,7 +480,7 @@ body.orientacao-vertical .avisoOrientacao {
   position: absolute;
   left: -170px;
   bottom: 26px;
-  width: 148px;
+  width: 74px;
   min-height: 128px;
   background: linear-gradient(155deg, rgba(20, 20, 20, 0.95), rgba(5, 5, 5, 0.9));
   border: 2px solid rgba(241, 196, 15, 0.75);
@@ -509,6 +489,89 @@ body.orientacao-vertical .avisoOrientacao {
   overflow: hidden;
   z-index: 1200;
 }
+
+@media (max-width: 1200px), (max-height: 760px) {
+  #painelRodada {
+    left: 12px;
+    top: 12px;
+    width: 156px;
+    padding: 10px 12px;
+  }
+
+  #placar {
+    right: 12px;
+    top: 12px;
+    min-width: 78px;
+    padding: 10px 12px;
+    font-size: 15px;
+  }
+
+  #painelHistorico {
+    left: 12px;
+    bottom: 12px;
+    width: 70px;
+    min-height: 96px;
+  }
+
+  
+
+.painelTitulo {
+    font-size: 18px;
+    padding: 6px 0;
+  }
+
+  #historicoRodadas {
+    font-size: 12px;
+    line-height: 1.5;
+    padding: 6px 8px;
+  }
+}
+body.orientacao-vertical #gameWrapper {
+  transform: none !important;
+}
+
+body.orientacao-vertical .mesa {
+  width: min(92vw, 664px);
+  height: min(92vw, 664px);
+  margin-bottom: 230px;
+}
+
+body.orientacao-vertical #painelRodada,
+body.orientacao-vertical #placar,
+body.orientacao-vertical #painelHistorico {
+  left: 50%;
+  right: auto;
+  top: auto;
+  transform: translateX(-50%);
+  margin-left: 0;
+}
+
+body.orientacao-vertical #painelRodada {
+  width: min(88vw, 340px);
+  bottom: -126px;
+}
+
+body.orientacao-vertical #placar {
+  min-width: min(88vw, 340px);
+  bottom: -206px;
+}
+
+body.orientacao-vertical #painelHistorico {
+  width: min(88vw, 340px);
+  min-height: 108px;
+  bottom: -344px;
+}
+
+body.orientacao-vertical #btnTruco {
+  right: 12px;
+  bottom: 98px;
+}
+
+body.orientacao-vertical #btnCorrer {
+  right: 12px;
+  bottom: 38px;
+}
+
 
 .painelTitulo {
   color: #f1c40f;
@@ -655,14 +718,6 @@ body.orientacao-vertical .avisoOrientacao {
 .carta.playerCard .top-left,
 .carta.playerCard .bottom-right {
   font-size: 14px;
-}
-
-#gameWrapper {
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .naipe-vermelho {

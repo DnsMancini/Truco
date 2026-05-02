@@ -25,7 +25,7 @@
     <div id="mensagem"></div>
     <div id="painelRodada">
       <div id="infoRodada"></div>
-      <div id="trucoStatus">Truco: Nenhum</div>
+      <div id="trucoStatus">Nenhum</div>
     </div>
     <div id="painelHistorico">
       <div class="painelTitulo">HISTÓRICO</div>
@@ -68,26 +68,8 @@
   <div id="textoFinal"></div>
 </div>
 
-<script>
-function checkOrientation() {
-  const aviso = document.getElementById("avisoOrientacao");
-  const game = document.getElementById("gameWrapper");
-
-  if (window.innerHeight > window.innerWidth) {
-    // vertical
-    aviso.style.display = "flex";
-    game.style.display = "none";
-  } else {
-    // horizontal
-    aviso.style.display = "none";
-    game.style.display = "block";
-  }
-}
-
-window.addEventListener("resize", checkOrientation);
-window.addEventListener("load", checkOrientation);
-</script>
-
+<script src="js/bootstrap.js"></script>
+<script src="js/cards.js"></script>
 <script src="js/script.js"></script>
 
 </body>

@@ -647,6 +647,10 @@ body.orientacao-vertical #hand1 {
   left: 0;
 }
 
+body.orientacao-vertical #hand2 {
+  top: -44px;
+}
+
 body.orientacao-vertical #hand3 {
   right: 0;
 }
@@ -909,6 +913,10 @@ body.orientacao-vertical #btnCorrer {
     bottom: 12px;
     width: 34px;
     min-height: 96px;
+  }
+
+  #hand2 {
+    top: -44px;
   }
 
   #historicoRodadas {

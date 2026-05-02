@@ -483,6 +483,7 @@ body {
 
 .placar-times {
   display: flex;
+  justify-content: flex-end;
   gap: 6px;
 }
 
@@ -544,8 +545,8 @@ body {
 }
 #placar {
   position: fixed;
-  top: 0;
-  right: 0;
+  top: var(--safe-top);
+  right: var(--safe-right);
   left: auto;
   min-width: 0;
   background: transparent;
@@ -609,8 +610,8 @@ body {
   }
 
   #placar {
-    right: 12px;
-    top: 12px;
+    right: var(--safe-right);
+    top: var(--safe-top);
     min-width: 0;
     padding: 0;
     font-size: 15px;
@@ -672,8 +673,8 @@ body.orientacao-vertical #painelRodada {
 
 body.orientacao-vertical #placar {
   min-width: 0;
-  top: 12px;
-  right: 12px;
+  top: var(--safe-top);
+  right: var(--safe-right);
   left: auto;
   bottom: auto;
   transform: none;

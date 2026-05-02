@@ -835,7 +835,7 @@ function resolver() {
 
     // 🔥 FIM DA MÃO
     if (verificarFimMao()) {
-      let time = getTime(primeiroTurno);
+      let time = getTimeVencedorMao();
 
       if (jogoEncerrado) return;
 
@@ -871,6 +871,16 @@ function resolver() {
       botPlay();
     }, 300);
   }, 2000);
+}
+
+function getTimeVencedorMao() {
+  const [r1, r2, r3] = resultadoRodadas;
+
+  if (rodada === 3 && r3 === "empate" && r1 !== "empate") {
+    return r1;
+  }
+
+  return getTime(primeiroTurno);
 }
 
 function verificarFimMao() {

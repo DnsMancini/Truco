@@ -991,7 +991,7 @@ function iniciar() {
 
   distribuir();
   atualizarPlacar();
-  document.getElementById("historicoRodadas").innerText = "";
+  atualizarHistorico();
 
   // Inicia o turno do bot se o starter não for o jogador
   if (starter !== 0) {
@@ -1004,23 +1004,26 @@ function atualizarControleJogador() {
 }
 
 function atualizarHistorico() {
+  const historico = document.getElementById("historicoRodadas");
   let html = "";
 
-  resultadoRodadas.forEach((r, i) => {
-    let texto = "";
+  for (let i = 0; i < 3; i++) {
+    const resultado = resultadoRodadas[i];
+    let classe = "bolinha-branca";
+    let texto = `Rodada ${i + 1}: sem resultado`;
 
-    if (r === 0) {
-      texto = "✔ Nós";
-    } else if (r === 1) {
-      texto = "✖ Eles";
-    } else {
-      texto = "➖ Empate";
+    if (resultado === 0) {
+      classe = "bolinha-verde";
+      texto = `Rodada ${i + 1}: você venceu`;
+    } else if (resultado === 1) {
+      classe = "bolinha-azul";
+      texto = `Rodada ${i + 1}: adversário venceu`;
     }
 
-    html += i + 1 + "ª: " + texto + "\n";
-  });
+    html += `<span class="bolinha-rodada ${classe}" title="${texto}" aria-label="${texto}"></span>`;
+  }
 
-  document.getElementById("historicoRodadas").innerText = html.trim();
+  historico.innerHTML = html;
 }
 
 function mostrarTelaFinal(vitoria) {

@@ -36,8 +36,17 @@ function ajustarEscala() {
   document.getElementById("gameWrapper").style.transformOrigin = "top center";
 }
 
+function atualizarOrientacaoLayout() {
+  const emRetrato = window.matchMedia("(orientation: portrait)").matches;
+  const larguraPequena = window.innerWidth <= 900;
+
+  document.body.classList.toggle("orientacao-vertical", emRetrato && larguraPequena);
+}
+
 window.addEventListener("resize", ajustarEscala);
 window.addEventListener("load", ajustarEscala);
+window.addEventListener("resize", atualizarOrientacaoLayout);
+window.addEventListener("load", atualizarOrientacaoLayout);
 
 function tocar(audio, volume = 1) {
   audio.pause();

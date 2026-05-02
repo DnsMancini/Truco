@@ -10,6 +10,7 @@ let botPlayActive = false;
 let distribuindo = false;
 let jogoEncerrado = false;
 let maoDeOnzeAtiva = false;
+let maoDeOnzeAceita = false;
 
 const BOT_PLAY_DELAY = 900;
 const BOT_PLAY_DELAY_AFTER_TRUCO = 1200;
@@ -44,6 +45,7 @@ let nivelTruco = 0;
 let valorMao = 1;
 
 function getPontosRecusaTruco() {
+  if (maoDeOnzeAtiva && maoDeOnzeAceita) return 3;
   if (valorMao <= 1) return 1;
   return trucoValores[Math.max(0, nivelTruco - 1)];
 }
@@ -880,9 +882,9 @@ function correr() {
 
     if (jogoEncerrado) return;
 
-    adicionarPontos(adversario, getPontosRecusaTruco());
+    adicionarPontos(adversario, valorMao);
 
-    mostrar("Eles ganharam " + getPontosRecusaTruco() + " ponto(s)");
+    mostrar("Eles ganharam " + valorMao + " ponto(s)");
 
     if (jogoEncerrado) return;
 
@@ -907,13 +909,16 @@ function tratarDecisaoMaoDeOnze() {
     );
 
     if (!vaiJogar) {
-      pontos[0] = Math.max(0, pontos[0] - 1);
-      atualizarPlacar();
-      mostrar("Você correu na mão de 11 e perdeu 1 ponto.");
-      setTimeout(iniciar, 1200);
+      mostrar("Você correu na mão de 11. Eles ganham 1 ponto.");
+      adicionarPontos(1, 1);
+
+      if (!jogoEncerrado) {
+        setTimeout(iniciar, 1200);
+      }
       return true;
     }
 
+    maoDeOnzeAceita = true;
     mostrar("Mão de 11 aceita! Esta mão vale 3 pontos.");
     return false;
   }
@@ -922,13 +927,16 @@ function tratarDecisaoMaoDeOnze() {
     const elesJogam = Math.random() > 0.35;
 
     if (!elesJogam) {
-      pontos[1] = Math.max(0, pontos[1] - 1);
-      atualizarPlacar();
-      mostrar("Eles correram na mão de 11 e perderam 1 ponto.");
-      setTimeout(iniciar, 1200);
+      mostrar("Eles correram na mão de 11. Nós ganhamos 1 ponto.");
+      adicionarPontos(0, 1);
+
+      if (!jogoEncerrado) {
+        setTimeout(iniciar, 1200);
+      }
       return true;
     }
 
+    maoDeOnzeAceita = true;
     mostrar("Eles aceitaram a mão de 11! Esta mão vale 3 pontos.");
   }
 
@@ -982,6 +990,7 @@ function iniciar() {
 
   nivelTruco = 0;
   maoDeOnzeAtiva = isMaoDeOnze();
+  maoDeOnzeAceita = false;
   valorMao = maoDeOnzeAtiva ? 3 : 1;
 
   atualizarTrucoStatus(maoDeOnzeAtiva ? "Mão de 11 (truco proibido)" : "Nenhum");

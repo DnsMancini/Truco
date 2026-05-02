@@ -94,8 +94,7 @@ function pedirTruco() {
 
     mostrar("Eles correram!");
     estadoTruco = "normal";
-    pontos[meuTime] += valorMao;
-    atualizarPlacar();
+    adicionarPontos(meuTime, valorMao);
     botPlayActive = false;
     if (botPlayTimeout) {
       clearTimeout(botPlayTimeout);
@@ -117,6 +116,32 @@ function isMaoDeOnze() {
   );
 }
 
+
+function finalizarPartida(timeVencedor) {
+  if (jogoEncerrado) return;
+  jogoEncerrado = true;
+  pontos[timeVencedor] = 12;
+  atualizarPlacar();
+  mostrarTelaFinal(timeVencedor === 0);
+
+  setTimeout(() => {
+    pontos = [0, 0];
+    jogoEncerrado = false;
+    atualizarPlacar();
+    iniciar();
+  }, 3000);
+}
+
+function adicionarPontos(time, valor) {
+  if (jogoEncerrado) return;
+
+  pontos[time] = Math.min(12, pontos[time] + valor);
+  atualizarPlacar();
+
+  if (pontos[time] >= 12) {
+    finalizarPartida(time);
+  }
+}
 function encerrarPartidaPorPenalidade(timeVencedor) {
   jogoEncerrado = true;
   pontos[timeVencedor] = 12;
@@ -514,8 +539,7 @@ function botPedirTruco(j) {
 
       estadoTruco = "normal";
       mostrar("Eles correram!");
-      pontos[meuTime] += valorMao;
-      atualizarPlacar();
+      adicionarPontos(meuTime, valorMao);
       atualizarTrucoStatus("Truco recusado");
       botPlayActive = false;
 
@@ -545,8 +569,7 @@ Cancelar = correr`,
 
     estadoTruco = "normal";
     mostrar("Você correu!");
-    pontos[meuTime] += valorMao;
-    atualizarPlacar();
+    adicionarPontos(meuTime, valorMao);
     atualizarTrucoStatus("Truco recusado");
     botPlayActive = false;
 
@@ -691,28 +714,12 @@ function resolver() {
 
       if (jogoEncerrado) return;
 
-      pontos[time] += valorMao;
-      atualizarPlacar();
+      adicionarPontos(time, valorMao);
 
       mostrar(
         (time === 0 ? "Nós" : "Eles") + " ganharam " + valorMao + " ponto(s)",
       );
-      if (pontos[0] >= 12 || pontos[1] >= 12) {
-        jogoEncerrado = true;
-
-        let vitoria = pontos[0] >= 12;
-
-        mostrarTelaFinal(vitoria);
-
-        setTimeout(() => {
-          pontos = [0, 0];
-          jogoEncerrado = false;
-          atualizarPlacar();
-          iniciar();
-        }, 3000);
-
-        return;
-      }
+      if (jogoEncerrado) return;
 
       // próximo starter (rotação horário)
       starter = (starter + direcao + 4) % 4;
@@ -762,17 +769,11 @@ function correr() {
 
     if (jogoEncerrado) return;
 
-    pontos[adversario] += valorMao;
-
-    atualizarPlacar();
+    adicionarPontos(adversario, valorMao);
 
     mostrar("Eles ganharam " + valorMao + " ponto(s)");
 
-    if (pontos[adversario] >= 12) {
-      mostrar("Eles venceram o jogo!");
-      pontos = [0, 0];
-      atualizarPlacar();
-    }
+    if (jogoEncerrado) return;
 
     mesa = [];
     document.getElementById("mesaCartas").innerHTML = "";

@@ -393,15 +393,26 @@ function botEscolherCarta(j) {
   let melhor = ordenar(mao, true);
   let pior = ordenar(mao, false);
 
-  if (mesa.length) {
-    let melhorMesa = mesa.reduce((a, b) =>
-      forcaCarta(a.c) > forcaCarta(b.c) ? a : b,
-    );
-    if (getTime(melhorMesa.j) === getTime(j)) {
-      return pior[0];
-    }
+  if (!mesa.length) return melhor[0];
+
+  const cartaVencedoraMesa = mesa.reduce((atualVencedora, proxima) =>
+    forcaCarta(proxima.c) > forcaCarta(atualVencedora.c) ? proxima : atualVencedora,
+  );
+
+  const meuTime = getTime(j);
+  const timeVencedor = getTime(cartaVencedoraMesa.j);
+
+  // Parceiro já está ganhando: descarta a carta mais fraca
+  if (timeVencedor === meuTime) {
+    return pior[0];
   }
-  return melhor[0];
+
+  // Adversário está ganhando: joga a menor carta que vence a atual vencedora
+  const forcaVencedora = forcaCarta(cartaVencedoraMesa.c);
+  const menorCartaQueGanha = pior.find((c) => forcaCarta(c) > forcaVencedora);
+
+  // Se não houver carta que ganhe, descarta a mais fraca
+  return menorCartaQueGanha || pior[0];
 }
 
 

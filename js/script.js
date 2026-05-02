@@ -28,6 +28,17 @@ const BOT_PLAY_DELAY = 900;
 const BOT_PLAY_DELAY_AFTER_TRUCO = 1200;
 const NEXT_HAND_DELAY = 1800;
 
+function ajustarEscala() {
+  const baseWidth = 420; // largura ideal do teu jogo
+  const scale = Math.min(window.innerWidth / baseWidth, 1);
+
+  document.getElementById("gameWrapper").style.transform = `scale(${scale})`;
+  document.getElementById("gameWrapper").style.transformOrigin = "top center";
+}
+
+window.addEventListener("resize", ajustarEscala);
+window.addEventListener("load", ajustarEscala);
+
 function tocar(audio, volume = 1) {
   audio.pause();
   audio.currentTime = 0;

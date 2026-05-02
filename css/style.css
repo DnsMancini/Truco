@@ -340,7 +340,7 @@ body {
   flex-direction: column;
 }
 #hand2 {
-  top: 30px;
+  top: 0;
   left: 50%;
   transform: translateX(-50%);
 }

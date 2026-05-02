@@ -535,15 +535,13 @@ body {
 
 #painelHistorico {
   position: absolute;
-  left: -170px;
-  bottom: 26px;
-  width: 74px;
-  min-height: 128px;
-  background: linear-gradient(155deg, rgba(20, 20, 20, 0.95), rgba(5, 5, 5, 0.9));
-  border: 2px solid rgba(241, 196, 15, 0.75);
-  border-radius: 10px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.55);
-  overflow: hidden;
+  left: calc(50% + 140px);
+  bottom: 24px;
+  width: 40px;
+  min-height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   z-index: 1200;
 }
 
@@ -564,23 +562,10 @@ body {
   }
 
   #painelHistorico {
-    left: 12px;
-    bottom: 12px;
-    width: 70px;
-    min-height: 96px;
-  }
-
-  
-
-.painelTitulo {
-    font-size: 18px;
-    padding: 6px 0;
-  }
-
-  #historicoRodadas {
-    font-size: 12px;
-    line-height: 1.5;
-    padding: 6px 8px;
+    left: calc(50% + 122px);
+    bottom: 18px;
+    width: 36px;
+    min-height: 102px;
   }
 }
 body.orientacao-vertical #gameWrapper {
@@ -618,9 +603,11 @@ body.orientacao-vertical #placar {
 }
 
 body.orientacao-vertical #painelHistorico {
-  width: min(88vw, 340px);
-  min-height: 108px;
-  bottom: -344px;
+  left: calc(50% + 138px);
+  width: 36px;
+  min-height: 102px;
+  bottom: 22px;
+  transform: none;
 }
 
 body.orientacao-vertical #btnTruco {
@@ -634,23 +621,24 @@ body.orientacao-vertical #btnCorrer {
 }
 
 
-.painelTitulo {
-  color: #f1c40f;
-  font-weight: 700;
-  font-size: 24px;
-  padding: 10px 0;
-  text-align: center;
-  border-bottom: 1px solid rgba(241, 196, 15, 0.25);
+#historicoRodadas {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
 }
 
-#historicoRodadas {
-  padding: 8px 10px;
-  color: #fff;
-  font-weight: 700;
-  font-size: 14px;
-  line-height: 1.7;
-  white-space: pre-line;
+.bolinha-rodada {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid rgba(0, 0, 0, 0.55);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
 }
+
+.bolinha-verde { background: #2ecc71; }
+.bolinha-azul { background: #3498db; }
+.bolinha-branca { background: #ffffff; }
 
 .telaFinal {
   position: fixed;
@@ -875,18 +863,14 @@ body.orientacao-vertical #btnCorrer {
   }
 
   #painelHistorico {
-    bottom: -202px;
-    min-height: 92px;
-  }
-
-  .painelTitulo {
-    font-size: 18px;
-    padding: 6px 0;
+    left: calc(50% + 116px);
+    bottom: 16px;
+    width: 34px;
+    min-height: 96px;
   }
 
   #historicoRodadas {
-    font-size: 12px;
-    line-height: 1.5;
+    gap: 8px;
   }
 
   #btnTruco,

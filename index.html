@@ -18,10 +18,27 @@
 
 <div id="gameWrapper" style="width: 100vw; height: 100vh;">
 
-  <div class="mesa">
+  <div class="mesa"></div>
 
+  <div id="game">
     <div id="vira" class="carta viraCarta"></div>
 
+    <!-- jogadores -->
+    <div class="player" id="p0"><div class="avatar avatar-voce"></div>Você</div>
+    <div class="player" id="p1"><div class="avatar avatar-bot1"></div>Bot 1</div>
+    <div class="player" id="p2"><div class="avatar"></div>Parceiro</div>
+    <div class="player" id="p3"><div class="avatar avatar-bot2"></div>Bot 2</div>
+
+    <!-- mãos bots -->
+    <div id="hand1" class="botHand"></div>
+    <div id="hand2" class="botHand"></div>
+    <div id="hand3" class="botHand"></div>
+
+    <!-- mesa -->
+    <div id="mesaCartas"></div>
+  </div>
+
+  <div id="ui">
     <div id="mensagem"></div>
     <div id="painelHistorico" aria-label="Histórico das rodadas">
       <div id="historicoRodadas"></div>
@@ -38,22 +55,7 @@
     <!-- 🔥 TRUCO -->
     <button id="btnTruco" onclick="pedirTruco()">TRUCO</button>
     <button id="btnCorrer" onclick="correr()">CORRER</button>
-
-    <!-- jogadores -->
-    <div class="player" id="p0"><div class="avatar avatar-voce"></div>Você</div>
-    <div class="player" id="p1"><div class="avatar avatar-bot1"></div>Bot 1</div>
-    <div class="player" id="p2"><div class="avatar"></div>Parceiro</div>
-    <div class="player" id="p3"><div class="avatar avatar-bot2"></div>Bot 2</div>
-
-    <!-- mãos bots -->
-    <div id="hand1" class="botHand"></div>
-    <div id="hand2" class="botHand"></div>
-    <div id="hand3" class="botHand"></div>
-
-    <!-- mesa -->
-    <div id="mesaCartas"></div>
     <div id="mao"></div>
-
   </div>
 
 </div>

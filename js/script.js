@@ -144,9 +144,7 @@ function mostrarBalaoTruco(jogadorIdx, texto, onResposta) {
   const btnSim = document.getElementById("btnBalaoSim");
   const btnNao = document.getElementById("btnBalaoNao");
   const jogador = document.getElementById(`p${jogadorIdx}`);
-  const mesaEl = document.querySelector(".mesa");
-
-  if (!balao || !jogador || !mesaEl) {
+  if (!balao || !jogador) {
     onResposta(false);
     return;
   }
@@ -154,10 +152,9 @@ function mostrarBalaoTruco(jogadorIdx, texto, onResposta) {
   balaoTexto.innerText = texto;
   balao.classList.remove("oculto");
 
-  const mesaRect = mesaEl.getBoundingClientRect();
   const jogadorRect = jogador.getBoundingClientRect();
-  const topo = jogadorRect.top - mesaRect.top - 80;
-  const esquerda = jogadorRect.left - mesaRect.left + jogadorRect.width / 2;
+  const topo = jogadorRect.top - 80;
+  const esquerda = jogadorRect.left + jogadorRect.width / 2;
 
   balao.style.top = `${Math.max(8, topo)}px`;
   balao.style.left = `${esquerda}px`;
@@ -323,7 +320,7 @@ function getPosicaoMao(player) {
 }
 
 function criarAnimacaoCarta(player, cartaValor) {
-  let mesa = document.querySelector(".mesa");
+  let mesa = document.getElementById("game");
 
   let el = document.createElement("div");
   el.className = "carta animar";

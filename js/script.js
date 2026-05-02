@@ -854,6 +854,13 @@ function iniciar() {
   baralho = criarBaralho();
   maos = [[], [], [], []];
   mesa = [];
+
+  // Limpa cartas visíveis da mão anterior antes da nova distribuição
+  document.getElementById("mao").innerHTML = "";
+  document.getElementById("hand1").innerHTML = "";
+  document.getElementById("hand2").innerHTML = "";
+  document.getElementById("hand3").innerHTML = "";
+
   document.getElementById("mesaCartas").innerHTML = "";
   cartaVencedoraIndex = -1;
   turno = starter;

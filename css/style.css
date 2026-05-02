@@ -592,7 +592,7 @@ body.orientacao-vertical #mao .carta {
 }
 
 body.orientacao-vertical #mao {
-  bottom: -150px;
+  bottom: max(6px, env(safe-area-inset-bottom));
 }
 
 body.orientacao-vertical #painelRodada,

@@ -1048,13 +1048,19 @@ function proximoTurno() {
 }
 
 function ajustarEscala() {
-  const isVertical = window.innerHeight > window.innerWidth;
-  document.body.classList.toggle("orientacao-vertical", isVertical);
-
-  if (isVertical) return;
-
   const mesa = document.querySelector(".mesa");
   if (!mesa) return;
+
+  // Em celular, o layout responsivo por CSS cuida da proporção.
+  // Não bloqueamos retrato e não forçamos escala que encolhe a mesa.
+  if (window.innerWidth <= 900) {
+    document.body.classList.remove("orientacao-vertical");
+    mesa.style.transform = "";
+    mesa.style.transformOrigin = "";
+    return;
+  }
+
+  document.body.classList.remove("orientacao-vertical");
 
   const w = window.innerWidth;
   const h = window.innerHeight;

@@ -616,7 +616,7 @@ body.orientacao-vertical #mao {
   left: 0;
   right: 0;
   width: 100%;
-  bottom: max(0px, env(safe-area-inset-bottom));
+  bottom: 0;
   z-index: 2100;
 }
 
@@ -637,8 +637,8 @@ body.orientacao-vertical #painelRodada {
 
 body.orientacao-vertical #placar {
   min-width: 0;
-  top: 12px;
-  right: 12px;
+  top: 0;
+  right: 0;
   left: auto;
   bottom: auto;
   transform: none;

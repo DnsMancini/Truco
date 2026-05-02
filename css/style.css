@@ -510,6 +510,41 @@ body.orientacao-vertical .avisoOrientacao {
   z-index: 1200;
 }
 
+@media (max-width: 1200px), (max-height: 760px) {
+  #painelRodada {
+    left: 12px;
+    top: 12px;
+    width: 156px;
+    padding: 10px 12px;
+  }
+
+  #placar {
+    right: 12px;
+    top: 12px;
+    min-width: 156px;
+    padding: 10px 12px;
+    font-size: 15px;
+  }
+
+  #painelHistorico {
+    left: 12px;
+    bottom: 12px;
+    width: 140px;
+    min-height: 96px;
+  }
+
+  .painelTitulo {
+    font-size: 18px;
+    padding: 6px 0;
+  }
+
+  #historicoRodadas {
+    font-size: 12px;
+    line-height: 1.5;
+    padding: 6px 8px;
+  }
+}
+
 .painelTitulo {
   color: #f1c40f;
   font-weight: 700;

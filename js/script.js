@@ -922,8 +922,20 @@ function tratarDecisaoMaoDeOnze() {
 
 function atualizarPlacar() {
   let label = getMaoStatusLabel();
-  let html = "Nós: " + pontos[0] + " x " + pontos[1] + " Eles";
-  if (label) html += "<span>" + label + "</span>";
+  let html = `
+    <div class="placar-times">
+      <div class="placar-time placar-time--nos">
+        <div class="placar-time-nome">NÓS</div>
+        <div class="placar-time-pontos">${pontos[0]}</div>
+      </div>
+      <div class="placar-time placar-time--eles">
+        <div class="placar-time-nome">ELES</div>
+        <div class="placar-time-pontos">${pontos[1]}</div>
+      </div>
+    </div>
+  `;
+
+  if (label) html += `<span class="placar-status">${label}</span>`;
   document.getElementById("placar").innerHTML = html;
   if (label) mostrar(label + "!");
 }

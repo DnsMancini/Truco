@@ -35,7 +35,10 @@ body {
   height: 664px;
   margin: 0;
   border-radius: 50%;
-  position: relative;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   background-color: #0a2b18;
   background-image: url("../img/mesa.png");
   background-size: cover;
@@ -46,10 +49,34 @@ body {
     0 30px 80px rgba(0, 0, 0, 0.9);
 }
 
+#game {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 664px;
+  height: 664px;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+#game > * {
+  pointer-events: auto;
+}
+
+#ui {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+
+#ui > * {
+  pointer-events: auto;
+}
+
 
 #btnTruco,
 #btnCorrer {
-  position: absolute;
+  position: fixed;
   right: 20px;
   min-width: 138px;
   height: 48px;
@@ -84,7 +111,7 @@ body {
 }
 
 #vira {
-  position: absolute;
+  position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) scale(0.85);
@@ -147,7 +174,7 @@ body {
 }
 
 .balaoTruco {
-  position: absolute;
+  position: fixed;
   z-index: 2400;
   min-width: 160px;
   max-width: 230px;
@@ -527,8 +554,10 @@ body {
 }
 
 #mao {
-  position: absolute;
+  position: fixed;
   bottom: 10px;
+  left: 0;
+  right: 0;
   width: 100%;
 
   display: flex;
@@ -539,7 +568,7 @@ body {
 }
 
 #painelHistorico {
-  position: absolute;
+  position: fixed;
   left: 50%;
   bottom: 20px;
   width: 44px;

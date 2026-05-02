@@ -516,7 +516,9 @@ body {
 }
 
 .carta.virada {
-  background: url("../img/carta-copag-vermelha.png") center/cover no-repeat !important;
+  background: #fff url("../img/carta-copag-vermelha.png") center/contain no-repeat !important;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
 }
 
 .carta.playerCard {

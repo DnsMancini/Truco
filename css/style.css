@@ -460,24 +460,24 @@ body {
 }
 
 .c0 {
-  bottom: 0;
+  top: calc(50% + 42px);
   left: 50%;
-  transform: translateX(-50%);
+  transform: translate(-50%, -50%);
 }
 .c1 {
-  left: 35px;
   top: 50%;
-  transform: translateY(-50%);
+  left: calc(50% - 56px);
+  transform: translate(-50%, -50%);
 }
 .c2 {
-  top: 0;
+  top: calc(50% - 42px);
   left: 50%;
-  transform: translateX(-50%);
+  transform: translate(-50%, -50%);
 }
 .c3 {
-  right: 35px;
   top: 50%;
-  transform: translateY(-50%);
+  left: calc(50% + 56px);
+  transform: translate(-50%, -50%);
 }
 
 

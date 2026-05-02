@@ -541,11 +541,11 @@ body {
 #painelHistorico {
   position: absolute;
   left: 16px;
-  bottom: 20px;
-  width: 40px;
-  min-height: 120px;
+  bottom: 8px;
+  width: 44px;
+  min-height: 132px;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
   z-index: 1200;
 }
@@ -568,9 +568,9 @@ body {
 
   #painelHistorico {
     left: 12px;
-    bottom: 14px;
-    width: 36px;
-    min-height: 102px;
+    bottom: 8px;
+    width: 40px;
+    min-height: 110px;
   }
 }
 body.orientacao-vertical #gameWrapper {
@@ -633,7 +633,7 @@ body.orientacao-vertical #painelHistorico {
   left: 50%;
   width: 36px;
   min-height: 102px;
-  bottom: calc(max(0px, env(safe-area-inset-bottom)) + 18px);
+  bottom: calc(max(0px, env(safe-area-inset-bottom)) + 6px);
   transform: translateX(calc(-50% - 170px));
 }
 
@@ -669,21 +669,45 @@ body.orientacao-vertical #btnCorrer {
 #historicoRodadas {
   display: flex;
   flex-direction: column;
+  justify-content: flex-end;
   gap: 10px;
   align-items: center;
+  padding: 6px 0 2px;
 }
 
 .bolinha-rodada {
+  position: relative;
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  border: 2px solid rgba(0, 0, 0, 0.55);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.38);
+  box-shadow:
+    inset -3px -4px 6px rgba(0, 0, 0, 0.35),
+    inset 2px 3px 5px rgba(255, 255, 255, 0.28),
+    0 5px 10px rgba(0, 0, 0, 0.42);
 }
 
-.bolinha-verde { background: #2ecc71; }
-.bolinha-azul { background: #3498db; }
-.bolinha-branca { background: #ffffff; }
+.bolinha-rodada::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 3px;
+  width: 42%;
+  height: 34%;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.52);
+  filter: blur(0.2px);
+}
+
+.bolinha-verde {
+  background: radial-gradient(circle at 30% 26%, #80f5b1 0%, #2ecc71 48%, #1b7741 100%);
+}
+.bolinha-azul {
+  background: radial-gradient(circle at 30% 26%, #9fd8ff 0%, #3498db 48%, #1b4f75 100%);
+}
+.bolinha-branca {
+  background: radial-gradient(circle at 30% 26%, #ffffff 0%, #ececec 56%, #b8b8b8 100%);
+}
 
 .telaFinal {
   position: fixed;
@@ -910,9 +934,9 @@ body.orientacao-vertical #btnCorrer {
 
   #painelHistorico {
     left: 10px;
-    bottom: 12px;
-    width: 34px;
-    min-height: 96px;
+    bottom: 6px;
+    width: 36px;
+    min-height: 100px;
   }
 
   #hand2 {

@@ -436,8 +436,6 @@ body {
 
 .placar-times {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
 }
 
 .placar-time {
@@ -495,16 +493,16 @@ body {
 #placar {
   position: absolute;
   top: 16px;
-  right: -172px;
+  right: -186px;
   left: auto;
-  min-width: 86px;
-  background: linear-gradient(155deg, rgba(20, 20, 20, 0.95), rgba(5, 5, 5, 0.9));
-  padding: 12px 14px;
-  border-radius: 10px;
+  min-width: 0;
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
   font-weight: 700;
   font-size: 17px;
   line-height: 1.3;
-  border: 2px solid #f1c40f;
+  border: none;
   z-index: 1200;
 }
 
@@ -560,8 +558,8 @@ body {
   #placar {
     right: 12px;
     top: 12px;
-    min-width: 78px;
-    padding: 10px 12px;
+    min-width: 0;
+    padding: 0;
     font-size: 15px;
   }
 
@@ -611,7 +609,7 @@ body.orientacao-vertical #painelRodada {
 }
 
 body.orientacao-vertical #placar {
-  min-width: min(88vw, 340px);
+  min-width: 0;
   bottom: -206px;
 }
 
@@ -864,7 +862,7 @@ body.orientacao-vertical #btnCorrer {
   #placar {
     top: auto;
     bottom: -98px;
-    padding: 10px 12px;
+    padding: 0;
     text-align: center;
   }
 

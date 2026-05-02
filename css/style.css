@@ -663,3 +663,69 @@ body {
 #hand3 .carta:nth-child(3) {
   transform: rotate(98deg);
 }
+
+@media (orientation: portrait) and (max-width: 900px) {
+  #gameWrapper {
+    min-height: 100dvh;
+    padding: 12px 0;
+    overflow: auto;
+    align-items: flex-start;
+  }
+
+  .mesa {
+    width: min(94vw, 94dvh);
+    height: min(94vw, 94dvh);
+    margin: 10px auto 16px;
+  }
+
+  #painelRodada,
+  #painelHistorico,
+  #placar {
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    width: min(78vw, 320px);
+  }
+
+  #painelRodada {
+    top: -98px;
+    padding: 10px 12px;
+  }
+
+  #placar {
+    top: auto;
+    bottom: -98px;
+    padding: 10px 12px;
+    text-align: center;
+  }
+
+  #painelHistorico {
+    bottom: -202px;
+    min-height: 92px;
+  }
+
+  .painelTitulo {
+    font-size: 18px;
+    padding: 6px 0;
+  }
+
+  #historicoRodadas {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  #btnTruco,
+  #btnCorrer {
+    min-width: 112px;
+    height: 40px;
+    font-size: 12px;
+  }
+
+  #btnTruco {
+    bottom: 74px;
+  }
+
+  #btnCorrer {
+    bottom: 24px;
+  }
+}

@@ -652,12 +652,12 @@ body.orientacao-vertical #gameWrapper::after {
 
 body.orientacao-vertical #gameWrapper::before {
   right: var(--safe-right);
-  background-image: url("../img/bandeiraverde.png");
+  background-image: url("../img/bandeirabranca.png");
 }
 
 body.orientacao-vertical #gameWrapper::after {
   right: calc(var(--safe-right) + var(--flag-width));
-  background-image: url("../img/bandeirabranca.png");
+  background-image: url("../img/bandeiraverde.png");
 }
 
 

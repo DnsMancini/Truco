@@ -4,7 +4,7 @@
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --safe-left: env(safe-area-inset-left, 0px);
   --viewport-height: 100dvh;
-  --ui-z: 2000;
+  --ui-z: 1800;
   --overlay-z: 3000;
   --table-size: min(90vw, 90vh);
 }
@@ -75,7 +75,7 @@ body {
   height: var(--table-size);
   transform: translate(-50%, -50%);
   pointer-events: none;
-  z-index: 1000;
+  z-index: 1900;
 }
 
 #game > * {
@@ -126,7 +126,7 @@ body {
 
 #btnCorrer {
   right: 20px;
-  bottom: calc(94px + var(--safe-bottom));
+  bottom: calc(154px + var(--safe-bottom));
   background: linear-gradient(180deg, #505a67 0%, #323a45 55%, #212832 100%);
   border-color: #8e9baa;
 }
@@ -755,7 +755,7 @@ body.orientacao-vertical #btnTruco {
 
 body.orientacao-vertical #btnCorrer {
   right: 12px;
-  bottom: calc(var(--safe-bottom) + 94px);
+  bottom: calc(var(--safe-bottom) + 154px);
 }
 
 
@@ -1069,7 +1069,7 @@ body.orientacao-vertical #btnCorrer {
   }
 
   #btnCorrer {
-    bottom: calc(var(--safe-bottom) + 94px);
+    bottom: calc(var(--safe-bottom) + 144px);
   }
 }
 

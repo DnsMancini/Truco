@@ -811,6 +811,9 @@ body.orientacao-vertical #btnCorrer {
 .bolinha-branca {
   background: radial-gradient(circle at 30% 26%, #ffffff 0%, #ececec 56%, #b8b8b8 100%);
 }
+.bolinha-ouro {
+  background: radial-gradient(circle at 30% 26%, #ffe8a3 0%, #d4af37 52%, #8a6a00 100%);
+}
 
 .telaFinal {
   position: fixed;

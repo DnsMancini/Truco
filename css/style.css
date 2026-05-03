@@ -198,14 +198,26 @@ body {
   position: fixed;
   top: 50%;
   left: 50%;
+  width: 100vw;
   transform: translate(-50%, -50%);
   z-index: 2450;
   color: #fff2cc;
-  font-size: clamp(44px, 12vw, 98px);
+  font-size: clamp(96px, 23vw, 360px);
   font-weight: 900;
+  line-height: 0.82;
   text-align: center;
-  letter-spacing: 6px;
-  text-shadow: 0 6px 20px rgba(0, 0, 0, 0.85);
+  letter-spacing: clamp(6px, 1.8vw, 24px);
+  text-shadow: 0 10px 26px rgba(0, 0, 0, 0.9);
+}
+
+.chamadaTruco::after {
+  content: "";
+  display: block;
+  width: min(86vw, 920px);
+  height: clamp(14px, 2.2vw, 30px);
+  margin: clamp(8px, 1vw, 16px) auto 0;
+  border-radius: 999px;
+  background: radial-gradient(ellipse at center, rgba(255, 242, 204, 0.78) 0%, rgba(255, 242, 204, 0.28) 48%, rgba(255, 242, 204, 0) 100%);
 }
 
 .acoesTruco {

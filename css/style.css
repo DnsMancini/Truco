@@ -515,36 +515,9 @@ body {
 }
 
 .placar-time::before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 100%;
-  height: 100%;
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
-  transform: translate(
-      calc(-50% + var(--flag-offset-x)),
-      calc(-50% + var(--flag-offset-y))
-    )
-    scale(var(--flag-scale));
-  transform-origin: center;
-  z-index: -1;
+  content: none;
 }
 
-
-.placar-time--eles {
-  --flag-offset-x: clamp(-14px, -1.6vw, -10px);
-}
-
-.placar-time--nos::before {
-  background-image: url("../img/bandeiraverde.png");
-}
-
-.placar-time--eles::before {
-  background-image: url("../img/bandeirabranca.png");
-}
 
 .placar-time-nome {
   font-size: 12px;
@@ -660,6 +633,34 @@ body {
 body.orientacao-vertical #gameWrapper {
   transform: none !important;
 }
+
+
+body.orientacao-vertical #gameWrapper::before,
+body.orientacao-vertical #gameWrapper::after {
+  content: "";
+  position: fixed;
+  right: var(--safe-right);
+  width: clamp(88px, 22vw, 128px);
+  aspect-ratio: 165 / 93;
+  background-size: contain;
+  background-position: right center;
+  background-repeat: no-repeat;
+  z-index: 2190;
+  pointer-events: none;
+}
+
+body.orientacao-vertical #gameWrapper::before {
+  top: calc(var(--safe-top) + 44px);
+  right: calc(var(--safe-right) + clamp(84px, 21vw, 122px));
+  background-image: url("../img/bandeiraverde.png");
+}
+
+body.orientacao-vertical #gameWrapper::after {
+  top: calc(var(--safe-top) + 44px);
+  right: var(--safe-right);
+  background-image: url("../img/bandeirabranca.png");
+}
+
 
 body.orientacao-vertical .mesa {
   width: min(92vw, var(--table-size));

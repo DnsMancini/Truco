@@ -637,10 +637,11 @@ body.orientacao-vertical #gameWrapper {
 
 body.orientacao-vertical #gameWrapper::before,
 body.orientacao-vertical #gameWrapper::after {
+  --flag-width: clamp(132px, 18vw, 165px);
   content: "";
   position: fixed;
-  right: var(--safe-right);
-  width: clamp(88px, 22vw, 128px);
+  top: calc(var(--safe-top) + 44px);
+  width: var(--flag-width);
   aspect-ratio: 165 / 93;
   background-size: contain;
   background-position: right center;
@@ -650,12 +651,12 @@ body.orientacao-vertical #gameWrapper::after {
 }
 
 body.orientacao-vertical #gameWrapper::before {
-  top: calc(var(--safe-top) + 44px);
+  right: var(--safe-right);
   background-image: url("../img/bandeiraverde.png");
 }
 
 body.orientacao-vertical #gameWrapper::after {
-  top: calc(var(--safe-top) + 122px);
+  right: calc(var(--safe-right) + var(--flag-width));
   background-image: url("../img/bandeirabranca.png");
 }
 

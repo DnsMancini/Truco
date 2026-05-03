@@ -529,7 +529,14 @@ body {
 
 .placar-time--eles .placar-time-nome,
 .placar-time--eles .placar-time-pontos {
-  color: #eef3ee;
+  color: #ffecec;
+  text-shadow: 0 1px 3px rgba(110, 0, 0, 0.55);
+}
+
+.placar-time--nos .placar-time-nome,
+.placar-time--nos .placar-time-pontos {
+  color: #ecffec;
+  text-shadow: 0 1px 3px rgba(0, 80, 20, 0.55);
 }
 
 .placar-status {
@@ -645,6 +652,7 @@ body.orientacao-vertical #gameWrapper::after {
 body.orientacao-vertical #gameWrapper::before {
   right: var(--safe-right);
   background-image: url("../img/bandeirabranca.png");
+  filter: hue-rotate(320deg) saturate(1.8) brightness(0.95);
 }
 
 body.orientacao-vertical #gameWrapper::after {
@@ -697,11 +705,21 @@ body.orientacao-vertical #painelRodada {
 
 body.orientacao-vertical #placar {
   min-width: 0;
-  top: var(--safe-top);
+  top: calc(var(--safe-top) + 2px);
   right: var(--safe-right);
   left: auto;
   bottom: auto;
   transform: none;
+}
+
+body.orientacao-vertical #placar .placar-times {
+  gap: 0;
+}
+
+body.orientacao-vertical #placar .placar-time {
+  justify-content: center;
+  padding-top: 0;
+  height: 100%;
 }
 
 body.orientacao-vertical #painelHistorico {

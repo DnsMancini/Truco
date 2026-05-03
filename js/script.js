@@ -1029,7 +1029,10 @@ function atualizarHistorico() {
     let classe = "bolinha-branca";
     let texto = `Rodada ${i + 1}: sem resultado`;
 
-    if (resultado === 0) {
+    if (resultado === "empate") {
+      classe = "bolinha-ouro";
+      texto = `Rodada ${i + 1}: empate`;
+    } else if (resultado === 0) {
       classe = "bolinha-verde";
       texto = `Rodada ${i + 1}: você venceu`;
     } else if (resultado === 1) {

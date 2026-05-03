@@ -434,8 +434,8 @@ body {
 #mesaCartas {
   --centro-x: 50%;
   --centro-y: 50%;
-  --offset-y: clamp(38px, 8%, 52px);
-  --offset-x: clamp(52px, 12%, 68px);
+  --offset-y: clamp(82px, 16%, 110px);
+  --offset-x: clamp(95px, 20%, 130px);
   position: absolute;
   top: var(--centro-y);
   left: var(--centro-x);

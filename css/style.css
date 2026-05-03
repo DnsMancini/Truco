@@ -500,7 +500,7 @@ body {
 .placar-time {
   --flag-offset-x: 0px;
   --flag-offset-y: 0px;
-  --flag-scale: 1;
+  --flag-scale: 1.15;
   position: relative;
   width: clamp(132px, 18vw, 165px);
   aspect-ratio: 165 / 93;
@@ -531,6 +531,11 @@ body {
     scale(var(--flag-scale));
   transform-origin: center;
   z-index: -1;
+}
+
+
+.placar-time--eles {
+  --flag-offset-x: clamp(-14px, -1.6vw, -10px);
 }
 
 .placar-time--nos::before {

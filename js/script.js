@@ -645,8 +645,65 @@ function botPedirTruco(j) {
         }
 
         if (respostaJogador === "aumentar") {
-          estadoTruco = "normal";
-          pedirTruco();
+          if (nivelTruco >= 4) {
+            estadoTruco = "normal";
+            atualizarTrucoStatus("Valor máximo de truco atingido");
+            botPlayTimeout = setTimeout(botPlay, BOT_PLAY_DELAY_AFTER_TRUCO);
+            return;
+          }
+
+          estadoTruco = "aguardando";
+
+          if (nivelTruco === 1) {
+            tocar(somSeis);
+            valorMao = 6;
+          } else if (nivelTruco === 2) {
+            tocar(somNove);
+            valorMao = 9;
+          } else if (nivelTruco === 3) {
+            tocar(somDoze);
+            valorMao = 12;
+          }
+
+          nivelTruco++;
+          ultimoTimeQuePediuTruco = getTime(0);
+
+          atualizarTrucoStatus("Você aumentou! Valor " + valorMao);
+          mostrar("SEIS! Agora vale " + valorMao);
+
+          const adversarios = [1, 3].filter((idx) => maos[idx] && maos[idx].length);
+          const botRespondente =
+            adversarios.length > 1
+              ? adversarios.reduce((a, b) =>
+                  calcularForcaMediaMao(maos[a]) >= calcularForcaMediaMao(maos[b]) ? a : b,
+                )
+              : adversarios[0] ?? 1;
+
+          setTimeout(() => {
+            const respostaBot = botResponderTruco(botRespondente);
+
+            if (respostaBot === "aceitar") {
+              estadoTruco = "normal";
+              mostrar("Eles aceitaram o aumento!");
+              atualizarTrucoStatus("Truco aceito! Valor " + valorMao);
+              botPlayTimeout = setTimeout(botPlay, BOT_PLAY_DELAY_AFTER_TRUCO);
+              return;
+            }
+
+            estadoTruco = "normal";
+            mostrar("Eles correram!");
+            adicionarPontos(getTime(0), getPontosRecusaTruco());
+            atualizarTrucoStatus("Truco recusado");
+            botPlayActive = false;
+
+            if (botPlayTimeout) {
+              clearTimeout(botPlayTimeout);
+              botPlayTimeout = null;
+            }
+
+            avancarStarterProximaMao();
+            setTimeout(iniciar, 1200);
+          }, 250);
           return;
         }
 

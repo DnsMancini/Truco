@@ -640,7 +640,7 @@ body.orientacao-vertical #gameWrapper::after {
   --flag-width: clamp(132px, 18vw, 165px);
   content: "";
   position: fixed;
-  top: calc(var(--safe-top) + 44px);
+  top: var(--safe-top);
   width: var(--flag-width);
   aspect-ratio: 165 / 93;
   background-size: contain;
@@ -656,7 +656,7 @@ body.orientacao-vertical #gameWrapper::before {
 }
 
 body.orientacao-vertical #gameWrapper::after {
-  right: calc(var(--safe-right) + var(--flag-width));
+  right: calc(var(--safe-right) + var(--flag-width) - 1px);
   background-image: url("../img/bandeiraverde.png");
 }
 

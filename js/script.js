@@ -127,50 +127,58 @@ function atualizarTrucoStatus(msg) {
 }
 
 function ocultarBalaoTruco() {
-  const balao = document.getElementById("balaoTruco");
-  const btnSim = document.getElementById("btnBalaoSim");
-  const btnNao = document.getElementById("btnBalaoNao");
+  const chamada = document.getElementById("chamadaTruco");
+  const acoes = document.getElementById("acoesTruco");
+  const btnAceitar = document.getElementById("btnAceitarTruco");
+  const btnAumentar = document.getElementById("btnAumentarTruco");
+  const btnCorrerTruco = document.getElementById("btnCorrerTruco");
 
-  if (!balao) return;
+  if (btnAceitar) btnAceitar.onclick = null;
+  if (btnAumentar) btnAumentar.onclick = null;
+  if (btnCorrerTruco) btnCorrerTruco.onclick = null;
 
-  if (btnSim) btnSim.onclick = null;
-  if (btnNao) btnNao.onclick = null;
-  balao.classList.add("oculto");
+  if (chamada) chamada.classList.add("oculto");
+  if (acoes) acoes.classList.add("oculto");
+
+  const btnTruco = document.getElementById("btnTruco");
+  const btnCorrer = document.getElementById("btnCorrer");
+  if (btnTruco) btnTruco.style.display = "";
+  if (btnCorrer) btnCorrer.style.display = "";
 }
 
-function mostrarBalaoTruco(jogadorIdx, texto, onResposta) {
-  const balao = document.getElementById("balaoTruco");
-  const balaoTexto = document.getElementById("balaoTrucoTexto");
-  const btnSim = document.getElementById("btnBalaoSim");
-  const btnNao = document.getElementById("btnBalaoNao");
-  const jogador = document.getElementById(`p${jogadorIdx}`);
-  if (!balao || !jogador) {
+function mostrarBalaoTruco(_jogadorIdx, _texto, onResposta) {
+  const chamada = document.getElementById("chamadaTruco");
+  const acoes = document.getElementById("acoesTruco");
+  const btnAceitar = document.getElementById("btnAceitarTruco");
+  const btnAumentar = document.getElementById("btnAumentarTruco");
+  const btnCorrerTruco = document.getElementById("btnCorrerTruco");
+  const btnTruco = document.getElementById("btnTruco");
+  const btnCorrer = document.getElementById("btnCorrer");
+
+  if (!chamada || !acoes || !btnAceitar || !btnAumentar || !btnCorrerTruco) {
     onResposta(false);
     return;
   }
 
-  balaoTexto.innerText = texto;
-  balao.classList.remove("oculto");
+  if (btnTruco) btnTruco.style.display = "none";
+  if (btnCorrer) btnCorrer.style.display = "none";
 
-  const jogadorRect = jogador.getBoundingClientRect();
-  const topo = jogadorRect.top - 80;
-  const esquerda = jogadorRect.left + jogadorRect.width / 2;
+  chamada.classList.remove("oculto");
+  acoes.classList.remove("oculto");
 
-  balao.style.top = `${Math.max(8, topo)}px`;
-  balao.style.left = `${esquerda}px`;
-  balao.style.transform = "translateX(-50%)";
-
-  const limpar = () => {
+  btnAceitar.onclick = () => {
     ocultarBalaoTruco();
+    onResposta("aceitar");
   };
 
-  btnSim.onclick = () => {
-    limpar();
-    onResposta(true);
+  btnAumentar.onclick = () => {
+    ocultarBalaoTruco();
+    onResposta("aumentar");
   };
-  btnNao.onclick = () => {
-    limpar();
-    onResposta(false);
+
+  btnCorrerTruco.onclick = () => {
+    ocultarBalaoTruco();
+    onResposta("correr");
   };
 }
 
@@ -628,11 +636,17 @@ function botPedirTruco(j) {
     mostrarBalaoTruco(
       j,
       `${NOMES[j]} pediu truco! Vale ${valorMao} pontos. Aceitar?`,
-      (aceitar) => {
-        if (aceitar) {
+      (respostaJogador) => {
+        if (respostaJogador === "aceitar") {
           estadoTruco = "normal";
           atualizarTrucoStatus("Truco aceito! Valor " + valorMao);
           botPlayTimeout = setTimeout(botPlay, BOT_PLAY_DELAY_AFTER_TRUCO);
+          return;
+        }
+
+        if (respostaJogador === "aumentar") {
+          estadoTruco = "normal";
+          pedirTruco();
           return;
         }
 

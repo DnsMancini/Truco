@@ -949,7 +949,7 @@ body.orientacao-vertical #btnCorrer {
 }
 
 #hand2 .carta {
-  margin-left: -22px;
+  margin-left: -30px;
 }
 #hand2 .carta:first-child {
   margin-left: 0;
@@ -964,11 +964,16 @@ body.orientacao-vertical #btnCorrer {
   transform: rotate(9deg);
 }
 
-#hand1 .carta,
+#hand1 .carta {
+  margin-top: -38px;
+}
+#hand1 .carta:first-child {
+  margin-top: 0;
+}
+
 #hand3 .carta {
   margin-top: -30px;
 }
-#hand1 .carta:first-child,
 #hand3 .carta:first-child {
   margin-top: 0;
 }

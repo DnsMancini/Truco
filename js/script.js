@@ -287,16 +287,8 @@ function finalizarPartida(timeVencedor) {
   jogoEncerrado = true;
   pontos[timeVencedor] = Math.max(12, pontos[timeVencedor]);
   atualizarPlacar();
-  mostrar(`${timeVencedor === 0 ? "Nós" : "Eles"} fecharam em 12. Nova partida iniciando...`);
-
-  setTimeout(() => {
-    pontos = [0, 0];
-    jogoEncerrado = false;
-    negaAtiva = false;
-    negaEstado = { ativo: false, fase: 0, vantagemTime: null };
-    atualizarPlacar();
-    iniciar();
-  }, 1500);
+  mostrar(`${timeVencedor === 0 ? "Nós" : "Eles"} fecharam em 12.`);
+  mostrarTelaFinal(timeVencedor === 0);
 }
 
 function adicionarPontos(time, valor) {
@@ -309,17 +301,11 @@ function adicionarPontos(time, valor) {
   }
 }
 function encerrarPartidaPorPenalidade(timeVencedor) {
+  if (jogoEncerrado) return;
   jogoEncerrado = true;
   pontos[timeVencedor] = 12;
   atualizarPlacar();
   mostrarTelaFinal(timeVencedor === 0);
-
-  setTimeout(() => {
-    pontos = [0, 0];
-    jogoEncerrado = false;
-    atualizarPlacar();
-    iniciar();
-  }, 3000);
 }
 
 function atualizarPainelRodada() {

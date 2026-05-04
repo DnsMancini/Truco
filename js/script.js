@@ -558,13 +558,28 @@ function calcularForcaMediaMao(mao) {
   return soma / valores.length + melhor * 0.35;
 }
 
+function botDeveForcarTrucoComZap(j) {
+  if (mesa.length) return false;
+
+  const meuTime = getTime(j);
+  const jaTemVantagemNaMao = resultadoRodadas.some((resultado) =>
+    resultado === "empate" || resultado === meuTime,
+  );
+  if (!jaTemVantagemNaMao) return false;
+
+  const cartaDeSaida = botEscolherCarta(j);
+  return forcaCarta(cartaDeSaida) === 103;
+}
+
 function botDevePedirTruco(j) {
   if (estadoTruco !== "normal" || maoDeOnzeAtiva || pontos[0] >= 11 || pontos[1] >= 11) return false;
   if (nivelTruco >= 4 || botJaPediuTrucoNaMao) return false;
-  if (rodada > 1) return false;
 
   const meuTime = getTime(j);
   if (ultimoTimeQuePediuTruco === meuTime) return false;
+
+  if (botDeveForcarTrucoComZap(j)) return true;
+  if (rodada > 1) return false;
 
   const forcaMao = calcularForcaMediaMao(maos[j]);
   const melhorCarta = Math.max(...maos[j].map((c) => forcaCarta(c)));

@@ -600,23 +600,43 @@ function botDevePedirTruco(j) {
   const meuTime = getTime(j);
   if (ultimoTimeQuePediuTruco === meuTime) return false;
 
-  if (botDeveForcarTrucoComZap(j)) return true;
-  if (rodada > 1) return false;
-
   const forcaMao = calcularForcaMediaMao(maos[j]);
   const melhorCarta = Math.max(...maos[j].map((c) => forcaCarta(c)));
   const pontosTime = pontos[meuTime];
   const pontosOponente = pontos[1 - meuTime];
 
-  // Situação agressiva: mão forte ou adversário muito perto de fechar o jogo
-  const maoForte = forcaMao >= 7.4 || melhorCarta >= 100;
-  const pressaoFinal = pontosOponente >= 10 && forcaMao >= 6.2;
+  // Perfil emocional momentâneo: muda por jogada para não ficar previsível.
+  const humor = (Math.random() - 0.5) * 0.08; // -0.04 até +0.04
+  const confianca = Math.random() * 0.06; // 0 até +0.06
 
-  if (!(maoForte || pressaoFinal)) return false;
+  // Pressão de placar e risco (foco em realismo, não em taxa de vitória).
+  const diferenca = pontosTime - pontosOponente;
+  const riscoPlacar = pontosOponente >= 10 ? -0.09 : pontosOponente >= 8 ? -0.04 : 0;
+  const urgencia = diferenca < 0 ? 0.04 : diferenca > 2 ? -0.03 : 0;
 
-  // reduz frequência para não ficar chamando toda hora
-  const chanceBase = 0.18 + Math.min(0.12, pontosTime / 30);
-  return Math.random() < chanceBase;
+  // Rodada inicial tende a chamar mais; depois cai bastante.
+  const fatorRodada = rodada === 1 ? 0.03 : rodada === 2 ? -0.05 : -0.09;
+
+  // Força da mão influencia, mas sem gatilhos determinísticos.
+  let ajusteForca = 0;
+  if (forcaMao >= 7.8 || melhorCarta >= 103) ajusteForca = 0.08;
+  else if (forcaMao >= 6.8 || melhorCarta >= 100) ajusteForca = 0.04;
+  else if (forcaMao >= 5.8) ajusteForca = -0.01;
+  else ajusteForca = -0.04;
+
+  // Blefe raro para parecer humano.
+  const blefeRaro = forcaMao < 5.8 && rodada === 1 && Math.random() < 0.06 ? 0.05 : 0;
+
+  // Base conservadora para reduzir spam.
+  let chance = 0.07 + ajusteForca + fatorRodada + urgencia + riscoPlacar + humor + confianca + blefeRaro;
+
+  // Anti-spam forte: se alguém acabou de pedir truco, reduz bastante a repetição.
+  if (ultimoTimeQuePediuTruco !== null) chance -= 0.07;
+
+  // Limites de realismo: nunca 0% nem alto demais.
+  chance = Math.min(0.3, Math.max(0.02, chance));
+
+  return Math.random() < chance;
 }
 
 function botResponderTruco(j) {

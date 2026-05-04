@@ -621,15 +621,13 @@ body {
 #painelHistorico {
   position: fixed;
   left: calc(var(--safe-left) + 8px);
-  top: calc(var(--safe-top) + 8px);
-  bottom: auto;
+  bottom: 20px;
   width: 44px;
   min-height: 132px;
   display: flex;
-  align-items: flex-start;
+  align-items: flex-end;
   justify-content: center;
   transform: none;
-  border: none;
   z-index: 2200;
 }
 
@@ -651,12 +649,10 @@ body {
 
   #painelHistorico {
     left: calc(var(--safe-left) + 8px);
-    top: calc(var(--safe-top) + 8px);
-    bottom: auto;
+    bottom: 20px;
     width: 40px;
     min-height: 110px;
     transform: none;
-    border: none;
   }
 }
 body.orientacao-vertical #gameWrapper {
@@ -730,13 +726,12 @@ body.orientacao-vertical #painelHistorico {
   position: fixed;
   left: calc(var(--safe-left) + 8px);
   right: auto;
-  top: calc(var(--safe-top) + 8px);
+  top: auto;
   width: 36px;
   min-height: 102px;
-  bottom: auto;
+  bottom: calc(var(--safe-bottom) + 6px);
   transform: none;
   margin-left: 0;
-  border: none;
 }
 
 
@@ -777,11 +772,10 @@ body.orientacao-vertical #btnCorrer {
 #historicoRodadas {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: flex-end;
   gap: 10px;
-  align-items: stretch;
+  align-items: center;
   padding: 6px 0 2px;
-  text-align: justify;
 }
 
 .bolinha-rodada {

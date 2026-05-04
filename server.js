@@ -139,6 +139,100 @@ function resolveHandWinner(resultadoRodadas) {
   return TEAM_INDEX[resultadoRodadas[0] ?? 0];
 }
 
+function broadcastGameState(roomId) {
+  const room = rooms.get(roomId);
+  if (!room || !room.game) return;
+  io.to(roomId).emit("game_state", getPublicGameState(room.game));
+}
+
+function playBotTurnIfNeeded(roomId) {
+  const room = rooms.get(roomId);
+  if (!room || !room.game) return;
+
+  const game = room.game;
+  const playerId = room.players[game.turno];
+  if (!playerId || !playerId.startsWith("bot-")) return;
+
+  const botIndex = game.turno;
+  const botHand = game.playerCards[botIndex];
+  if (!Array.isArray(botHand) || botHand.length === 0) return;
+
+  const card = botHand.shift();
+  game.mesa.push({ player: botIndex, card });
+
+  if (game.mesa.length === ROOM_SIZE) {
+    const winnerPlayer = resolveRoundWinner(game.mesa);
+    game.resultadoRodadas.push(winnerPlayer);
+
+    const handWinnerTeam = resolveHandWinner(game.resultadoRodadas);
+
+    io.to(roomId).emit("round_result", {
+      rodada: game.rodada,
+      winnerPlayer,
+      winnerTeam: winnerPlayer === null ? null : TEAM_INDEX[winnerPlayer]
+    });
+
+    if (handWinnerTeam !== null) {
+      game.pontos[handWinnerTeam] += game.valorMao;
+      io.to(roomId).emit("hand_result", {
+        winnerTeam: handWinnerTeam,
+        valorMao: game.valorMao,
+        pontos: game.pontos
+      });
+
+      const nextStarter = (game.starter + 1) % ROOM_SIZE;
+      room.game = newHandState(nextStarter, game.pontos);
+    } else {
+      game.rodada += 1;
+      game.starter = winnerPlayer === null ? game.starter : winnerPlayer;
+      game.turno = game.starter;
+      game.mesa = [];
+    }
+  } else {
+    game.turno = (game.turno + 1) % ROOM_SIZE;
+  }
+
+  broadcastGameState(roomId);
+  setTimeout(() => playBotTurnIfNeeded(roomId), 450);
+}
+
+function replaceWithBot(roomId, socketId) {
+  const room = rooms.get(roomId);
+  if (!room) return;
+
+  const index = room.players.indexOf(socketId);
+  if (index === -1) return;
+
+  const botId = `bot-${roomId}-${index}`;
+
+  room.players[index] = botId;
+  socketToRoom.delete(socketId);
+
+  if (room.game) {
+    if (!room.game.playerCards[index]) {
+      room.game.playerCards[index] = [];
+    }
+  }
+
+  io.to(roomId).emit("player_replaced_by_bot", {
+    oldPlayer: socketId,
+    botId,
+    index
+  });
+
+  io.to(roomId).emit("room_update", {
+    roomId,
+    players: room.players,
+    playersCount: room.players.length,
+    maxPlayers: ROOM_SIZE,
+    isFull: room.players.length === ROOM_SIZE
+  });
+
+  broadcastGameState(roomId);
+  setTimeout(() => playBotTurnIfNeeded(roomId), 250);
+}
+
+
 
 // =========================
 // CRIAR SALA
@@ -236,7 +330,7 @@ io.on("connection", (socket) => {
     if (game) {
       game.playerCards[oldIndex] = game.playerCards[oldIndex] || [];
       socket.emit("game_sync", game);
-      io.to(saved.roomId).emit("game_state", getPublicGameState(game));
+      broadcastGameState(saved.roomId);
     }
 
     io.to(saved.roomId).emit("player_reconnected", {
@@ -455,7 +549,7 @@ io.on("connection", (socket) => {
     }
 
     const timeout = setTimeout(() => {
-      removePlayer(socket);
+      replaceWithBot(roomId, socket.id);
       disconnectedPlayers.delete(socket.id);
     }, 30000);
 

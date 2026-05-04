@@ -214,6 +214,8 @@ function replaceWithBot(roomId, socketId) {
     }
   }
 
+  io.to(roomId).emit("player_left", { playerId: socketId, replacedByBot: true, botId });
+
   io.to(roomId).emit("player_replaced_by_bot", {
     oldPlayer: socketId,
     botId,
@@ -373,21 +375,39 @@ io.on("connection", (socket) => {
   // INICIAR JOGO (ETAPA 2)
   // =========================
   if (room.players.length === ROOM_SIZE && !room.game) {
-    room.game = newHandState(0);
+    room.game = {
+      players: [...room.players],
+      teams: [[0, 2], [1, 3]],
+      hands: {},
+      table: [],
+      turn: 0,
+      round: 1,
+      scores: [0, 0],
+      deck: [],
+      started: true,
+      ...newHandState(0)
+    };
 
-    io.to(roomId).emit("game_start", {
-      players: room.players,
-      turno: 0
-    });
-
+    io.to(roomId).emit("game_start", room.game);
     broadcastGameState(roomId);
   }
+
+
+  socket.on("request_state", ({ roomId: requestedRoomId } = {}) => {
+    const roomId = requestedRoomId || socketToRoom.get(socket.id);
+    if (!roomId) return;
+
+    const room = rooms.get(roomId);
+    if (!room || !room.game) return;
+
+    socket.emit("game_state", room.game);
+  });
 
   // =========================
   // JOGAR CARTA (ETAPA 2)
   // =========================
-  socket.on("play_card", ({ card, index }) => {
-    const roomId = socketToRoom.get(socket.id);
+  socket.on("play_card", ({ roomId: requestedRoomId, card }) => {
+    const roomId = requestedRoomId || socketToRoom.get(socket.id);
     if (!roomId) return;
 
     const room = rooms.get(roomId);
@@ -413,6 +433,11 @@ io.on("connection", (socket) => {
 
     // adiciona carta na mesa
     room.game.mesa.push({
+      player: playerIndex,
+      card
+    });
+
+    io.to(roomId).emit("card_played", {
       player: playerIndex,
       card
     });
@@ -449,10 +474,11 @@ io.on("connection", (socket) => {
     } else {
       // troca turno dentro da rodada
       room.game.turno = (room.game.turno + 1) % ROOM_SIZE;
+      io.to(roomId).emit("next_turn", { turn: room.game.turno });
     }
 
     // envia estado completo atualizado
-    broadcastGameState(roomId);
+    io.to(roomId).emit("game_state", room.game);
   });
 
   socket.on("request_truco", () => {
@@ -558,6 +584,7 @@ io.on("connection", (socket) => {
       timeout
     });
 
+    io.to(roomId).emit("player_left", { playerId: socket.id });
     io.emit("players_online", playersOnline);
   });
 });

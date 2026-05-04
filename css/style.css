@@ -1120,3 +1120,47 @@ html, body {
   overflow: hidden;
   background: #000;
 }
+
+.lobby {
+  min-height: var(--viewport-height);
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: radial-gradient(circle at top, #1d5d3a 0%, #0b0b0b 65%);
+}
+
+.lobby-card {
+  width: min(720px, 92vw);
+  background: rgba(10, 10, 10, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 16px;
+  padding: 24px;
+}
+
+.lista-mesas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.mesa-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: #113524;
+  color: #fff;
+  text-align: left;
+  cursor: pointer;
+}
+
+.mesa-item:hover {
+  background: #1a4c34;
+}
+
+.game-hidden {
+  display: none !important;
+}

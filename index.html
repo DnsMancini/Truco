@@ -16,7 +16,15 @@
   Vire o aparelho para jogar na horizontal.
 </div>
 
-<div id="gameWrapper" style="width: 100vw; height: 100dvh; min-height: 100%;">
+<main id="lobby" class="lobby">
+  <section class="lobby-card">
+    <h1>Lobby de Truco</h1>
+    <p>Escolha uma mesa para entrar no jogo.</p>
+    <div id="listaMesas" class="lista-mesas"></div>
+  </section>
+</main>
+
+<div id="gameWrapper" class="game-hidden" style="width: 100vw; height: 100dvh; min-height: 100%;">
 
   <div class="mesa"></div>
 
@@ -67,6 +75,7 @@
 <script src="js/bootstrap.js"></script>
 <script src="js/cards.js"></script>
 <script src="js/script.js"></script>
+<script src="js/lobby.js"></script>
 
 </body>
 </html>

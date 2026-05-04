@@ -28,7 +28,7 @@ function criarJogadorHumano(nome) {
 function criarBots(quantidade) {
   return Array.from({ length: quantidade }, (_, i) => ({
     id: `bot-${Date.now()}-${i + 1}-${Math.random().toString(36).slice(2, 7)}`,
-    nome: `Bot ${i + 1}`,
+    nome: `Bot ${i + 1} [BOT]`,
     tipo: "bot",
   }));
 }

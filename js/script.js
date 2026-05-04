@@ -12,9 +12,16 @@ let maoDeOnzeAceita = false;
 let maoDeFerroAtiva = false;
 let botJaPediuTrucoNaMao = false;
 
-const BOT_PLAY_DELAY = 900;
-const BOT_PLAY_DELAY_AFTER_TRUCO = 1200;
+const BOT_RESPONSE_DELAY_MIN = 800;
+const BOT_RESPONSE_DELAY_MAX = 3000;
 const NEXT_HAND_DELAY = 1800;
+
+function getBotDelay() {
+  return Math.floor(
+    Math.random() * (BOT_RESPONSE_DELAY_MAX - BOT_RESPONSE_DELAY_MIN + 1) +
+      BOT_RESPONSE_DELAY_MIN,
+  );
+}
 
 let podeJogar = true;
 let pontos = [0, 0]; // [nos, eles]
@@ -328,7 +335,7 @@ function distribuir() {
             if (tratarDecisaoMaoDeOnze()) return;
 
             if (turno !== 0) {
-              botPlayTimeout = setTimeout(botPlay, BOT_PLAY_DELAY);
+              botPlayTimeout = setTimeout(botPlay, getBotDelay());
             }
           }, 600);
         }
@@ -469,7 +476,7 @@ function jogar(i) {
   }
   botPlayActive = false;
 
-  botPlayTimeout = setTimeout(botPlay, BOT_PLAY_DELAY);
+  botPlayTimeout = setTimeout(botPlay, getBotDelay());
   render();
 }
 
@@ -711,7 +718,7 @@ function botPedirTruco(j) {
         estadoTruco = "normal";
         mostrar("Eles aceitaram!");
         atualizarTrucoStatus("Truco aceito! Valor " + valorMao);
-        botPlayTimeout = setTimeout(botPlay, BOT_PLAY_DELAY_AFTER_TRUCO);
+        botPlayTimeout = setTimeout(botPlay, getBotDelay());
         return;
       }
 
@@ -728,7 +735,7 @@ function botPedirTruco(j) {
 
       avancarStarterProximaMao();
       setTimeout(iniciar, 1200);
-    }, 250);
+    }, getBotDelay());
     return;
   }
 
@@ -740,7 +747,7 @@ function botPedirTruco(j) {
         if (respostaJogador === "aceitar") {
           estadoTruco = "normal";
           atualizarTrucoStatus("Truco aceito! Valor " + valorMao);
-          botPlayTimeout = setTimeout(botPlay, BOT_PLAY_DELAY_AFTER_TRUCO);
+          botPlayTimeout = setTimeout(botPlay, getBotDelay());
           return;
         }
 
@@ -748,7 +755,7 @@ function botPedirTruco(j) {
           if (nivelTruco >= 4) {
             estadoTruco = "normal";
             atualizarTrucoStatus("Valor máximo de truco atingido");
-            botPlayTimeout = setTimeout(botPlay, BOT_PLAY_DELAY_AFTER_TRUCO);
+            botPlayTimeout = setTimeout(botPlay, getBotDelay());
             return;
           }
 
@@ -786,7 +793,7 @@ function botPedirTruco(j) {
               estadoTruco = "normal";
               mostrar("Eles aceitaram o aumento!");
               atualizarTrucoStatus("Truco aceito! Valor " + valorMao);
-              botPlayTimeout = setTimeout(botPlay, BOT_PLAY_DELAY_AFTER_TRUCO);
+              botPlayTimeout = setTimeout(botPlay, getBotDelay());
               return;
             }
 
@@ -803,7 +810,7 @@ function botPedirTruco(j) {
 
             avancarStarterProximaMao();
             setTimeout(iniciar, 1200);
-          }, 250);
+          }, getBotDelay());
           return;
         }
 
@@ -822,7 +829,7 @@ function botPedirTruco(j) {
         setTimeout(iniciar, 1200);
       },
     );
-  }, 250);
+  }, getBotDelay());
 }
 
 function botPlay() {
@@ -877,7 +884,7 @@ function botPlay() {
     botPlayActive = false;
   }
 
-  botPlayTimeout = setTimeout(botPlay, BOT_PLAY_DELAY);
+  botPlayTimeout = setTimeout(botPlay, getBotDelay());
 }
 
 function renderMesa() {
@@ -1071,7 +1078,7 @@ function tratarDecisaoMaoDeOnze() {
       atualizarControleJogador();
 
       if (turno !== 0) {
-        botPlayTimeout = setTimeout(botPlay, BOT_PLAY_DELAY);
+        botPlayTimeout = setTimeout(botPlay, getBotDelay());
       }
     });
     return true;
@@ -1096,7 +1103,7 @@ function tratarDecisaoMaoDeOnze() {
     atualizarControleJogador();
 
     if (turno !== 0) {
-      botPlayTimeout = setTimeout(botPlay, BOT_PLAY_DELAY);
+      botPlayTimeout = setTimeout(botPlay, getBotDelay());
     }
   }
 
@@ -1181,7 +1188,7 @@ function iniciar() {
 
   // Inicia o turno do bot se o starter não for o jogador
   if (starter !== 0) {
-    botPlayTimeout = setTimeout(botPlay, BOT_PLAY_DELAY);
+    botPlayTimeout = setTimeout(botPlay, getBotDelay());
   }
 }
 

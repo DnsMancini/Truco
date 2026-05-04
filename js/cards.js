@@ -1,6 +1,6 @@
 const VAL = ["4", "5", "6", "7", "Q", "J", "K", "A", "2", "3"];
 const NAIPES = ["♠", "♥", "♦", "♣"];
-const NOMES = ["Você", "Bot 1", "Parceiro", "Bot 2"];
+const NOMES = ["Você", "Bot 1 [BOT]", "Parceiro", "Bot 2 [BOT]"];
 
 function getValorCarta(c) {
   return c.slice(0, -1);

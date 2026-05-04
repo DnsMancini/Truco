@@ -27,6 +27,14 @@ app.get("/", (req, res) => {
   res.send("Truco backend rodando");
 });
 
+app.get("/status", (req, res) => {
+  res.json({
+    ok: true,
+    status: "running",
+    playersOnline
+  });
+});
+
 const PORT = process.env.PORT || 3000;
 
 server.listen(PORT, () => {

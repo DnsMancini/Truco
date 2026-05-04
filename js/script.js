@@ -439,6 +439,11 @@ function render() {
     .join("");
 }
 
+function playCardSocket(card) {
+  if (typeof socket === "undefined") return;
+  socket.emit("play_card", { roomId, card });
+}
+
 function jogar(i) {
   if (distribuindo) return;
 
@@ -450,6 +455,16 @@ function jogar(i) {
 
   if (cartaCobertaPendenteIndex !== null && cartaCobertaPendenteIndex !== i) {
     cartaCobertaPendenteIndex = null;
+  }
+
+  const card = maos[0][i];
+  if (!card) return;
+
+  if (typeof socket !== "undefined") {
+    playCardSocket(card);
+    cartaCobertaPendenteIndex = null;
+    atualizarControleJogador();
+    return;
   }
 
   mesa.push({ j: 0, c: maos[0].splice(i, 1)[0], coberta: jogadaCoberta });
@@ -1289,40 +1304,39 @@ function proximoTurno() {
   turno = (turno + direcao + 4) % 4;
 }
 
+function aplicarEstadoDoJogo(state) {
+  if (!state) return;
+
+  if (Array.isArray(state.hands)) maos = state.hands;
+  if (Array.isArray(state.table)) mesa = state.table;
+  if (typeof state.turn === "number") turno = state.turn;
+
+  if (Array.isArray(state.mesa)) mesa = state.mesa;
+  if (typeof state.turno === "number") turno = state.turno;
+  if (typeof state.starter === "number") starter = state.starter;
+  if (Array.isArray(state.score)) pontos = state.score;
+  if (Array.isArray(state.pontos)) pontos = state.pontos;
+  if (typeof state.round === "number") rodada = state.round;
+  if (typeof state.rodada === "number") rodada = state.rodada;
+  if (Array.isArray(state.resultadoRodadas)) resultadoRodadas = state.resultadoRodadas;
+  if (typeof state.valorMao === "number") valorMao = state.valorMao;
+  if (typeof state.trucoNivel === "number") nivelTruco = state.trucoNivel;
+
+  estadoTruco = state.trucoPending ? "aguardando" : "normal";
+  ultimoTimeQuePediuTruco = typeof state.lastTrucoTeam === "number" ? state.lastTrucoTeam : null;
+
+  atualizarTrucoStatus(state.trucoPending ? `Truco pendente (${valorMao})` : `Truco em ${valorMao}`);
+
+  render();
+  renderMesa();
+  if (typeof atualizarPlacar === "function") atualizarPlacar();
+  if (typeof atualizarPainelRodada === "function") atualizarPainelRodada();
+  if (typeof atualizarControleJogador === "function") atualizarControleJogador();
+}
+
 if (typeof socket !== "undefined") {
   socket.on("game_state", (state) => {
-    if (!state) return;
-
-    console.log("STATE UPDATE SERVER", state);
-
-    if (Array.isArray(state.hands)) maos = state.hands;
-    if (Array.isArray(state.table)) mesa = state.table;
-    if (typeof state.turn === "number") turno = state.turn;
-
-    if (Array.isArray(state.mesa)) mesa = state.mesa;
-    if (typeof state.turno === "number") turno = state.turno;
-    if (typeof state.starter === "number") starter = state.starter;
-    if (Array.isArray(state.score)) pontos = state.score;
-    if (Array.isArray(state.pontos)) pontos = state.pontos;
-    if (typeof state.round === "number") rodada = state.round;
-    if (typeof state.rodada === "number") rodada = state.rodada;
-    if (Array.isArray(state.resultadoRodadas)) resultadoRodadas = state.resultadoRodadas;
-    if (typeof state.valorMao === "number") valorMao = state.valorMao;
-    if (typeof state.trucoNivel === "number") nivelTruco = state.trucoNivel;
-
-    estadoTruco = state.trucoPending ? "aguardando" : "normal";
-    ultimoTimeQuePediuTruco =
-      typeof state.lastTrucoTeam === "number" ? state.lastTrucoTeam : null;
-
-    atualizarTrucoStatus(
-      state.trucoPending ? `Truco pendente (${valorMao})` : `Truco em ${valorMao}`,
-    );
-
-    render();
-    renderMesa();
-    if (typeof atualizarPlacar === "function") atualizarPlacar();
-    if (typeof atualizarPainelRodada === "function") atualizarPainelRodada();
-    if (typeof atualizarControleJogador === "function") atualizarControleJogador();
+    aplicarEstadoDoJogo(state);
   });
 }
 
@@ -1333,21 +1347,7 @@ if (typeof socket !== "undefined") {
 
     console.log("jogo restaurado", game);
 
-    if (Array.isArray(game.playerCards)) maos = game.playerCards;
-    if (Array.isArray(game.mesa)) mesa = game.mesa;
-    if (typeof game.turno === "number") turno = game.turno;
-    if (typeof game.starter === "number") starter = game.starter;
-    if (Array.isArray(game.pontos)) pontos = game.pontos;
-    if (typeof game.rodada === "number") rodada = game.rodada;
-    if (Array.isArray(game.resultadoRodadas)) resultadoRodadas = game.resultadoRodadas;
-    if (typeof game.valorMao === "number") valorMao = game.valorMao;
-    if (typeof game.trucoNivel === "number") nivelTruco = game.trucoNivel;
-
-    if (typeof render === "function") render();
-    if (typeof renderMesa === "function") renderMesa();
-    if (typeof atualizarPlacar === "function") atualizarPlacar();
-    if (typeof atualizarPainelRodada === "function") atualizarPainelRodada();
-    if (typeof atualizarControleJogador === "function") atualizarControleJogador();
+    aplicarEstadoDoJogo(game);
   });
 
   socket.on("player_reconnected", () => {

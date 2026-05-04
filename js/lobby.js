@@ -2,6 +2,17 @@ const MATCH_CONFIG = {
   jogadoresPorMesa: 4,
   tempoMaximoEsperaMs: 30000,
   intervaloMatchmakingMs: 1000,
+  intervaloHeartbeatOnlineMs: 5000,
+  janelaAtividadeOnlineMs: 15000,
+};
+
+const CHAVE_PRESENCA_ONLINE = "truco-online-presenca-v1";
+const ID_CONEXAO_LOCAL = `conn-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+
+const servidorMatchmaking = {
+  totalTempoEsperaMs: 0,
+  totalPartidasFormadas: 0,
+  jogadoresOnline: 0,
 };
 const filaGlobal = [];
 const jogadoresEmMesa = new Set();
@@ -11,6 +22,55 @@ let mesaAtual = null;
 let contadorMesa = 0;
 let matchmakingIntervalo = null;
 let fluxoEntradaTardiaAtivo = false;
+
+function registrarTempoDeEspera(jogador, momentoEntradaMesaMs = Date.now()) {
+  if (!jogador?.entrouNaFilaEm) return;
+  const esperaMs = Math.max(0, momentoEntradaMesaMs - jogador.entrouNaFilaEm);
+  servidorMatchmaking.totalTempoEsperaMs += esperaMs;
+  servidorMatchmaking.totalPartidasFormadas += 1;
+}
+
+function obterTempoMedioEsperaSegundos() {
+  if (!servidorMatchmaking.totalPartidasFormadas) return 0;
+  return (
+    servidorMatchmaking.totalTempoEsperaMs /
+    servidorMatchmaking.totalPartidasFormadas /
+    1000
+  );
+}
+
+function obterPresencasAtivas() {
+  const agora = Date.now();
+  try {
+    const bruto = localStorage.getItem(CHAVE_PRESENCA_ONLINE);
+    const presencas = bruto ? JSON.parse(bruto) : {};
+    return Object.fromEntries(
+      Object.entries(presencas).filter(
+        ([, ultimoPing]) => agora - Number(ultimoPing) <= MATCH_CONFIG.janelaAtividadeOnlineMs,
+      ),
+    );
+  } catch (_erro) {
+    return {};
+  }
+}
+
+function publicarPresencaLocal() {
+  const presencasAtivas = obterPresencasAtivas();
+  presencasAtivas[ID_CONEXAO_LOCAL] = Date.now();
+  localStorage.setItem(CHAVE_PRESENCA_ONLINE, JSON.stringify(presencasAtivas));
+  servidorMatchmaking.jogadoresOnline = Object.keys(presencasAtivas).length;
+}
+
+function atualizarJogadoresOnline() {
+  const presencasAtivas = obterPresencasAtivas();
+  servidorMatchmaking.jogadoresOnline = Object.keys(presencasAtivas).length;
+}
+
+function removerPresencaLocal() {
+  const presencasAtivas = obterPresencasAtivas();
+  delete presencasAtivas[ID_CONEXAO_LOCAL];
+  localStorage.setItem(CHAVE_PRESENCA_ONLINE, JSON.stringify(presencasAtivas));
+}
 
 function gerarIdUnicoMesa() { contadorMesa += 1; return `mesa-${Date.now()}-${contadorMesa}`; }
 function criarJogadorHumano(nome) { return { id:`humano-${Date.now()}-${Math.random().toString(36).slice(2,8)}`, nome, tipo:"humano", entrouNaFilaEm:Date.now() }; }
@@ -30,9 +90,11 @@ function entrarNaFilaGlobal() {
 function montarMesa(participantes) {
   const humanos = participantes.filter((j)=>j.tipo==="humano");
   if (!humanos.length) return null;
+  const momentoEntradaMesa = Date.now();
+  humanos.forEach((jogador) => registrarTempoDeEspera(jogador, momentoEntradaMesa));
   humanos.forEach((j)=>jogadoresEmMesa.add(j.id));
   const bots = criarBots(Math.max(0, MATCH_CONFIG.jogadoresPorMesa - participantes.length));
-  return { id:gerarIdUnicoMesa(), jogadores:[...participantes,...bots], criadaEm:Date.now(), emAndamento:true, placar:[0,0], rodadaAtual:1, janelaEntradaTardiaAberta:true, sugestoesEntradaTardiaRecusadas:new Set() };
+  return { id:gerarIdUnicoMesa(), jogadores:[...participantes,...bots], criadaEm:momentoEntradaMesa, emAndamento:true, placar:[0,0], rodadaAtual:1, janelaEntradaTardiaAberta:true, sugestoesEntradaTardiaRecusadas:new Set() };
 }
 function criarResumoMesa(mesa) {
   const jogadores = mesa.jogadores.map((j)=>`${j.nome} (${j.tipo === "bot" ? "BOT" : "Humano"})`).join("\n");
@@ -143,7 +205,22 @@ function mostrarStatusLobby(texto){ const status=document.getElementById("status
 function renderizarLobby(){
   const lista=document.getElementById("listaMesas"); if(!lista) return;
   const naFila = jogadorLocal && filaGlobal.some((j)=>j.id===jogadorLocal.id);
-  lista.innerHTML = `<div class="matchmaking-card"><p><strong>Fila global:</strong> ${filaGlobal.length} jogador(es) humano(s)</p><p><strong>Mesas em jogo:</strong> ${mesasEmAndamento.length}</p><p><strong>Tempo máximo de espera:</strong> 30s</p>${naFila?`<p><strong>Seu tempo restante:</strong> ${formatarTempoRestante()}</p>`:""}<button class="mesa-item" type="button" onclick="entrarNaFilaGlobal()" ${naFila || mesaAtual ? "disabled" : ""}>${mesaAtual ? "Partida em andamento" : naFila ? "Na fila global" : "Entrar na fila global"}</button></div>`;
+  const tempoMedioEspera = obterTempoMedioEsperaSegundos().toFixed(1);
+  lista.innerHTML = `<div class="matchmaking-card"><p><strong>Fila global:</strong> ${filaGlobal.length} jogador(es) humano(s)</p><p><strong>Mesas em jogo:</strong> ${mesasEmAndamento.length}</p><p><strong>Tempo máximo de espera:</strong> 30s</p><p><strong>Tempo médio de espera:</strong> ${tempoMedioEspera} segundos</p><p><strong>Jogadores online:</strong> ${servidorMatchmaking.jogadoresOnline}</p>${naFila?`<p><strong>Seu tempo restante:</strong> ${formatarTempoRestante()}</p>`:""}<button class="mesa-item" type="button" onclick="entrarNaFilaGlobal()" ${naFila || mesaAtual ? "disabled" : ""}>${mesaAtual ? "Partida em andamento" : naFila ? "Na fila global" : "Entrar na fila global"}</button></div>`;
 }
 function iniciarMatchmakingContinuo(){ if(matchmakingIntervalo) return; matchmakingIntervalo = setInterval(processarMatchmaking, MATCH_CONFIG.intervaloMatchmakingMs); }
-window.addEventListener("load", ()=>{ renderizarLobby(); iniciarMatchmakingContinuo(); });
+window.addEventListener("storage", (evento) => {
+  if (evento.key !== CHAVE_PRESENCA_ONLINE) return;
+  atualizarJogadoresOnline();
+  renderizarLobby();
+});
+window.addEventListener("beforeunload", removerPresencaLocal);
+window.addEventListener("load", ()=>{
+  publicarPresencaLocal();
+  setInterval(() => {
+    publicarPresencaLocal();
+    renderizarLobby();
+  }, MATCH_CONFIG.intervaloHeartbeatOnlineMs);
+  renderizarLobby();
+  iniciarMatchmakingContinuo();
+});

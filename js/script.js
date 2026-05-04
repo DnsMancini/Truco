@@ -674,7 +674,7 @@ function botPedirTruco(j) {
   setTimeout(() => {
     mostrarBalaoTruco(
       j,
-      `${NOMES[j]} pediu truco! Vale ${valorMao} pontos. Aceitar?`,
+      "TRUCO!",
       (respostaJogador) => {
         if (respostaJogador === "aceitar") {
           estadoTruco = "normal";

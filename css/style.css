@@ -336,10 +336,10 @@ body {
 }
 #p2 {
   --avatar-size: 105px;
-  top: 20px;
+  top: 0;
   left: 50%;
-  transform: translate(-50%, -30%);
-  z-index: 1200;
+  transform: translate(-50%, -85%);
+  z-index: 1300;
 }
 #p3 {
   --avatar-size: 105px;
@@ -362,7 +362,7 @@ body {
   flex-direction: column;
 }
 #hand2 {
-  top: 20px;
+  top: 54px;
   left: 50%;
   transform: translateX(-50%);
 }

@@ -1007,6 +1007,11 @@ function tratarDecisaoMaoDeOnze() {
 
       maoDeOnzeAceita = true;
       mostrar("Mão de 11 aceita! Esta mão vale 3 pontos.");
+      atualizarControleJogador();
+
+      if (turno !== 0) {
+        botPlayTimeout = setTimeout(botPlay, BOT_PLAY_DELAY);
+      }
     });
     return true;
   }
@@ -1027,6 +1032,11 @@ function tratarDecisaoMaoDeOnze() {
 
     maoDeOnzeAceita = true;
     mostrar("Eles aceitaram a mão de 11! Esta mão vale 3 pontos.");
+    atualizarControleJogador();
+
+    if (turno !== 0) {
+      botPlayTimeout = setTimeout(botPlay, BOT_PLAY_DELAY);
+    }
   }
 
   return false;

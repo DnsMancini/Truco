@@ -284,6 +284,7 @@ body {
   width: var(--avatar-size);
   height: var(--avatar-size);
   border-radius: 50%;
+  overflow: hidden;
   background: linear-gradient(#555, #111);
   margin: auto;
   margin-bottom: 4px;

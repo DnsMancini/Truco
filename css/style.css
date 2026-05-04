@@ -334,9 +334,11 @@ body {
   transform: translate(-58%, -182%);
 }
 #p2 {
-  top: 0;
+  --avatar-size: 105px;
+  top: 20px;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -30%);
+  z-index: 1200;
 }
 #p3 {
   --avatar-size: 105px;

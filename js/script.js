@@ -7,6 +7,12 @@ let botPlayTimeout = null;
 let botPlayActive = false;
 let distribuindo = false;
 let jogoEncerrado = false;
+let negaAtiva = false;
+let negaEstado = {
+  ativo: false,
+  fase: 0,
+  vantagemTime: null,
+};
 let maoDeOnzeAtiva = false;
 let maoDeOnzeAceita = false;
 let maoDeFerroAtiva = false;
@@ -240,28 +246,84 @@ function isMaoDeFerro() {
 }
 
 
+function formatarResumoFinal() {
+  const jogadores = typeof obterNomesJogadoresMesaAtual === "function"
+    ? obterNomesJogadoresMesaAtual()
+    : ["Você", "Bot 1 [BOT]", "Parceiro", "Bot 2 [BOT]"];
+  return `Placar final: Nós ${pontos[0]} x ${pontos[1]} Eles\n\nJogadores da mesa:\n- ${jogadores.join("\n- ")}`;
+}
+
+function encerrarMesaAposResultado(buscarNova) {
+  if (typeof finalizarMesaNoServidor !== "function") return;
+  finalizarMesaNoServidor({ buscarNovaPartida: Boolean(buscarNova) });
+}
+
+function mostrarTelaFinal(vitoria) {
+  let tela = document.getElementById("telaFinal");
+  let texto = document.getElementById("textoFinal");
+  let resumo = document.getElementById("resumoFinal");
+  const btnLobby = document.getElementById("btnVoltarLobby");
+  const btnNova = document.getElementById("btnBuscarNova");
+
+  if (!tela || !texto || !resumo || !btnLobby || !btnNova) return;
+
+  texto.innerText = vitoria ? "VOCÊ FOI O VENCEDOR 🏆" : "VOCÊ PERDEU 😢";
+  texto.style.color = vitoria ? "#00ff88" : "#ff4444";
+  resumo.textContent = formatarResumoFinal();
+
+  btnLobby.onclick = () => encerrarMesaAposResultado(false);
+  btnNova.onclick = () => encerrarMesaAposResultado(true);
+  tela.classList.add("show");
+}
+
 function finalizarPartida(timeVencedor) {
   if (jogoEncerrado) return;
   jogoEncerrado = true;
-  pontos[timeVencedor] = 12;
+  pontos[timeVencedor] = Math.max(12, pontos[timeVencedor]);
   atualizarPlacar();
   mostrarTelaFinal(timeVencedor === 0);
-
-  setTimeout(() => {
-    pontos = [0, 0];
-    jogoEncerrado = false;
-    atualizarPlacar();
-    iniciar();
-  }, 3000);
 }
 
 function adicionarPontos(time, valor) {
   if (jogoEncerrado) return;
-
-  pontos[time] = Math.min(12, pontos[time] + valor);
+  pontos[time] += valor;
   atualizarPlacar();
 
-  if (pontos[time] >= 12) {
+  if (!negaEstado.ativo && (pontos[0] >= 12 || pontos[1] >= 12)) {
+    negaAtiva = true;
+    negaEstado = { ativo: true, fase: 1, vantagemTime: null };
+    mostrar("NEGA iniciada! A próxima mão define vantagem.");
+    atualizarPlacar();
+    return;
+  }
+
+  if (negaEstado.ativo) {
+    if (negaEstado.fase === 1) {
+      negaEstado.vantagemTime = time;
+      negaEstado.fase = 2;
+      mostrar(`${time === 0 ? "Nós" : "Eles"} ganharam vantagem na NEGA.`);
+      atualizarPlacar();
+      return;
+    }
+
+    if (negaEstado.fase === 2) {
+      if (negaEstado.vantagemTime === time) {
+        finalizarPartida(time);
+        return;
+      }
+      negaEstado.fase = 3;
+      mostrar("NEGA empatada! Rodada 3 obrigatória para desempate.");
+      atualizarPlacar();
+      return;
+    }
+
+    if (negaEstado.fase === 3) {
+      finalizarPartida(time);
+      return;
+    }
+  }
+
+  if (pontos[time] >= 12 && pontos[1 - time] < 12) {
     finalizarPartida(time);
   }
 }
@@ -287,6 +349,11 @@ function atualizarPainelRodada() {
 }
 
 function getMaoStatusLabel() {
+  if (negaEstado.ativo) {
+    if (negaEstado.fase === 1) return "NEGA: valendo vantagem";
+    if (negaEstado.fase === 2) return `NEGA: vantagem ${negaEstado.vantagemTime === 0 ? "NÓS" : "ELES"}`;
+    if (negaEstado.fase === 3) return "NEGA: desempate final";
+  }
   if (pontos[0] === 11 && pontos[1] === 11) return "Mão-de-ferro";
   if (pontos[0] === 11 || pontos[1] === 11) return "Mão-de-onze";
   return "";
@@ -1207,7 +1274,7 @@ function iniciar() {
 }
 
 function atualizarControleJogador() {
-  podeJogar = turno === 0 && mesa.length < 4 && estadoTruco === "normal";
+  podeJogar = !jogoEncerrado && turno === 0 && mesa.length < 4 && estadoTruco === "normal";
 }
 
 function atualizarHistorico() {
@@ -1236,26 +1303,6 @@ function atualizarHistorico() {
   historico.innerHTML = html;
 }
 
-function mostrarTelaFinal(vitoria) {
-  let tela = document.getElementById("telaFinal");
-  let texto = document.getElementById("textoFinal");
-
-  if (vitoria) {
-    texto.innerText = "🔥 VOCÊ VENCEU!";
-    texto.style.color = "#00ff88";
-  } else {
-    texto.innerText = "💀 VOCÊ PERDEU!";
-    texto.style.color = "#ff4444";
-  }
-
-  tela.classList.add("show");
-
-  setTimeout(() => {
-    tela.classList.remove("show");
-  }, 2500);
-}
-
 function proximoTurno() {
   turno = (turno + direcao + 4) % 4;
 }
-

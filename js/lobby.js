@@ -243,6 +243,35 @@ function iniciarPartidaDaMesa(mesa) {
   iniciar();
 }
 
+function obterNomesJogadoresMesaAtual() {
+  if (!mesaAtual?.jogadores?.length) return ["Você", "Bot 1 [BOT]", "Parceiro", "Bot 2 [BOT]"];
+  return mesaAtual.jogadores.map((j) => j.nome);
+}
+
+function finalizarMesaNoServidor({ buscarNovaPartida = false } = {}) {
+  if (!mesaAtual || !jogadorLocal) return;
+  const mesaId = mesaAtual.id;
+  const iMesa = mesasEmAndamento.findIndex((m) => m.id === mesaId);
+  if (iMesa !== -1) mesasEmAndamento.splice(iMesa, 1);
+  jogadoresEmMesa.delete(jogadorLocal.id);
+  socketLeave(mesaId);
+  mesaAtual = null;
+  const telaFinal = document.getElementById("telaFinal");
+  if (telaFinal) telaFinal.classList.remove("show");
+  document.getElementById("gameWrapper").classList.add("game-hidden");
+  document.getElementById("lobby").style.display = "flex";
+  salvarMesasNoEstadoGlobal();
+  renderizarLobby();
+  if (buscarNovaPartida) {
+    entrarNaFilaGlobal();
+    socketJoin("queue");
+    mostrarStatusLobby("Buscando nova partida automaticamente...");
+  } else {
+    socketJoin("queue");
+    mostrarStatusLobby("Você voltou para o lobby.");
+  }
+}
+
 function processarEntradaTardiaParaJogadorLocal() {
   if (!jogadorLocal || fluxoEntradaTardiaAtivo || mesaAtual) return false;
   if (jogadoresEmMesa.has(jogadorLocal.id)) return false;

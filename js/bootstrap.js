@@ -1,4 +1,8 @@
-const socket = io("https://truco-dev.onrender.com");
+const socketEndpoint =
+  window.TRUCO_SOCKET_URL ||
+  (window.location.origin.startsWith("http") ? window.location.origin : undefined);
+
+const socket = socketEndpoint ? io(socketEndpoint) : io();
 
 const reconnectSocketKey = "truco_previous_socket_id";
 

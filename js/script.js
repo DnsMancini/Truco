@@ -857,9 +857,24 @@ function proximoTurno() {
 }
 
 
+function normalizarCarta(carta) {
+  if (typeof carta === "string") return carta;
+  if (!carta || typeof carta !== "object") return null;
+
+  const valor = carta.c ?? carta.card ?? carta.value ?? carta.codigo;
+  return typeof valor === "string" ? valor : null;
+}
+
 function normalizarMaos(hands) {
   if (!Array.isArray(hands)) return [[], [], [], []];
-  return Array.from({ length: 4 }, (_, idx) => (Array.isArray(hands[idx]) ? [...hands[idx]] : []));
+
+  return Array.from({ length: 4 }, (_, idx) => {
+    if (!Array.isArray(hands[idx])) return [];
+
+    return hands[idx]
+      .map((carta) => normalizarCarta(carta))
+      .filter((carta) => typeof carta === "string" && carta.length >= 2);
+  });
 }
 
 function normalizarMesa(table) {

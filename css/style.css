@@ -1164,3 +1164,11 @@ html, body {
 .game-hidden {
   display: none !important;
 }
+
+.status-lobby { margin-top: 10px; min-height: 22px; }
+.modal-entrada { position: fixed; inset: 0; background: rgba(0,0,0,.6); display:flex; align-items:center; justify-content:center; z-index:9999; }
+.modal-entrada.oculto { display:none; }
+.modal-conteudo { background:#1c1c1c; color:#fff; padding:20px; border-radius:12px; width:min(90vw,520px); }
+.modal-conteudo pre { white-space:pre-wrap; background:#101010; padding:10px; border-radius:8px; max-height:45vh; overflow:auto; }
+.modal-acoes { display:grid; gap:8px; margin-top:10px; }
+.modal-acoes button { padding:10px; border:0; border-radius:8px; cursor:pointer; }

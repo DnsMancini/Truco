@@ -899,6 +899,20 @@ function renderMesa() {
     .join("");
 }
 
+
+function atualizarJogadoresDaMesaUI(jogadoresMesa) {
+  if (!Array.isArray(jogadoresMesa) || jogadoresMesa.length !== 4) return;
+  jogadoresMesa.forEach((jogador, idx) => {
+    NOMES[idx] = jogador.nome;
+    const playerEl = document.getElementById(`p${idx}`);
+    if (playerEl) {
+      const avatarEl = playerEl.querySelector(".avatar");
+      playerEl.innerHTML = `${avatarEl ? avatarEl.outerHTML : ""}${jogador.nome}`;
+    }
+    mostrar(`${jogador.nome} ${jogador.tipo === "bot" ? "saiu" : "entrou"} na mesa.`);
+  });
+}
+
 function mostrar(msg) {
   let el = document.getElementById("mensagem");
   el.innerText = msg;

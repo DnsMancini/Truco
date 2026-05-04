@@ -1312,3 +1312,32 @@ if (typeof socket !== "undefined") {
     if (typeof atualizarControleJogador === "function") atualizarControleJogador();
   });
 }
+
+
+if (typeof socket !== "undefined") {
+  socket.on("game_sync", (game) => {
+    if (!game) return;
+
+    console.log("jogo restaurado", game);
+
+    if (Array.isArray(game.playerCards)) maos = game.playerCards;
+    if (Array.isArray(game.mesa)) mesa = game.mesa;
+    if (typeof game.turno === "number") turno = game.turno;
+    if (typeof game.starter === "number") starter = game.starter;
+    if (Array.isArray(game.pontos)) pontos = game.pontos;
+    if (typeof game.rodada === "number") rodada = game.rodada;
+    if (Array.isArray(game.resultadoRodadas)) resultadoRodadas = game.resultadoRodadas;
+    if (typeof game.valorMao === "number") valorMao = game.valorMao;
+    if (typeof game.trucoNivel === "number") nivelTruco = game.trucoNivel;
+
+    if (typeof render === "function") render();
+    if (typeof renderMesa === "function") renderMesa();
+    if (typeof atualizarPlacar === "function") atualizarPlacar();
+    if (typeof atualizarPainelRodada === "function") atualizarPainelRodada();
+    if (typeof atualizarControleJogador === "function") atualizarControleJogador();
+  });
+
+  socket.on("player_reconnected", () => {
+    mostrar("Jogador reconectou na partida");
+  });
+}

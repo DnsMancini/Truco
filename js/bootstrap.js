@@ -1,5 +1,16 @@
 const socket = io("https://truco-dev.onrender.com");
 
+const reconnectSocketKey = "truco_previous_socket_id";
+
+socket.on("connect", () => {
+  const previousSocketId = localStorage.getItem(reconnectSocketKey);
+  if (previousSocketId) {
+    socket.emit("rejoin_game", { previousSocketId });
+  }
+
+  localStorage.setItem(reconnectSocketKey, socket.id);
+});
+
 socket.on("players_online", (n) => {
   console.log("Players online:", n);
 });

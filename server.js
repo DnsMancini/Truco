@@ -28,6 +28,9 @@ const rooms = new Map();
 // socketId -> roomId
 const socketToRoom = new Map();
 
+const disconnectedPlayers = new Map();
+// socket.id -> { roomId, timeout }
+
 function nextTrucoValue(currentValue) {
   const idx = TRUCO_STEPS.indexOf(currentValue);
   if (idx === -1 || idx === TRUCO_STEPS.length - 1) return TRUCO_STEPS[TRUCO_STEPS.length - 1];
@@ -174,6 +177,53 @@ function removePlayer(socket) {
 io.on("connection", (socket) => {
   playersOnline++;
   io.emit("players_online", playersOnline);
+
+  socket.on("rejoin_game", ({ previousSocketId } = {}) => {
+    if (!previousSocketId) return;
+
+    const saved = disconnectedPlayers.get(previousSocketId);
+    if (!saved) return;
+
+    clearTimeout(saved.timeout);
+
+    const room = rooms.get(saved.roomId);
+    if (!room) {
+      disconnectedPlayers.delete(previousSocketId);
+      return;
+    }
+
+    const oldIndex = room.players.indexOf(previousSocketId);
+    if (oldIndex === -1) {
+      disconnectedPlayers.delete(previousSocketId);
+      return;
+    }
+
+    room.players[oldIndex] = socket.id;
+
+    socketToRoom.set(socket.id, saved.roomId);
+    socket.join(saved.roomId);
+
+    disconnectedPlayers.delete(previousSocketId);
+
+    const game = room.game;
+    if (game) {
+      game.playerCards[oldIndex] = game.playerCards[oldIndex] || [];
+      socket.emit("game_sync", game);
+      io.to(saved.roomId).emit("game_state", getPublicGameState(game));
+    }
+
+    io.to(saved.roomId).emit("player_reconnected", {
+      playerId: socket.id
+    });
+
+    io.to(saved.roomId).emit("room_update", {
+      roomId: saved.roomId,
+      players: room.players,
+      playersCount: room.players.length,
+      maxPlayers: ROOM_SIZE,
+      isFull: room.players.length === ROOM_SIZE
+    });
+  });
 
   // entrar em sala
   const roomId = findAvailableRoom();
@@ -370,7 +420,23 @@ io.on("connection", (socket) => {
   // =========================
   socket.on("disconnect", () => {
     playersOnline = Math.max(playersOnline - 1, 0);
-    removePlayer(socket);
+
+    const roomId = socketToRoom.get(socket.id);
+    if (!roomId) {
+      io.emit("players_online", playersOnline);
+      return;
+    }
+
+    const timeout = setTimeout(() => {
+      removePlayer(socket);
+      disconnectedPlayers.delete(socket.id);
+    }, 30000);
+
+    disconnectedPlayers.set(socket.id, {
+      roomId,
+      timeout
+    });
+
     io.emit("players_online", playersOnline);
   });
 });

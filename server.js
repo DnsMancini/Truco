@@ -38,6 +38,7 @@ function nextTrucoValue(currentValue) {
 }
 
 function newHandState(starter = 0, points = [0, 0]) {
+  const deck = createDeck();
   return {
     mesa: [],
     turno: starter,
@@ -49,12 +50,14 @@ function newHandState(starter = 0, points = [0, 0]) {
     trucoNivel: 0,
     trucoPending: null,
     lastTrucoTeam: null,
-    playerCards: [[], [], [], []],
+    playerCards: [deck.splice(0, 3), deck.splice(0, 3), deck.splice(0, 3), deck.splice(0, 3)],
+    deck,
     started: true
   };
 }
 
 function resetHand(game, starter) {
+  const deck = createDeck();
   game.mesa = [];
   game.turno = starter;
   game.starter = starter;
@@ -64,8 +67,25 @@ function resetHand(game, starter) {
   game.trucoNivel = 0;
   game.trucoPending = null;
   game.lastTrucoTeam = null;
-  game.playerCards = [[], [], [], []];
+  game.playerCards = [deck.splice(0, 3), deck.splice(0, 3), deck.splice(0, 3), deck.splice(0, 3)];
+  game.deck = deck;
   game.started = true;
+}
+
+function createDeck() {
+  const suits = ["♠", "♥", "♦", "♣"];
+  const ranks = ["4", "5", "6", "7", "Q", "J", "K", "A", "2", "3"];
+  const deck = [];
+  for (const suit of suits) {
+    for (const rank of ranks) {
+      deck.push({ suit, rank, power: ranks.indexOf(rank) });
+    }
+  }
+  for (let i = deck.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [deck[i], deck[j]] = [deck[j], deck[i]];
+  }
+  return deck;
 }
 
 function getPublicGameState(game) {
@@ -137,12 +157,6 @@ function resolveHandWinner(resultadoRodadas) {
   if (firstWinner !== undefined) return TEAM_INDEX[firstWinner];
 
   return TEAM_INDEX[resultadoRodadas[0] ?? 0];
-}
-
-function broadcastGameState(roomId) {
-  const room = rooms.get(roomId);
-  if (!room || !room.game) return;
-  io.to(roomId).emit("game_state", getPublicGameState(room.game));
 }
 
 function playBotTurnIfNeeded(roomId) {

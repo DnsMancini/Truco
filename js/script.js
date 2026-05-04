@@ -146,7 +146,7 @@ function ocultarBalaoTruco() {
   if (btnCorrer) btnCorrer.style.display = "";
 }
 
-function mostrarBalaoTruco(_jogadorIdx, _texto, onResposta) {
+function mostrarBalaoTruco(_jogadorIdx, texto, onResposta) {
   const chamada = document.getElementById("chamadaTruco");
   const acoes = document.getElementById("acoesTruco");
   const btnAceitar = document.getElementById("btnAceitarTruco");
@@ -163,6 +163,7 @@ function mostrarBalaoTruco(_jogadorIdx, _texto, onResposta) {
   if (btnTruco) btnTruco.style.display = "none";
   if (btnCorrer) btnCorrer.style.display = "none";
 
+  chamada.textContent = texto || "TRUCO!";
   chamada.classList.remove("oculto");
   acoes.classList.remove("oculto");
 
@@ -179,6 +180,44 @@ function mostrarBalaoTruco(_jogadorIdx, _texto, onResposta) {
   btnCorrerTruco.onclick = () => {
     ocultarBalaoTruco();
     onResposta("correr");
+  };
+}
+
+function mostrarDecisaoMaoDeOnze(onResposta) {
+  const chamada = document.getElementById("chamadaTruco");
+  const acoes = document.getElementById("acoesTruco");
+  const btnAceitar = document.getElementById("btnAceitarTruco");
+  const btnAumentar = document.getElementById("btnAumentarTruco");
+  const btnCorrerTruco = document.getElementById("btnCorrerTruco");
+  const btnTruco = document.getElementById("btnTruco");
+  const btnCorrer = document.getElementById("btnCorrer");
+
+  if (!chamada || !acoes || !btnAceitar || !btnAumentar || !btnCorrerTruco) {
+    onResposta(false);
+    return;
+  }
+
+  if (btnTruco) btnTruco.style.display = "none";
+  if (btnCorrer) btnCorrer.style.display = "none";
+
+  chamada.textContent = "MÃO DE 11";
+  chamada.classList.remove("oculto");
+  acoes.classList.remove("oculto");
+
+  btnAceitar.textContent = "Jogar";
+  btnAumentar.textContent = "Correr";
+  btnCorrerTruco.style.display = "none";
+
+  btnAceitar.onclick = () => {
+    ocultarBalaoTruco();
+    btnCorrerTruco.style.display = "";
+    onResposta(true);
+  };
+
+  btnAumentar.onclick = () => {
+    ocultarBalaoTruco();
+    btnCorrerTruco.style.display = "";
+    onResposta(false);
   };
 }
 
@@ -953,24 +992,23 @@ function tratarDecisaoMaoDeOnze() {
   if (!maoDeOnzeAtiva) return false;
 
   if (pontos[0] === 11) {
-    const vaiJogar = window.confirm(
-      "Mão de 11: jogar valendo 3 pontos?\nCancelar = correr e perder 1 ponto.",
-    );
+    mostrar("Mão de 11: olhe suas cartas e escolha Jogar ou Correr.");
+    mostrarDecisaoMaoDeOnze((vaiJogar) => {
+      if (!vaiJogar) {
+        mostrar("Você correu na mão de 11. Eles ganham 1 ponto.");
+        adicionarPontos(1, 1);
 
-    if (!vaiJogar) {
-      mostrar("Você correu na mão de 11. Eles ganham 1 ponto.");
-      adicionarPontos(1, 1);
-
-      if (!jogoEncerrado) {
-        avancarStarterProximaMao();
-        setTimeout(iniciar, 1200);
+        if (!jogoEncerrado) {
+          avancarStarterProximaMao();
+          setTimeout(iniciar, 1200);
+        }
+        return;
       }
-      return true;
-    }
 
-    maoDeOnzeAceita = true;
-    mostrar("Mão de 11 aceita! Esta mão vale 3 pontos.");
-    return false;
+      maoDeOnzeAceita = true;
+      mostrar("Mão de 11 aceita! Esta mão vale 3 pontos.");
+    });
+    return true;
   }
 
   if (pontos[1] === 11) {

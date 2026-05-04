@@ -25,6 +25,32 @@ function forcaCarta(c) {
   return VAL.indexOf(v);
 }
 
+function randomInt(maxExclusive) {
+  if (window.crypto && window.crypto.getRandomValues) {
+    const array = new Uint32Array(1);
+    const limite = Math.floor(0x100000000 / maxExclusive) * maxExclusive;
+    let valor;
+
+    do {
+      window.crypto.getRandomValues(array);
+      valor = array[0];
+    } while (valor >= limite);
+
+    return valor % maxExclusive;
+  }
+
+  return Math.floor(Math.random() * maxExclusive);
+}
+
+function embaralharFisherYates(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = randomInt(i + 1);
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+
+  return array;
+}
+
 function criarBaralho() {
   let b = [];
   for (let n of NAIPES) {
@@ -32,7 +58,8 @@ function criarBaralho() {
       b.push(v + n);
     }
   }
-  return b.sort(() => Math.random() - 0.5);
+
+  return embaralharFisherYates(b);
 }
 
 function getClasseNaipe(carta) {

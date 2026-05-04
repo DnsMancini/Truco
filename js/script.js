@@ -33,6 +33,12 @@ let podeJogar = true;
 let pontos = [0, 0]; // [nos, eles]
 let cartaCobertaPendenteIndex = null;
 let longPressTimer = null;
+let turnoJogadorTimeout = null;
+let turnoJogadorInterval = null;
+let turnoJogadorTempoRestante = 30;
+
+const TEMPO_TURNO_JOGADOR = 30;
+const INICIO_EXIBICAO_CONTADOR = 10;
 
 /* 🔥 TRUCO */
 const trucoValores = [1, 3, 6, 9, 12];
@@ -544,7 +550,58 @@ function jogar(i) {
   botPlayActive = false;
 
   botPlayTimeout = setTimeout(botPlay, getBotDelay());
+  atualizarControleJogador();
   render();
+}
+
+function jogarCartaAleatoriaJogador() {
+  if (!podeJogar || turno !== 0 || !maos[0] || maos[0].length === 0) return;
+  const indiceAleatorio = Math.floor(Math.random() * maos[0].length);
+  mostrar("Tempo esgotado! Carta jogada aleatoriamente.");
+  jogar(indiceAleatorio);
+}
+
+function esconderContadorTurno() {
+  const contadorEl = document.getElementById("contadorTurno");
+  if (!contadorEl) return;
+  contadorEl.classList.add("oculto");
+  contadorEl.textContent = "";
+}
+
+function limparTimerTurnoJogador() {
+  if (turnoJogadorTimeout) {
+    clearTimeout(turnoJogadorTimeout);
+    turnoJogadorTimeout = null;
+  }
+  if (turnoJogadorInterval) {
+    clearInterval(turnoJogadorInterval);
+    turnoJogadorInterval = null;
+  }
+  turnoJogadorTempoRestante = TEMPO_TURNO_JOGADOR;
+  esconderContadorTurno();
+}
+
+function iniciarTimerTurnoJogador() {
+  limparTimerTurnoJogador();
+  turnoJogadorTempoRestante = TEMPO_TURNO_JOGADOR;
+
+  turnoJogadorTimeout = setTimeout(() => {
+    limparTimerTurnoJogador();
+    jogarCartaAleatoriaJogador();
+  }, TEMPO_TURNO_JOGADOR * 1000);
+
+  turnoJogadorInterval = setInterval(() => {
+    turnoJogadorTempoRestante -= 1;
+    const contadorEl = document.getElementById("contadorTurno");
+    if (!contadorEl) return;
+
+    if (turnoJogadorTempoRestante <= INICIO_EXIBICAO_CONTADOR && turnoJogadorTempoRestante > 0) {
+      contadorEl.classList.remove("oculto");
+      contadorEl.textContent = `${turnoJogadorTempoRestante}`;
+    } else if (turnoJogadorTempoRestante > INICIO_EXIBICAO_CONTADOR) {
+      esconderContadorTurno();
+    }
+  }, 1000);
 }
 
 function podePrepararCartaCoberta() {
@@ -1275,6 +1332,11 @@ function iniciar() {
 
 function atualizarControleJogador() {
   podeJogar = !jogoEncerrado && turno === 0 && mesa.length < 4 && estadoTruco === "normal";
+  if (podeJogar) {
+    iniciarTimerTurnoJogador();
+  } else {
+    limparTimerTurnoJogador();
+  }
 }
 
 function atualizarHistorico() {

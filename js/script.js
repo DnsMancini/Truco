@@ -571,9 +571,19 @@ function botDeveForcarTrucoComZap(j) {
   return forcaCarta(cartaDeSaida) === 103;
 }
 
+function temZapNaMesa() {
+  return mesa.some((jogada) => forcaCarta(jogada.c) === 103);
+}
+
+function jogadorJaTeveVantagemNaMao() {
+  const meuTime = getTime(0);
+  return resultadoRodadas.some((resultado) => resultado === "empate" || resultado === meuTime);
+}
+
 function botDevePedirTruco(j) {
   if (estadoTruco !== "normal" || maoDeOnzeAtiva || pontos[0] >= 11 || pontos[1] >= 11) return false;
   if (nivelTruco >= 4 || botJaPediuTrucoNaMao) return false;
+  if (temZapNaMesa() && jogadorJaTeveVantagemNaMao()) return false;
 
   const meuTime = getTime(j);
   if (ultimoTimeQuePediuTruco === meuTime) return false;
@@ -598,6 +608,10 @@ function botDevePedirTruco(j) {
 }
 
 function botResponderTruco(j) {
+  if (temZapNaMesa() && jogadorJaTeveVantagemNaMao()) {
+    return "correr";
+  }
+
   const forcaMao = calcularForcaMediaMao(maos[j]);
   const melhorCarta = Math.max(...maos[j].map((c) => forcaCarta(c)));
   const pontosMeuTime = pontos[getTime(j)];

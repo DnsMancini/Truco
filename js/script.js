@@ -9,6 +9,7 @@ let distribuindo = false;
 let jogoEncerrado = false;
 let maoDeOnzeAtiva = false;
 let maoDeOnzeAceita = false;
+let maoDeFerroAtiva = false;
 let botJaPediuTrucoNaMao = false;
 
 const BOT_PLAY_DELAY = 900;
@@ -41,8 +42,8 @@ function getPontosRecusaTruco() {
 function pedirTruco() {
   let meuTime = getTime(0);
 
-  if (maoDeOnzeAtiva) {
-    mostrar("Mão de 11: truco proibido! Você perdeu a partida.");
+  if (maoDeOnzeAtiva || maoDeFerroAtiva) {
+    mostrar("Mão especial: truco proibido! Você perdeu a partida.");
     encerrarPartidaPorPenalidade(1);
     return;
   }
@@ -227,6 +228,10 @@ function isMaoDeOnze() {
   );
 }
 
+function isMaoDeFerro() {
+  return pontos[0] === 11 && pontos[1] === 11;
+}
+
 
 function finalizarPartida(timeVencedor) {
   if (jogoEncerrado) return;
@@ -395,6 +400,9 @@ function render() {
 
   document.getElementById("mao").innerHTML = maos[0]
     .map((c, i) => {
+      if (maoDeFerroAtiva) {
+        return `<div class="carta playerCard virada" data-index="${i}"></div>`;
+      }
       const rot = inclinacoesJogador[i] ?? 0;
       const pendente = cartaCobertaPendenteIndex === i ? "coberta-pendente" : "";
 
@@ -521,6 +529,10 @@ function ordenar(mao, desc = true) {
 
 function botEscolherCarta(j) {
   let mao = maos[j];
+
+  if (maoDeFerroAtiva) {
+    return mao[Math.floor(Math.random() * mao.length)];
+  }
   let melhor = ordenar(mao, true);
   let pior = ordenar(mao, false);
 
@@ -1131,10 +1143,13 @@ function iniciar() {
   nivelTruco = 0;
   botJaPediuTrucoNaMao = false;
   maoDeOnzeAtiva = isMaoDeOnze();
+  maoDeFerroAtiva = isMaoDeFerro();
   maoDeOnzeAceita = false;
   valorMao = maoDeOnzeAtiva ? 3 : 1;
 
-  atualizarTrucoStatus(maoDeOnzeAtiva ? "Mão de 11 (truco proibido)" : "Nenhum");
+  atualizarTrucoStatus(
+    maoDeOnzeAtiva || maoDeFerroAtiva ? "Mão especial (truco proibido)" : "Nenhum",
+  );
   atualizarPainelRodada();
 
   vira = baralho.pop();

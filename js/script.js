@@ -287,47 +287,22 @@ function finalizarPartida(timeVencedor) {
   jogoEncerrado = true;
   pontos[timeVencedor] = Math.max(12, pontos[timeVencedor]);
   atualizarPlacar();
-  mostrarTelaFinal(timeVencedor === 0);
+  mostrar(`${timeVencedor === 0 ? "Nós" : "Eles"} fecharam em 12. Nova partida iniciando...`);
+
+  setTimeout(() => {
+    pontos = [0, 0];
+    jogoEncerrado = false;
+    negaAtiva = false;
+    negaEstado = { ativo: false, fase: 0, vantagemTime: null };
+    atualizarPlacar();
+    iniciar();
+  }, 1500);
 }
 
 function adicionarPontos(time, valor) {
   if (jogoEncerrado) return;
   pontos[time] += valor;
   atualizarPlacar();
-
-  if (!negaEstado.ativo && (pontos[0] >= 12 || pontos[1] >= 12)) {
-    negaAtiva = true;
-    negaEstado = { ativo: true, fase: 1, vantagemTime: null };
-    mostrar("NEGA iniciada! A próxima mão define vantagem.");
-    atualizarPlacar();
-    return;
-  }
-
-  if (negaEstado.ativo) {
-    if (negaEstado.fase === 1) {
-      negaEstado.vantagemTime = time;
-      negaEstado.fase = 2;
-      mostrar(`${time === 0 ? "Nós" : "Eles"} ganharam vantagem na NEGA.`);
-      atualizarPlacar();
-      return;
-    }
-
-    if (negaEstado.fase === 2) {
-      if (negaEstado.vantagemTime === time) {
-        finalizarPartida(time);
-        return;
-      }
-      negaEstado.fase = 3;
-      mostrar("NEGA empatada! Rodada 3 obrigatória para desempate.");
-      atualizarPlacar();
-      return;
-    }
-
-    if (negaEstado.fase === 3) {
-      finalizarPartida(time);
-      return;
-    }
-  }
 
   if (pontos[time] >= 12 && pontos[1 - time] < 12) {
     finalizarPartida(time);
@@ -355,11 +330,6 @@ function atualizarPainelRodada() {
 }
 
 function getMaoStatusLabel() {
-  if (negaEstado.ativo) {
-    if (negaEstado.fase === 1) return "NEGA: valendo vantagem";
-    if (negaEstado.fase === 2) return `NEGA: vantagem ${negaEstado.vantagemTime === 0 ? "NÓS" : "ELES"}`;
-    if (negaEstado.fase === 3) return "NEGA: desempate final";
-  }
   if (pontos[0] === 11 && pontos[1] === 11) return "Mão-de-ferro";
   if (pontos[0] === 11 || pontos[1] === 11) return "Mão-de-onze";
   return "";

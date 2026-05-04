@@ -59,80 +59,40 @@ function getPontosRecusaTruco() {
 }
 
 function pedirTruco() {
-  let meuTime = getTime(0);
-
-  if (maoDeOnzeAtiva || maoDeFerroAtiva) {
-    mostrar("Mão especial: truco proibido! Você perdeu a partida.");
-    encerrarPartidaPorPenalidade(1);
+  if (typeof socket !== "undefined") {
+    socket.emit("request_truco");
     return;
   }
 
-  if (turno !== 0) {
-    mostrar("Só pode pedir truco na sua vez!");
+  // Fallback legado (não remover nesta etapa de migração segura).
+  mostrar("Socket indisponível para pedir truco.");
+}
+
+function aceitarTruco() {
+  if (typeof socket !== "undefined") {
+    socket.emit("respond_truco", { action: "aceitar" });
     return;
   }
+  // Fallback legado (não remover nesta etapa de migração segura).
+  mostrar("Socket indisponível para aceitar truco.");
+}
 
-  if (estadoTruco !== "normal") return;
-
-  if (ultimoTimeQuePediuTruco === meuTime) {
-    mostrar("Aguarde o adversário responder!");
+function correrTruco() {
+  if (typeof socket !== "undefined") {
+    socket.emit("respond_truco", { action: "correr" });
     return;
   }
+  // Fallback legado (não remover nesta etapa de migração segura).
+  mostrar("Socket indisponível para correr do truco.");
+}
 
-  if (nivelTruco >= 4) return;
-
-  estadoTruco = "aguardando";
-  atualizarTrucoStatus("Truco chamado! Valor " + trucoValores[nivelTruco]);
-
-  if (nivelTruco === 0) {
-    tocar(somTruco);
-    valorMao = 3;
-  } else if (nivelTruco === 1) {
-    tocar(somSeis);
-    valorMao = 6;
-  } else if (nivelTruco === 2) {
-    tocar(somNove);
-    valorMao = 9;
-  } else if (nivelTruco === 3) {
-    tocar(somDoze);
-    valorMao = 12;
+function aumentarTruco() {
+  if (typeof socket !== "undefined") {
+    socket.emit("respond_truco", { action: "aumentar" });
+    return;
   }
-
-  nivelTruco++;
-  ultimoTimeQuePediuTruco = meuTime;
-
-  mostrar("TRUCO! Agora vale " + valorMao);
-
-  setTimeout(() => {
-    const adversarios = [1, 3].filter((idx) => maos[idx] && maos[idx].length);
-    const botRespondente =
-      adversarios.length > 1
-        ? adversarios.reduce((a, b) =>
-            calcularForcaMediaMao(maos[a]) >= calcularForcaMediaMao(maos[b]) ? a : b,
-          )
-        : adversarios[0] ?? 1;
-
-    const resposta = botResponderTruco(botRespondente);
-
-    if (resposta === "aceitar") {
-      mostrar("Aceitaram!");
-      estadoTruco = "normal";
-      atualizarTrucoStatus("Truco aceito! Valor " + valorMao);
-      return;
-    }
-
-    mostrar("Eles correram!");
-    estadoTruco = "normal";
-    adicionarPontos(meuTime, getPontosRecusaTruco());
-    botPlayActive = false;
-    if (botPlayTimeout) {
-      clearTimeout(botPlayTimeout);
-      botPlayTimeout = null;
-    }
-    atualizarTrucoStatus("Truco recusado");
-    avancarStarterProximaMao();
-    setTimeout(iniciar, 1500);
-  }, 800);
+  // Fallback legado (não remover nesta etapa de migração segura).
+  mostrar("Socket indisponível para aumentar truco.");
 }
 
 function avancarStarterProximaMao() {
@@ -1323,4 +1283,32 @@ function atualizarHistorico() {
 
 function proximoTurno() {
   turno = (turno + direcao + 4) % 4;
+}
+
+if (typeof socket !== "undefined") {
+  socket.on("game_state", (state) => {
+    if (!state) return;
+
+    if (Array.isArray(state.mesa)) mesa = state.mesa;
+    if (typeof state.turno === "number") turno = state.turno;
+    if (typeof state.starter === "number") starter = state.starter;
+    if (Array.isArray(state.pontos)) pontos = state.pontos;
+    if (typeof state.rodada === "number") rodada = state.rodada;
+    if (Array.isArray(state.resultadoRodadas)) resultadoRodadas = state.resultadoRodadas;
+    if (typeof state.valorMao === "number") valorMao = state.valorMao;
+    if (typeof state.trucoNivel === "number") nivelTruco = state.trucoNivel;
+
+    estadoTruco = state.trucoPending ? "aguardando" : "normal";
+    ultimoTimeQuePediuTruco =
+      typeof state.lastTrucoTeam === "number" ? state.lastTrucoTeam : null;
+
+    atualizarTrucoStatus(
+      state.trucoPending ? `Truco pendente (${valorMao})` : `Truco em ${valorMao}`,
+    );
+
+    if (typeof atualizarPlacar === "function") atualizarPlacar();
+    if (typeof atualizarPainelRodada === "function") atualizarPainelRodada();
+    if (typeof renderMesa === "function") renderMesa();
+    if (typeof atualizarControleJogador === "function") atualizarControleJogador();
+  });
 }

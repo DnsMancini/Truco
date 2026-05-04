@@ -9,6 +9,7 @@ const MATCH_CONFIG = {
 const CHAVE_PRESENCA_ONLINE = "truco-online-presenca-v1";
 const CHAVE_MESAS_GLOBAIS = "truco-online-mesas-v1";
 const CHAVE_EVENTO_MESA_CRIADA = "truco-online-evento-mesa-criada-v1";
+const CHAVE_EVENTO_PLAYER_JOINED_TABLE = "truco-online-evento-player-joined-table-v1";
 const ID_CONEXAO_LOCAL = `conn-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 
 const servidorMatchmaking = {
@@ -24,6 +25,7 @@ let mesaAtual = null;
 let contadorMesa = 0;
 let matchmakingIntervalo = null;
 let fluxoEntradaTardiaAtivo = false;
+const salasSocketLocal = new Set(["queue"]);
 
 function registrarTempoDeEspera(jogador, momentoEntradaMesaMs = Date.now()) {
   if (!jogador?.entrouNaFilaEm) return;
@@ -158,6 +160,59 @@ function procurarMesaElegivelEntradaTardia() {
 }
 function retirarJogadorDaFila(id){ const i=filaGlobal.findIndex((j)=>j.id===id); if(i!==-1) filaGlobal.splice(i,1); }
 function substituirBotPorHumano(mesa,humano){ const i=mesa.jogadores.findIndex((j)=>j.tipo==="bot"); if(i===-1) return false; mesa.jogadores.splice(i,1,humano); jogadoresEmMesa.add(humano.id); mostrar(`${humano.nome} entrou na mesa ${mesa.id}.`); return true; }
+function socketLeave(roomId) {
+  salasSocketLocal.delete(roomId);
+  console.log("[backend] socket.leave executado:", roomId);
+}
+function socketJoin(roomId) {
+  salasSocketLocal.add(roomId);
+  console.log("[backend] socket.join executado:", roomId);
+}
+function emitirEventoPlayerJoinedTable(mesa, jogador) {
+  const payload = {
+    mesa: serializarMesa(mesa),
+    jogador,
+    emitidoEm: Date.now(),
+    origem: ID_CONEXAO_LOCAL,
+  };
+  console.log("[backend] evento player_joined_table emitido:", mesa.id, jogador.id);
+  localStorage.setItem(CHAVE_EVENTO_PLAYER_JOINED_TABLE, JSON.stringify(payload));
+}
+function sincronizarMesaNoServidor(mesaAtualizada) {
+  const indiceMesa = mesasEmAndamento.findIndex((m) => m.id === mesaAtualizada.id);
+  if (indiceMesa === -1) {
+    mesasEmAndamento.push(mesaAtualizada);
+  } else {
+    mesasEmAndamento.splice(indiceMesa, 1, mesaAtualizada);
+  }
+  salvarMesasNoEstadoGlobal();
+}
+function aceitarEntradaTardiaNoServidor(mesaId, jogador, socketId) {
+  console.log("[backend] jogador aceitou entrada tardia:", jogador?.id, "mesa:", mesaId, "socket:", socketId);
+  carregarMesasDoEstadoGlobal();
+  const mesa = mesasEmAndamento.find((m) => m.id === mesaId);
+  if (!mesa || !podeReceberEntradaTardia(mesa)) {
+    console.log("[backend] mesa inválida/desatualizada para entrada tardia:", mesaId);
+    return { ok: false, motivo: "Mesa indisponível." };
+  }
+  if (mesa.jogadores.some((j) => j.id === jogador.id)) {
+    console.log("[backend] jogador já está na mesa:", mesaId, jogador.id);
+    return { ok: true, mesa };
+  }
+  retirarJogadorDaFila(jogador.id);
+  socketLeave("queue");
+  socketJoin(mesa.id);
+  const entrou = substituirBotPorHumano(mesa, jogador);
+  if (!entrou) {
+    socketLeave(mesa.id);
+    socketJoin("queue");
+    return { ok: false, motivo: "Sem vaga de bot disponível." };
+  }
+  console.log("[backend] jogador adicionado à estrutura da mesa:", mesa.id, jogador.id);
+  sincronizarMesaNoServidor(mesa);
+  emitirEventoPlayerJoinedTable(mesa, jogador);
+  return { ok: true, mesa };
+}
 
 function abrirModalEntradaTardia(mesa, onEscolha) {
   const modal = document.getElementById("modalEntradaTardia");
@@ -197,14 +252,15 @@ function processarEntradaTardiaParaJogadorLocal() {
   fluxoEntradaTardiaAtivo = true;
   abrirModalEntradaTardia(mesa, (escolha) => {
     if (escolha === "aceitar") {
-      retirarJogadorDaFila(jogadorLocal.id);
-      if (substituirBotPorHumano(mesa, jogadorLocal)) {
+      const resultadoEntrada = aceitarEntradaTardiaNoServidor(mesa.id, jogadorLocal, ID_CONEXAO_LOCAL);
+      if (resultadoEntrada.ok) {
         mostrarStatusLobby("Entrada tardia confirmada. Entrando na partida...");
-        iniciarPartidaDaMesa(mesa);
+        iniciarPartidaDaMesa(resultadoEntrada.mesa);
       } else {
-        mostrarStatusLobby("Sem bot disponível. Voltando para a fila automaticamente.");
+        mostrarStatusLobby(`${resultadoEntrada.motivo} Voltando para a fila automaticamente.`);
         jogadorLocal.entrouNaFilaEm = Date.now();
         filaGlobal.push(jogadorLocal);
+        socketJoin("queue");
       }
     } else if (escolha === "bots") {
       retirarJogadorDaFila(jogadorLocal.id);
@@ -278,6 +334,22 @@ window.addEventListener("storage", (evento) => {
         salvarMesasNoEstadoGlobal();
       }
       console.log("[frontend] evento mesa_criada recebido:", mesaRecebida.id);
+      renderizarLobby();
+    } catch (_erro) {
+      // ignorar payload inválido
+    }
+  }
+
+  if (evento.key === CHAVE_EVENTO_PLAYER_JOINED_TABLE && evento.newValue) {
+    try {
+      const payload = JSON.parse(evento.newValue);
+      if (payload?.origem === ID_CONEXAO_LOCAL) return;
+      const mesaRecebida = hidratarMesa(payload.mesa);
+      console.log("[frontend] evento player_joined_table recebido:", mesaRecebida.id, payload?.jogador?.id);
+      sincronizarMesaNoServidor(mesaRecebida);
+      if (jogadorLocal?.id && mesaRecebida.jogadores.some((j) => j.id === jogadorLocal.id)) {
+        iniciarPartidaDaMesa(mesaRecebida);
+      }
       renderizarLobby();
     } catch (_erro) {
       // ignorar payload inválido

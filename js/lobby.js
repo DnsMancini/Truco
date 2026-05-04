@@ -125,7 +125,13 @@ function criarJogadorHumano(nome) { return { id:`humano-${Date.now()}-${Math.ran
 function criarBots(q) { return Array.from({ length:q }, (_,i)=>({ id:`bot-${Date.now()}-${i+1}-${Math.random().toString(36).slice(2,7)}`, nome:`Bot ${i+1} [BOT]`, tipo:"bot" })); }
 function jogadorJaEstaNaFilaOuMesa(id) { return filaGlobal.some((j)=>j.id===id) || jogadoresEmMesa.has(id); }
 
+const LOBBY_ENTRADA_DESATIVADA = true;
+
 function entrarNaFilaGlobal() {
+  if (LOBBY_ENTRADA_DESATIVADA) {
+    mostrarStatusLobby("Lobby de entrada temporariamente desativado.");
+    return;
+  }
   if (!jogadorLocal) jogadorLocal = criarJogadorHumano("Você");
   if (mesaAtual) return mostrarStatusLobby(`Você já está na ${mesaAtual.id}.`);
   if (jogadorJaEstaNaFilaOuMesa(jogadorLocal.id)) return mostrarStatusLobby("Você já está na fila.");
@@ -336,7 +342,7 @@ function renderizarLobby(){
   const lista=document.getElementById("listaMesas"); if(!lista) return;
   const naFila = jogadorLocal && filaGlobal.some((j)=>j.id===jogadorLocal.id);
   const tempoMedioEspera = obterTempoMedioEsperaSegundos().toFixed(1);
-  lista.innerHTML = `<div class="matchmaking-card"><p><strong>Fila global:</strong> ${filaGlobal.length} jogador(es) humano(s)</p><p><strong>Mesas em jogo:</strong> ${mesasEmAndamento.length}</p><p><strong>Tempo máximo de espera:</strong> 30s</p><p><strong>Tempo médio de espera:</strong> ${tempoMedioEspera} segundos</p><p><strong>Jogadores online:</strong> ${servidorMatchmaking.jogadoresOnline}</p>${naFila?`<p><strong>Seu tempo restante:</strong> ${formatarTempoRestante()}</p>`:""}<button class="mesa-item" type="button" onclick="entrarNaFilaGlobal()" ${naFila || mesaAtual ? "disabled" : ""}>${mesaAtual ? "Partida em andamento" : naFila ? "Na fila global" : "Entrar na fila global"}</button></div>`;
+  lista.innerHTML = `<div class="matchmaking-card"><p><strong>Fila global:</strong> ${filaGlobal.length} jogador(es) humano(s)</p><p><strong>Mesas em jogo:</strong> ${mesasEmAndamento.length}</p><p><strong>Tempo máximo de espera:</strong> 30s</p><p><strong>Tempo médio de espera:</strong> ${tempoMedioEspera} segundos</p><p><strong>Jogadores online:</strong> ${servidorMatchmaking.jogadoresOnline}</p>${naFila?`<p><strong>Seu tempo restante:</strong> ${formatarTempoRestante()}</p>`:""}<button class="mesa-item" type="button" onclick="entrarNaFilaGlobal()" ${LOBBY_ENTRADA_DESATIVADA || naFila || mesaAtual ? "disabled" : ""}>${LOBBY_ENTRADA_DESATIVADA ? "Entrada temporariamente desativada" : mesaAtual ? "Partida em andamento" : naFila ? "Na fila global" : "Entrar na fila global"}</button></div>`;
 }
 function iniciarMatchmakingContinuo(){ if(matchmakingIntervalo) return; matchmakingIntervalo = setInterval(processarMatchmaking, MATCH_CONFIG.intervaloMatchmakingMs); }
 window.addEventListener("storage", (evento) => {

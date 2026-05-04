@@ -393,7 +393,13 @@ window.addEventListener("storage", (evento) => {
   }
 });
 window.addEventListener("beforeunload", removerPresencaLocal);
-window.addEventListener("load", ()=>{
+
+let appLobbyInicializado = false;
+
+function inicializarLobbyApp() {
+  if (appLobbyInicializado) return;
+  appLobbyInicializado = true;
+
   carregarMesasDoEstadoGlobal();
   publicarPresencaLocal();
   setInterval(() => {
@@ -401,6 +407,7 @@ window.addEventListener("load", ()=>{
     publicarPresencaLocal();
     renderizarLobby();
   }, MATCH_CONFIG.intervaloHeartbeatOnlineMs);
+
   if (INICIAR_DIRETO_NA_MESA) {
     const lobby = document.getElementById("lobby");
     const gameWrapper = document.getElementById("gameWrapper");
@@ -412,4 +419,10 @@ window.addEventListener("load", ()=>{
 
   renderizarLobby();
   iniciarMatchmakingContinuo();
-});
+}
+
+if (document.readyState === "loading") {
+  window.addEventListener("DOMContentLoaded", inicializarLobbyApp, { once: true });
+} else {
+  inicializarLobbyApp();
+}

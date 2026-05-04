@@ -446,7 +446,7 @@ function render() {
 
 function playCardSocket(card) {
   if (typeof socket === "undefined") return;
-  socket.emit("play_card", { roomId, card });
+  socket.emit("play_card", { roomId, index: card.index });
 }
 
 function jogar(i) {
@@ -469,29 +469,11 @@ function jogar(i) {
     return;
   }
 
-  if (typeof socket !== "undefined") {
-    playCardSocket(card);
-    cartaCobertaPendenteIndex = null;
-    atualizarControleJogador();
-    return;
-  }
-
-  mesa.push({ j: 0, c: maos[0].splice(i, 1)[0], coberta: jogadaCoberta });
+  // Frontend não decide jogada: apenas envia ação ao backend.
+  card.index = i;
+  playCardSocket(card);
   cartaCobertaPendenteIndex = null;
-  renderMesa();
-  tocar(somJogarCarta, 0.7);
-
-  turno = (turno + direcao + 4) % 4;
-
-  if (botPlayTimeout) {
-    clearTimeout(botPlayTimeout);
-    botPlayTimeout = null;
-  }
-  botPlayActive = false;
-
-  botPlayTimeout = setTimeout(botPlay, getBotDelay());
   atualizarControleJogador();
-  render();
 }
 
 function jogarCartaAleatoriaJogador() {

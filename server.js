@@ -406,7 +406,7 @@ io.on("connection", (socket) => {
   // =========================
   // JOGAR CARTA (ETAPA 2)
   // =========================
-  socket.on("play_card", ({ roomId: requestedRoomId, card }) => {
+  socket.on("play_card", ({ roomId: requestedRoomId, card, index }) => {
     const roomId = requestedRoomId || socketToRoom.get(socket.id);
     if (!roomId) return;
 
@@ -416,30 +416,33 @@ io.on("connection", (socket) => {
     const playerIndex = room.players.indexOf(socket.id);
     if (playerIndex === -1) return;
 
-    if (!card || typeof card.power !== "number") return;
-
     // valida turno
     if (room.game.turno !== playerIndex) return;
 
-    // valida posse da carta, se o servidor tiver mão registrada
+    // valida posse da carta e resolve carta jogada exclusivamente no servidor
     const serverHand = room.game.playerCards[playerIndex];
-    if (Array.isArray(serverHand) && serverHand.length > 0) {
-      const cardInHandIndex = serverHand.findIndex(c =>
+    if (!Array.isArray(serverHand) || serverHand.length === 0) return;
+
+    let chosenIndex = Number.isInteger(index) ? index : -1;
+    if (chosenIndex < 0 || chosenIndex >= serverHand.length) {
+      // compatibilidade legada (cliente antigo enviando objeto card)
+      if (!card || typeof card.power !== "number") return;
+      chosenIndex = serverHand.findIndex(c =>
         c.suit === card.suit && c.rank === card.rank && c.power === card.power
       );
-      if (cardInHandIndex === -1) return;
-      serverHand.splice(cardInHandIndex, 1);
+      if (chosenIndex === -1) return;
     }
+    const chosenCard = serverHand.splice(chosenIndex, 1)[0];
 
     // adiciona carta na mesa
     room.game.mesa.push({
       player: playerIndex,
-      card
+      card: chosenCard
     });
 
     io.to(roomId).emit("card_played", {
       player: playerIndex,
-      card
+      card: chosenCard
     });
 
     // rodada termina com 4 cartas

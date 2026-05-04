@@ -5,6 +5,9 @@ const { Server } = require("socket.io");
 const app = express();
 const server = http.createServer(app);
 
+app.use(express.static(__dirname));
+app.use('/js', express.static(`${__dirname}/js`));
+
 const io = new Server(server, {
   cors: { origin: "*" }
 });
@@ -611,7 +614,7 @@ io.on("connection", (socket) => {
 // ROTAS HTTP
 // =========================
 app.get("/", (req, res) => {
-  res.send("Truco backend rodando com salas + multiplayer");
+  res.sendFile(`${__dirname}/index.html`);
 });
 
 app.get("/status", (req, res) => {

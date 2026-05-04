@@ -394,7 +394,12 @@ function criarAnimacaoCarta(player, cartaValor) {
 function render() {
   const inclinacoesJogador = [-8, 0, 8];
 
-  document.getElementById("mao").innerHTML = maos[0]
+  const maoJogador = Array.isArray(maos[0]) ? maos[0] : []
+  const maoEsquerda = Array.isArray(maos[1]) ? maos[1] : []
+  const maoParceiro = Array.isArray(maos[2]) ? maos[2] : []
+  const maoDireita = Array.isArray(maos[3]) ? maos[3] : []
+
+  document.getElementById("mao").innerHTML = maoJogador
     .map((c, i) => {
       if (maoDeFerroAtiva) {
         return `<div class="carta playerCard virada" data-index="${i}"></div>`;
@@ -414,7 +419,7 @@ function render() {
 
   vincularLongPressCartaJogador();
 
-  document.getElementById("hand1").innerHTML = maos[1]
+  document.getElementById("hand1").innerHTML = maoEsquerda
     .map(
       (c) => `
       <div class="carta virada"></div>
@@ -422,7 +427,7 @@ function render() {
     )
     .join("");
 
-  document.getElementById("hand2").innerHTML = maos[2]
+  document.getElementById("hand2").innerHTML = maoParceiro
     .map(
       (c) => `
       <div class="carta virada"></div>
@@ -430,7 +435,7 @@ function render() {
     )
     .join("");
 
-  document.getElementById("hand3").innerHTML = maos[3]
+  document.getElementById("hand3").innerHTML = maoDireita
     .map(
       (c) => `
       <div class="carta virada"></div>
@@ -458,7 +463,11 @@ function jogar(i) {
   }
 
   const card = maos[0][i];
-  if (!card) return;
+  if (!card) {
+    podeJogar = true;
+    atualizarControleJogador();
+    return;
+  }
 
   if (typeof socket !== "undefined") {
     playCardSocket(card);
@@ -1304,14 +1313,33 @@ function proximoTurno() {
   turno = (turno + direcao + 4) % 4;
 }
 
+
+function normalizarMaos(hands) {
+  if (!Array.isArray(hands)) return [[], [], [], []];
+  return Array.from({ length: 4 }, (_, idx) => (Array.isArray(hands[idx]) ? [...hands[idx]] : []));
+}
+
+function normalizarMesa(table) {
+  if (!Array.isArray(table)) return [];
+  return table
+    .map((entry) => {
+      if (!entry || typeof entry !== "object") return null;
+      const jogador = typeof entry.j === "number" ? entry.j : entry.player;
+      const carta = entry.c ?? entry.card;
+      if (typeof jogador !== "number" || !carta) return null;
+      return { j: jogador, c: carta, coberta: Boolean(entry.coberta) };
+    })
+    .filter(Boolean);
+}
+
 function aplicarEstadoDoJogo(state) {
   if (!state) return;
 
-  if (Array.isArray(state.hands)) maos = state.hands;
-  if (Array.isArray(state.table)) mesa = state.table;
+  if (Array.isArray(state.hands)) maos = normalizarMaos(state.hands);
+  if (Array.isArray(state.table)) mesa = normalizarMesa(state.table);
   if (typeof state.turn === "number") turno = state.turn;
 
-  if (Array.isArray(state.mesa)) mesa = state.mesa;
+  if (Array.isArray(state.mesa)) mesa = normalizarMesa(state.mesa);
   if (typeof state.turno === "number") turno = state.turno;
   if (typeof state.starter === "number") starter = state.starter;
   if (Array.isArray(state.score)) pontos = state.score;
@@ -1321,6 +1349,9 @@ function aplicarEstadoDoJogo(state) {
   if (Array.isArray(state.resultadoRodadas)) resultadoRodadas = state.resultadoRodadas;
   if (typeof state.valorMao === "number") valorMao = state.valorMao;
   if (typeof state.trucoNivel === "number") nivelTruco = state.trucoNivel;
+
+  maos = normalizarMaos(maos);
+  mesa = normalizarMesa(mesa);
 
   estadoTruco = state.trucoPending ? "aguardando" : "normal";
   ultimoTimeQuePediuTruco = typeof state.lastTrucoTeam === "number" ? state.lastTrucoTeam : null;

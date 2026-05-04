@@ -21,6 +21,7 @@ let botJaPediuTrucoNaMao = false;
 const BOT_RESPONSE_DELAY_MIN = 800;
 const BOT_RESPONSE_DELAY_MAX = 3000;
 const NEXT_HAND_DELAY = 1800;
+const modoServidor = typeof socket !== "undefined";
 
 function getBotDelay() {
   return Math.floor(
@@ -394,7 +395,12 @@ function criarAnimacaoCarta(player, cartaValor) {
 function render() {
   const inclinacoesJogador = [-8, 0, 8];
 
-  document.getElementById("mao").innerHTML = maos[0]
+  const maoJogador = Array.isArray(maos?.[0]) ? maos[0] : [];
+  const mao1 = Array.isArray(maos?.[1]) ? maos[1] : [];
+  const mao2 = Array.isArray(maos?.[2]) ? maos[2] : [];
+  const mao3 = Array.isArray(maos?.[3]) ? maos[3] : [];
+
+  document.getElementById("mao").innerHTML = maoJogador
     .map((c, i) => {
       if (maoDeFerroAtiva) {
         return `<div class="carta playerCard virada" data-index="${i}"></div>`;
@@ -414,7 +420,7 @@ function render() {
 
   vincularLongPressCartaJogador();
 
-  document.getElementById("hand1").innerHTML = maos[1]
+  document.getElementById("hand1").innerHTML = mao1
     .map(
       (c) => `
       <div class="carta virada"></div>
@@ -422,7 +428,7 @@ function render() {
     )
     .join("");
 
-  document.getElementById("hand2").innerHTML = maos[2]
+  document.getElementById("hand2").innerHTML = mao2
     .map(
       (c) => `
       <div class="carta virada"></div>
@@ -430,7 +436,7 @@ function render() {
     )
     .join("");
 
-  document.getElementById("hand3").innerHTML = maos[3]
+  document.getElementById("hand3").innerHTML = mao3
     .map(
       (c) => `
       <div class="carta virada"></div>
@@ -441,6 +447,11 @@ function render() {
 
 function jogar(i) {
   if (distribuindo) return;
+
+  if (modoServidor) {
+    console.warn("jogar() local ignorado no modo servidor; aguardando game_state.");
+    return;
+  }
 
   if (!jogoAtivo || !podeJogar || estadoTruco !== "normal") return;
 
@@ -875,6 +886,8 @@ function botPedirTruco(j) {
 function botPlay() {
   if (distribuindo) return;
 
+  if (modoServidor) return;
+
   if (!jogoAtivo || estadoTruco !== "normal") return;
 
   if (mesa.length >= 4) {
@@ -1241,7 +1254,7 @@ function iniciar() {
   atualizarHistorico();
 
   // Inicia o turno do bot se o starter não for o jogador
-  if (starter !== 0) {
+  if (!modoServidor && starter !== 0) {
     botPlayTimeout = setTimeout(botPlay, getBotDelay());
   }
 }
@@ -1295,11 +1308,17 @@ if (typeof socket !== "undefined") {
 
     console.log("STATE UPDATE SERVER", state);
 
-    if (Array.isArray(state.hands)) maos = state.hands;
-    if (Array.isArray(state.table)) mesa = state.table;
+    if (botPlayTimeout) {
+      clearTimeout(botPlayTimeout);
+      botPlayTimeout = null;
+    }
+    botPlayActive = false;
+
+    if (Array.isArray(state.hands)) maos = state.hands.map((hand) => (Array.isArray(hand) ? [...hand] : []));
+    if (Array.isArray(state.table)) mesa = state.table.map((item) => ({ ...item }));
     if (typeof state.turn === "number") turno = state.turn;
 
-    if (Array.isArray(state.mesa)) mesa = state.mesa;
+    if (Array.isArray(state.mesa)) mesa = state.mesa.map((item) => ({ ...item }));
     if (typeof state.turno === "number") turno = state.turno;
     if (typeof state.starter === "number") starter = state.starter;
     if (Array.isArray(state.score)) pontos = state.score;
@@ -1333,8 +1352,14 @@ if (typeof socket !== "undefined") {
 
     console.log("jogo restaurado", game);
 
-    if (Array.isArray(game.playerCards)) maos = game.playerCards;
-    if (Array.isArray(game.mesa)) mesa = game.mesa;
+    if (botPlayTimeout) {
+      clearTimeout(botPlayTimeout);
+      botPlayTimeout = null;
+    }
+    botPlayActive = false;
+
+    if (Array.isArray(game.playerCards)) maos = game.playerCards.map((hand) => (Array.isArray(hand) ? [...hand] : []));
+    if (Array.isArray(game.mesa)) mesa = game.mesa.map((item) => ({ ...item }));
     if (typeof game.turno === "number") turno = game.turno;
     if (typeof game.starter === "number") starter = game.starter;
     if (Array.isArray(game.pontos)) pontos = game.pontos;

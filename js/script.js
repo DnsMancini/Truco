@@ -1218,4 +1218,3 @@ function proximoTurno() {
   turno = (turno + direcao + 4) % 4;
 }
 
-iniciar();

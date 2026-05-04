@@ -21,8 +21,21 @@
     <h1>Lobby de Truco</h1>
     <p>Escolha uma mesa para entrar no jogo.</p>
     <div id="listaMesas" class="lista-mesas"></div>
+    <p id="statusLobby" class="status-lobby"></p>
   </section>
 </main>
+
+<div id="modalEntradaTardia" class="modal-entrada oculto">
+  <div class="modal-conteudo">
+    <h2>Entrada tardia disponível</h2>
+    <pre id="modalEntradaResumo"></pre>
+    <div class="modal-acoes">
+      <button id="btnModalAceitar" type="button">Aceitar entrar</button>
+      <button id="btnModalRecusar" type="button">Recusar e buscar outra</button>
+      <button id="btnModalBots" type="button">Jogar com bots agora</button>
+    </div>
+  </div>
+</div>
 
 <div id="gameWrapper" class="game-hidden" style="width: 100vw; height: 100dvh; min-height: 100%;">
 

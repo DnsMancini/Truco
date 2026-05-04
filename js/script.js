@@ -446,7 +446,7 @@ function render() {
 
 function playCardSocket(card) {
   if (typeof socket === "undefined") return;
-  socket.emit("play_card", { roomId, index: card.index });
+  socket.emit("play_card", { index: card.index });
 }
 
 function jogar(i) {
@@ -1121,7 +1121,7 @@ function iniciar() {
   // Arquitetura server-authoritative:
   // frontend somente solicita estado/renderiza.
   jogoAtivo = true;
-  socket.emit("request_state", { roomId });
+  socket.emit("request_state");
 }
 
 function podeJogarCarta() {

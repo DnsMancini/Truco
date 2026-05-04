@@ -297,11 +297,17 @@ body {
   background-image: url("../img/bot1.png");
 }
 
+.avatar-parceiro {
+  background-image: url("../img/parceiro.svg");
+}
+
+
 .avatar-bot2 {
   background-image: url("../img/bot2.png");
 }
 
 .avatar-bot1,
+.avatar-parceiro,
 .avatar-bot2 {
   width: var(--avatar-size);
   height: var(--avatar-size);
@@ -309,6 +315,7 @@ body {
 
 .avatar-voce,
 .avatar-bot1,
+.avatar-parceiro,
 .avatar-bot2 {
   background-size: cover;
   background-position: center 56%;

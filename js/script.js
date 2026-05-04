@@ -879,58 +879,9 @@ function botPedirTruco(j) {
 }
 
 function botPlay() {
-  if (distribuindo) return;
-
-  if (!jogoAtivo || estadoTruco !== "normal") return;
-
-  if (mesa.length >= 4) {
-    botPlayActive = false;
-    setTimeout(resolver, 500);
-    return;
-  }
-
-  if (turno === 0) {
-    botPlayActive = false;
-    atualizarControleJogador();
-    return;
-  }
-
-  if (!maos[turno] || maos[turno].length === 0) {
-    botPlayActive = false;
-    setTimeout(resolver, 500);
-    return;
-  }
-
-  if (botDevePedirTruco(turno)) {
-    botPlayActive = false;
-    botPedirTruco(turno);
-    return;
-  }
-
-  if (botPlayActive) return;
-  botPlayActive = true;
-
-  try {
-    let carta = botEscolherCarta(turno);
-
-    if (!carta) throw new Error("Sem carta");
-
-    maos[turno].splice(maos[turno].indexOf(carta), 1);
-    mesa.push({ j: turno, c: carta });
-
-    tocar(somJogarCarta, 0.7);
-
-    render();
-    renderMesa();
-
-    turno = (turno + direcao + 4) % 4;
-  } catch (e) {
-    console.log("Erro botPlay:", e);
-  } finally {
-    botPlayActive = false;
-  }
-
-  botPlayTimeout = setTimeout(botPlay, getBotDelay());
+  // Arquitetura server-authoritative:
+  // bots e progressão de turno ficam somente no backend.
+  return;
 }
 
 function renderMesa() {
@@ -969,6 +920,12 @@ function mostrar(msg) {
 }
 
 function resolver() {
+  // Arquitetura server-authoritative:
+  // resolução de rodada/mão fica somente no backend.
+  return;
+}
+
+function resolverLegadoLocal() {
   let maior = -1;
   let vencedores = [];
   cartaVencedoraIndex = -1;
@@ -1083,37 +1040,7 @@ function verificarFimMao() {
   return false;
 }
 function correr() {
-  ocultarBalaoTruco();
-  mostrar("Você correu!");
-
-  setTimeout(() => {
-    let adversario = 1;
-    const pontosDaCorrida =
-      estadoTruco === "aguardando" ? getPontosRecusaTruco() : valorMao;
-
-    if (jogoEncerrado) return;
-
-    adicionarPontos(adversario, pontosDaCorrida);
-
-    mostrar("Eles ganharam " + pontosDaCorrida + " ponto(s)");
-    if (estadoTruco === "aguardando") {
-      estadoTruco = "normal";
-      atualizarTrucoStatus("Truco recusado");
-    }
-
-    if (jogoEncerrado) return;
-
-    mesa = [];
-    document.getElementById("mesaCartas").innerHTML = "";
-    botPlayActive = false;
-    if (botPlayTimeout) {
-      clearTimeout(botPlayTimeout);
-      botPlayTimeout = null;
-    }
-
-    avancarStarterProximaMao();
-    setTimeout(iniciar, 1500);
-  }, 1000);
+  correrTruco();
 }
 
 function tratarDecisaoMaoDeOnze() {
@@ -1191,65 +1118,10 @@ function atualizarPlacar() {
 }
 
 function iniciar() {
-  tocar(somDistribuir, 0.7);
-
-  distribuindo = true; // 🔥 bloqueia jogo durante deal
-
-  estadoTruco = "normal";
-  ultimoTimeQuePediuTruco = null;
-  botPlayActive = false;
-  jogoAtivo = false;
-
-  if (botPlayTimeout) {
-    clearTimeout(botPlayTimeout);
-    botPlayTimeout = null;
-  }
-  baralho = criarBaralho();
-  maos = [[], [], [], []];
-  mesa = [];
-  cartaCobertaPendenteIndex = null;
-
-  // Limpa cartas visíveis da mão anterior antes da nova distribuição
-  document.getElementById("mao").innerHTML = "";
-  document.getElementById("hand1").innerHTML = "";
-  document.getElementById("hand2").innerHTML = "";
-  document.getElementById("hand3").innerHTML = "";
-
-  document.getElementById("mesaCartas").innerHTML = "";
-  cartaVencedoraIndex = -1;
-  turno = starter;
-  rodada = 1;
-  resultadoRodadas = [];
-  vencedorRodadaJogador = [];
-  primeiroTurno = starter;
-  ultimoTimeQuePediuTruco = null;
+  // Arquitetura server-authoritative:
+  // frontend somente solicita estado/renderiza.
   jogoAtivo = true;
-
-  atualizarControleJogador();
-
-  nivelTruco = 0;
-  botJaPediuTrucoNaMao = false;
-  maoDeOnzeAtiva = isMaoDeOnze();
-  maoDeFerroAtiva = isMaoDeFerro();
-  maoDeOnzeAceita = false;
-  valorMao = maoDeOnzeAtiva ? 3 : 1;
-
-  atualizarTrucoStatus(
-    maoDeOnzeAtiva || maoDeFerroAtiva ? "Mão especial (truco proibido)" : "Nenhum",
-  );
-  atualizarPainelRodada();
-
-  vira = baralho.pop();
-  document.getElementById("vira").innerHTML = renderCartaFrente(vira);
-
-  distribuir();
-  atualizarPlacar();
-  atualizarHistorico();
-
-  // Inicia o turno do bot se o starter não for o jogador
-  if (starter !== 0) {
-    botPlayTimeout = setTimeout(botPlay, getBotDelay());
-  }
+  socket.emit("request_state", { roomId });
 }
 
 function podeJogarCarta() {

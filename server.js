@@ -44,9 +44,25 @@ function newHandState(starter = 0, points = [0, 0]) {
     resultadoRodadas: [],
     valorMao: 1,
     trucoNivel: 0,
+    trucoPending: null,
+    lastTrucoTeam: null,
     playerCards: [[], [], [], []],
     started: true
   };
+}
+
+function resetHand(game, starter) {
+  game.mesa = [];
+  game.turno = starter;
+  game.starter = starter;
+  game.rodada = 1;
+  game.resultadoRodadas = [];
+  game.valorMao = 1;
+  game.trucoNivel = 0;
+  game.trucoPending = null;
+  game.lastTrucoTeam = null;
+  game.playerCards = [[], [], [], []];
+  game.started = true;
 }
 
 function getPublicGameState(game) {
@@ -58,7 +74,9 @@ function getPublicGameState(game) {
     rodada: game.rodada,
     resultadoRodadas: game.resultadoRodadas,
     valorMao: game.valorMao,
-    trucoNivel: game.trucoNivel
+    trucoNivel: game.trucoNivel,
+    trucoPending: game.trucoPending,
+    lastTrucoTeam: game.lastTrucoTeam
   };
 }
 
@@ -264,6 +282,87 @@ io.on("connection", (socket) => {
 
     // envia estado completo atualizado
     io.to(roomId).emit("game_state", getPublicGameState(room.game));
+  });
+
+  socket.on("request_truco", () => {
+    const roomId = socketToRoom.get(socket.id);
+    if (!roomId) return;
+
+    const room = rooms.get(roomId);
+    if (!room || !room.game) return;
+
+    const playerIndex = room.players.indexOf(socket.id);
+    if (playerIndex === -1) return;
+
+    if (room.game.turno !== playerIndex) return;
+    if (room.game.trucoPending) return;
+    if (room.game.trucoNivel >= 4) return;
+
+    const requestingTeam = TEAM_INDEX[playerIndex];
+    if (room.game.lastTrucoTeam === requestingTeam) return;
+
+    room.game.trucoNivel += 1;
+    room.game.valorMao = TRUCO_STEPS[room.game.trucoNivel];
+    room.game.lastTrucoTeam = requestingTeam;
+    room.game.trucoPending = {
+      requestedBy: playerIndex,
+      requestedByTeam: requestingTeam,
+      respondersTeam: 1 - requestingTeam
+    };
+
+    io.to(roomId).emit("game_state", getPublicGameState(room.game));
+  });
+
+  socket.on("respond_truco", ({ action }) => {
+    const roomId = socketToRoom.get(socket.id);
+    if (!roomId) return;
+
+    const room = rooms.get(roomId);
+    if (!room || !room.game) return;
+    if (!room.game.trucoPending) return;
+
+    const playerIndex = room.players.indexOf(socket.id);
+    if (playerIndex === -1) return;
+
+    const playerTeam = TEAM_INDEX[playerIndex];
+    const pending = room.game.trucoPending;
+    if (playerTeam !== pending.respondersTeam) return;
+
+    if (action === "aceitar") {
+      room.game.trucoPending = null;
+      io.to(roomId).emit("game_state", getPublicGameState(room.game));
+      return;
+    }
+
+    if (action === "aumentar") {
+      if (room.game.trucoNivel >= 4) return;
+      room.game.trucoNivel += 1;
+      room.game.valorMao = TRUCO_STEPS[room.game.trucoNivel];
+      room.game.lastTrucoTeam = playerTeam;
+      room.game.trucoPending = {
+        requestedBy: playerIndex,
+        requestedByTeam: playerTeam,
+        respondersTeam: 1 - playerTeam
+      };
+      io.to(roomId).emit("game_state", getPublicGameState(room.game));
+      return;
+    }
+
+    if (action === "correr") {
+      const winnerTeam = pending.requestedByTeam;
+      const pontosGanhos = TRUCO_STEPS[Math.max(room.game.trucoNivel - 1, 0)];
+      room.game.pontos[winnerTeam] += pontosGanhos;
+
+      io.to(roomId).emit("hand_result", {
+        winnerTeam,
+        valorMao: pontosGanhos,
+        pontos: room.game.pontos
+      });
+
+      const nextStarter = (room.game.starter + 1) % ROOM_SIZE;
+      resetHand(room.game, nextStarter);
+      io.to(roomId).emit("game_state", getPublicGameState(room.game));
+    }
   });
 
   // =========================

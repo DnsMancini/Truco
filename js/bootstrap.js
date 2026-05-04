@@ -1,3 +1,9 @@
+const socket = io("https://truco-dev.onrender.com");
+
+socket.on("players_online", (n) => {
+  console.log("Players online:", n);
+});
+
 const somDistribuir = new Audio("audio/Distribuicaocartas.mp3");
 const somJogarCarta = new Audio("audio/jogarcarta.mp3");
 const somTruco = new Audio("audio/Truco.mp3");

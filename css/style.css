@@ -842,7 +842,7 @@ body.orientacao-vertical #btnCorrer {
   pointer-events: none;
 
   transition: 0.5s;
-  z-index: 999;
+  z-index: calc(var(--overlay-z) + 10);
 }
 
 .telaFinal.show {
@@ -851,6 +851,9 @@ body.orientacao-vertical #btnCorrer {
 
 #textoFinal {
   animation: zoom 0.5s ease;
+  text-align: center;
+  padding: 0 24px;
+  max-width: min(92vw, 720px);
 }
 
 @keyframes zoom {

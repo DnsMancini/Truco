@@ -1246,8 +1246,12 @@ function iniciar() {
   }
 }
 
+function podeJogarCarta() {
+  return turno === 0;
+}
+
 function atualizarControleJogador() {
-  podeJogar = !jogoEncerrado && turno === 0 && mesa.length < 4 && estadoTruco === "normal";
+  podeJogar = !jogoEncerrado && podeJogarCarta() && mesa.length < 4 && estadoTruco === "normal";
   if (podeJogar) {
     iniciarTimerTurnoJogador();
   } else {
@@ -1289,10 +1293,18 @@ if (typeof socket !== "undefined") {
   socket.on("game_state", (state) => {
     if (!state) return;
 
+    console.log("STATE UPDATE SERVER", state);
+
+    if (Array.isArray(state.hands)) maos = state.hands;
+    if (Array.isArray(state.table)) mesa = state.table;
+    if (typeof state.turn === "number") turno = state.turn;
+
     if (Array.isArray(state.mesa)) mesa = state.mesa;
     if (typeof state.turno === "number") turno = state.turno;
     if (typeof state.starter === "number") starter = state.starter;
+    if (Array.isArray(state.score)) pontos = state.score;
     if (Array.isArray(state.pontos)) pontos = state.pontos;
+    if (typeof state.round === "number") rodada = state.round;
     if (typeof state.rodada === "number") rodada = state.rodada;
     if (Array.isArray(state.resultadoRodadas)) resultadoRodadas = state.resultadoRodadas;
     if (typeof state.valorMao === "number") valorMao = state.valorMao;
@@ -1306,9 +1318,10 @@ if (typeof socket !== "undefined") {
       state.trucoPending ? `Truco pendente (${valorMao})` : `Truco em ${valorMao}`,
     );
 
+    render();
+    renderMesa();
     if (typeof atualizarPlacar === "function") atualizarPlacar();
     if (typeof atualizarPainelRodada === "function") atualizarPainelRodada();
-    if (typeof renderMesa === "function") renderMesa();
     if (typeof atualizarControleJogador === "function") atualizarControleJogador();
   });
 }

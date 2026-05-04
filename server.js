@@ -84,32 +84,6 @@ function getPublicGameState(game) {
 }
 
 
-function broadcastGameState(roomId) {
-  const room = rooms.get(roomId);
-  if (!room || !room.game) return;
-
-  const game = room.game;
-  io.to(roomId).emit("game_state", {
-    hands: game.playerCards,
-    table: game.mesa,
-    turn: game.turno,
-    round: game.rodada,
-    score: game.pontos,
-    players: room.players,
-    // compat legado
-    mesa: game.mesa,
-    turno: game.turno,
-    starter: game.starter,
-    pontos: game.pontos,
-    rodada: game.rodada,
-    resultadoRodadas: game.resultadoRodadas,
-    valorMao: game.valorMao,
-    trucoNivel: game.trucoNivel,
-    trucoPending: game.trucoPending,
-    lastTrucoTeam: game.lastTrucoTeam
-  });
-}
-
 function resolveRoundWinner(mesa) {
   const ordered = [...mesa].sort((a, b) => b.card.power - a.card.power);
   const highestPower = ordered[0].card.power;
@@ -142,7 +116,16 @@ function resolveHandWinner(resultadoRodadas) {
 function broadcastGameState(roomId) {
   const room = rooms.get(roomId);
   if (!room || !room.game) return;
-  io.to(roomId).emit("game_state", getPublicGameState(room.game));
+  io.to(roomId).emit("game_state", {
+    roomId,
+    ...getPublicGameState(room.game),
+    hands: room.game.playerCards,
+    table: room.game.mesa,
+    turn: room.game.turno,
+    round: room.game.rodada,
+    score: room.game.pontos,
+    players: room.players
+  });
 }
 
 function playBotTurnIfNeeded(roomId) {
@@ -406,7 +389,7 @@ io.on("connection", (socket) => {
   // =========================
   // JOGAR CARTA (ETAPA 2)
   // =========================
-  socket.on("play_card", ({ roomId: requestedRoomId, card }) => {
+  socket.on("play_card", ({ roomId: requestedRoomId, card, index }) => {
     const roomId = requestedRoomId || socketToRoom.get(socket.id);
     if (!roomId) return;
 
@@ -416,30 +399,35 @@ io.on("connection", (socket) => {
     const playerIndex = room.players.indexOf(socket.id);
     if (playerIndex === -1) return;
 
-    if (!card || typeof card.power !== "number") return;
+    let selectedCard = card;
+    const serverHand = room.game.playerCards[playerIndex] || [];
+
+    if (typeof index === "number") {
+      if (index < 0 || index >= serverHand.length) return;
+      selectedCard = serverHand[index];
+    }
+
+    if (!selectedCard || typeof selectedCard.power !== "number") return;
 
     // valida turno
     if (room.game.turno !== playerIndex) return;
 
-    // valida posse da carta, se o servidor tiver mão registrada
-    const serverHand = room.game.playerCards[playerIndex];
-    if (Array.isArray(serverHand) && serverHand.length > 0) {
-      const cardInHandIndex = serverHand.findIndex(c =>
-        c.suit === card.suit && c.rank === card.rank && c.power === card.power
-      );
-      if (cardInHandIndex === -1) return;
-      serverHand.splice(cardInHandIndex, 1);
-    }
+    // valida posse da carta
+    const cardInHandIndex = serverHand.findIndex(c =>
+      c.suit === selectedCard.suit && c.rank === selectedCard.rank && c.power === selectedCard.power
+    );
+    if (cardInHandIndex === -1) return;
+    serverHand.splice(cardInHandIndex, 1);
 
     // adiciona carta na mesa
     room.game.mesa.push({
       player: playerIndex,
-      card
+      card: selectedCard
     });
 
     io.to(roomId).emit("card_played", {
       player: playerIndex,
-      card
+      card: selectedCard
     });
 
     // rodada termina com 4 cartas

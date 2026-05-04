@@ -1340,4 +1340,9 @@ if (typeof socket !== "undefined") {
   socket.on("player_reconnected", () => {
     mostrar("Jogador reconectou na partida");
   });
+
+  socket.on("player_replaced_by_bot", (data) => {
+    console.log("BOT assumiu jogador", data);
+    mostrar("Um jogador ficou ausente. BOT assumiu a posição.");
+  });
 }

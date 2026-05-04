@@ -126,6 +126,7 @@ function criarBots(q) { return Array.from({ length:q }, (_,i)=>({ id:`bot-${Date
 function jogadorJaEstaNaFilaOuMesa(id) { return filaGlobal.some((j)=>j.id===id) || jogadoresEmMesa.has(id); }
 
 const LOBBY_ENTRADA_DESATIVADA = true;
+const INICIAR_DIRETO_NA_MESA = true;
 
 function entrarNaFilaGlobal() {
   if (LOBBY_ENTRADA_DESATIVADA) {
@@ -400,6 +401,15 @@ window.addEventListener("load", ()=>{
     publicarPresencaLocal();
     renderizarLobby();
   }, MATCH_CONFIG.intervaloHeartbeatOnlineMs);
+  if (INICIAR_DIRETO_NA_MESA) {
+    const lobby = document.getElementById("lobby");
+    const gameWrapper = document.getElementById("gameWrapper");
+    if (lobby) lobby.style.display = "none";
+    if (gameWrapper) gameWrapper.classList.remove("game-hidden");
+    iniciar();
+    return;
+  }
+
   renderizarLobby();
   iniciarMatchmakingContinuo();
 });

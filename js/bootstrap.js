@@ -47,3 +47,9 @@ function tocar(audio, volume = 1) {
 
 window.addEventListener("resize", atualizarOrientacaoLayout);
 window.addEventListener("load", atualizarOrientacaoLayout);
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/service-worker.js");
+  });
+}

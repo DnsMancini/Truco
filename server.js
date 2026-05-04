@@ -10,6 +10,14 @@ const io = new Server(server, {
 });
 
 const ROOM_SIZE = 4;
+const TEAM_INDEX = {
+  0: 0,
+  1: 1,
+  2: 0,
+  3: 1
+};
+
+const TRUCO_STEPS = [1, 3, 6, 9, 12];
 
 let playersOnline = 0;
 let roomCounter = 1;
@@ -19,6 +27,69 @@ const rooms = new Map();
 
 // socketId -> roomId
 const socketToRoom = new Map();
+
+function nextTrucoValue(currentValue) {
+  const idx = TRUCO_STEPS.indexOf(currentValue);
+  if (idx === -1 || idx === TRUCO_STEPS.length - 1) return TRUCO_STEPS[TRUCO_STEPS.length - 1];
+  return TRUCO_STEPS[idx + 1];
+}
+
+function newHandState(starter = 0, points = [0, 0]) {
+  return {
+    mesa: [],
+    turno: starter,
+    starter,
+    pontos: [...points],
+    rodada: 1,
+    resultadoRodadas: [],
+    valorMao: 1,
+    trucoNivel: 0,
+    playerCards: [[], [], [], []],
+    started: true
+  };
+}
+
+function getPublicGameState(game) {
+  return {
+    mesa: game.mesa,
+    turno: game.turno,
+    starter: game.starter,
+    pontos: game.pontos,
+    rodada: game.rodada,
+    resultadoRodadas: game.resultadoRodadas,
+    valorMao: game.valorMao,
+    trucoNivel: game.trucoNivel
+  };
+}
+
+function resolveRoundWinner(mesa) {
+  const ordered = [...mesa].sort((a, b) => b.card.power - a.card.power);
+  const highestPower = ordered[0].card.power;
+  const highestCards = ordered.filter(entry => entry.card.power === highestPower);
+  if (highestCards.length > 1) return null;
+  return highestCards[0].player;
+}
+
+function resolveHandWinner(resultadoRodadas) {
+  const wins = [0, 0];
+  for (const winner of resultadoRodadas) {
+    if (winner === null) continue;
+    wins[TEAM_INDEX[winner]] += 1;
+  }
+
+  if (wins[0] >= 2) return 0;
+  if (wins[1] >= 2) return 1;
+
+  if (resultadoRodadas.length < 3) return null;
+
+  if (wins[0] > wins[1]) return 0;
+  if (wins[1] > wins[0]) return 1;
+
+  const firstWinner = resultadoRodadas.find(w => w !== null);
+  if (firstWinner !== undefined) return TEAM_INDEX[firstWinner];
+
+  return TEAM_INDEX[resultadoRodadas[0] ?? 0];
+}
 
 
 // =========================
@@ -113,16 +184,14 @@ io.on("connection", (socket) => {
   // INICIAR JOGO (ETAPA 2)
   // =========================
   if (room.players.length === ROOM_SIZE && !room.game) {
-    room.game = {
-      mesa: [],
-      turno: 0,
-      started: true
-    };
+    room.game = newHandState(0);
 
     io.to(roomId).emit("game_start", {
       players: room.players,
       turno: 0
     });
+
+    io.to(roomId).emit("game_state", getPublicGameState(room.game));
   }
 
   // =========================
@@ -136,9 +205,22 @@ io.on("connection", (socket) => {
     if (!room || !room.game) return;
 
     const playerIndex = room.players.indexOf(socket.id);
+    if (playerIndex === -1) return;
+
+    if (!card || typeof card.power !== "number") return;
 
     // valida turno
     if (room.game.turno !== playerIndex) return;
+
+    // valida posse da carta, se o servidor tiver mão registrada
+    const serverHand = room.game.playerCards[playerIndex];
+    if (Array.isArray(serverHand) && serverHand.length > 0) {
+      const cardInHandIndex = serverHand.findIndex(c =>
+        c.suit === card.suit && c.rank === card.rank && c.power === card.power
+      );
+      if (cardInHandIndex === -1) return;
+      serverHand.splice(cardInHandIndex, 1);
+    }
 
     // adiciona carta na mesa
     room.game.mesa.push({
@@ -146,18 +228,42 @@ io.on("connection", (socket) => {
       card
     });
 
-    // troca turno (4 jogadores)
-    room.game.turno = (room.game.turno + 1) % ROOM_SIZE;
+    // rodada termina com 4 cartas
+    if (room.game.mesa.length === ROOM_SIZE) {
+      const winnerPlayer = resolveRoundWinner(room.game.mesa);
+      room.game.resultadoRodadas.push(winnerPlayer);
 
-    // envia estado atualizado
-    io.to(roomId).emit("game_state", {
-      mesa: room.game.mesa,
-      turno: room.game.turno
-    });
+      const handWinnerTeam = resolveHandWinner(room.game.resultadoRodadas);
 
-    io.to(roomId).emit("next_turn", {
-      turno: room.game.turno
-    });
+      io.to(roomId).emit("round_result", {
+        rodada: room.game.rodada,
+        winnerPlayer,
+        winnerTeam: winnerPlayer === null ? null : TEAM_INDEX[winnerPlayer]
+      });
+
+      if (handWinnerTeam !== null) {
+        room.game.pontos[handWinnerTeam] += room.game.valorMao;
+        io.to(roomId).emit("hand_result", {
+          winnerTeam: handWinnerTeam,
+          valorMao: room.game.valorMao,
+          pontos: room.game.pontos
+        });
+
+        const nextStarter = (room.game.starter + 1) % ROOM_SIZE;
+        room.game = newHandState(nextStarter, room.game.pontos);
+      } else {
+        room.game.rodada += 1;
+        room.game.starter = winnerPlayer === null ? room.game.starter : winnerPlayer;
+        room.game.turno = room.game.starter;
+        room.game.mesa = [];
+      }
+    } else {
+      // troca turno dentro da rodada
+      room.game.turno = (room.game.turno + 1) % ROOM_SIZE;
+    }
+
+    // envia estado completo atualizado
+    io.to(roomId).emit("game_state", getPublicGameState(room.game));
   });
 
   // =========================

@@ -7,6 +7,8 @@ const MATCH_CONFIG = {
 };
 
 const CHAVE_PRESENCA_ONLINE = "truco-online-presenca-v1";
+const CHAVE_MESAS_GLOBAIS = "truco-online-mesas-v1";
+const CHAVE_EVENTO_MESA_CRIADA = "truco-online-evento-mesa-criada-v1";
 const ID_CONEXAO_LOCAL = `conn-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 
 const servidorMatchmaking = {
@@ -70,6 +72,50 @@ function removerPresencaLocal() {
   const presencasAtivas = obterPresencasAtivas();
   delete presencasAtivas[ID_CONEXAO_LOCAL];
   localStorage.setItem(CHAVE_PRESENCA_ONLINE, JSON.stringify(presencasAtivas));
+}
+
+function serializarMesa(mesa) {
+  return {
+    ...mesa,
+    sugestoesEntradaTardiaRecusadas: Array.from(mesa.sugestoesEntradaTardiaRecusadas ?? []),
+  };
+}
+
+function hidratarMesa(mesa) {
+  return {
+    ...mesa,
+    sugestoesEntradaTardiaRecusadas: new Set(mesa.sugestoesEntradaTardiaRecusadas ?? []),
+  };
+}
+
+function salvarMesasNoEstadoGlobal() {
+  const mesasSerializadas = mesasEmAndamento.map(serializarMesa);
+  localStorage.setItem(CHAVE_MESAS_GLOBAIS, JSON.stringify(mesasSerializadas));
+}
+
+function carregarMesasDoEstadoGlobal() {
+  try {
+    const bruto = localStorage.getItem(CHAVE_MESAS_GLOBAIS);
+    const mesas = bruto ? JSON.parse(bruto) : [];
+    mesasEmAndamento.splice(0, mesasEmAndamento.length, ...mesas.map(hidratarMesa));
+  } catch (_erro) {
+    mesasEmAndamento.splice(0, mesasEmAndamento.length);
+  }
+}
+
+function emitirEventoMesaCriada(mesa) {
+  console.log("[backend] evento mesa_criada emitido:", mesa.id);
+  localStorage.setItem(CHAVE_EVENTO_MESA_CRIADA, JSON.stringify({ mesa: serializarMesa(mesa), emitidoEm: Date.now(), origem: ID_CONEXAO_LOCAL }));
+}
+
+function criarMesaNoBackend(participantes) {
+  const mesa = montarMesa(participantes);
+  if (!mesa) return null;
+  console.log("[backend] mesa criada e salva no estado global:", mesa.id);
+  mesasEmAndamento.push(mesa);
+  salvarMesasNoEstadoGlobal();
+  emitirEventoMesaCriada(mesa);
+  return mesa;
 }
 
 function gerarIdUnicoMesa() { contadorMesa += 1; return `mesa-${Date.now()}-${contadorMesa}`; }
@@ -162,8 +208,8 @@ function processarEntradaTardiaParaJogadorLocal() {
       }
     } else if (escolha === "bots") {
       retirarJogadorDaFila(jogadorLocal.id);
-      const mesaBots = montarMesa([jogadorLocal]);
-      mesasEmAndamento.push(mesaBots);
+      const mesaBots = criarMesaNoBackend([jogadorLocal]);
+      if (!mesaBots) return;
       mostrarStatusLobby("Modo contra bots selecionado.");
       iniciarPartidaDaMesa(mesaBots);
     } else {
@@ -184,12 +230,11 @@ function processarMatchmaking() {
   const esperaPrimeiro = Date.now() - filaGlobal[0].entrouNaFilaEm;
   if (filaGlobal.length >= MATCH_CONFIG.jogadoresPorMesa || esperaPrimeiro >= MATCH_CONFIG.tempoMaximoEsperaMs) {
     const participantes = filaGlobal.splice(0, MATCH_CONFIG.jogadoresPorMesa);
-    const mesa = montarMesa(participantes);
+    const mesa = criarMesaNoBackend(participantes);
     if (!mesa) {
       mostrarStatusLobby("Não foi possível iniciar mesa sem jogador humano.");
       return renderizarLobby();
     }
-    mesasEmAndamento.push(mesa);
     iniciarPartidaDaMesa(mesa);
   }
   renderizarLobby();
@@ -210,14 +255,41 @@ function renderizarLobby(){
 }
 function iniciarMatchmakingContinuo(){ if(matchmakingIntervalo) return; matchmakingIntervalo = setInterval(processarMatchmaking, MATCH_CONFIG.intervaloMatchmakingMs); }
 window.addEventListener("storage", (evento) => {
-  if (evento.key !== CHAVE_PRESENCA_ONLINE) return;
-  atualizarJogadoresOnline();
-  renderizarLobby();
+  if (evento.key === CHAVE_PRESENCA_ONLINE) {
+    atualizarJogadoresOnline();
+    renderizarLobby();
+    return;
+  }
+
+  if (evento.key === CHAVE_MESAS_GLOBAIS) {
+    carregarMesasDoEstadoGlobal();
+    renderizarLobby();
+    return;
+  }
+
+  if (evento.key === CHAVE_EVENTO_MESA_CRIADA && evento.newValue) {
+    try {
+      const payload = JSON.parse(evento.newValue);
+      if (payload?.origem === ID_CONEXAO_LOCAL) return;
+      const mesaRecebida = hidratarMesa(payload.mesa);
+      const jaExiste = mesasEmAndamento.some((m) => m.id === mesaRecebida.id);
+      if (!jaExiste) {
+        mesasEmAndamento.push(mesaRecebida);
+        salvarMesasNoEstadoGlobal();
+      }
+      console.log("[frontend] evento mesa_criada recebido:", mesaRecebida.id);
+      renderizarLobby();
+    } catch (_erro) {
+      // ignorar payload inválido
+    }
+  }
 });
 window.addEventListener("beforeunload", removerPresencaLocal);
 window.addEventListener("load", ()=>{
+  carregarMesasDoEstadoGlobal();
   publicarPresencaLocal();
   setInterval(() => {
+    carregarMesasDoEstadoGlobal();
     publicarPresencaLocal();
     renderizarLobby();
   }, MATCH_CONFIG.intervaloHeartbeatOnlineMs);

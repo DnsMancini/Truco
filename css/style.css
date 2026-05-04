@@ -752,6 +752,7 @@ body.orientacao-vertical #painelHistorico {
 
 
 body.orientacao-vertical #p1,
+body.orientacao-vertical #p2,
 body.orientacao-vertical #p3 {
   --avatar-size: 40px;
 }

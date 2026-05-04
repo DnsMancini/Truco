@@ -28,15 +28,26 @@ function entrarNaFilaGlobal() {
 }
 
 function montarMesa(participantes) {
-  participantes.filter((j)=>j.tipo==="humano").forEach((j)=>jogadoresEmMesa.add(j.id));
+  const humanos = participantes.filter((j)=>j.tipo==="humano");
+  if (!humanos.length) return null;
+  humanos.forEach((j)=>jogadoresEmMesa.add(j.id));
   const bots = criarBots(Math.max(0, MATCH_CONFIG.jogadoresPorMesa - participantes.length));
-  return { id:gerarIdUnicoMesa(), jogadores:[...participantes,...bots], criadaEm:Date.now(), emAndamento:true, placar:[0,0], rodadaAtual:1 };
+  return { id:gerarIdUnicoMesa(), jogadores:[...participantes,...bots], criadaEm:Date.now(), emAndamento:true, placar:[0,0], rodadaAtual:1, janelaEntradaTardiaAberta:true, sugestoesEntradaTardiaRecusadas:new Set() };
 }
 function criarResumoMesa(mesa) {
   const jogadores = mesa.jogadores.map((j)=>`${j.nome} (${j.tipo === "bot" ? "BOT" : "Humano"})`).join("\n");
   return `Mesa ${mesa.id}\n\nJogadores:\n${jogadores}\n\nPlacar: Nós ${mesa.placar[0]} x ${mesa.placar[1]} Eles\nRodada atual: ${mesa.rodadaAtual}`;
 }
-function procurarMesaElegivelEntradaTardia() { return mesasEmAndamento.find((m)=>m.jogadores.some((j)=>j.tipo==="bot") && m.jogadores.filter((j)=>j.tipo==="humano").length < MATCH_CONFIG.jogadoresPorMesa); }
+function podeReceberEntradaTardia(mesa) {
+  return Boolean(mesa && mesa.janelaEntradaTardiaAberta);
+}
+function procurarMesaElegivelEntradaTardia() {
+  return mesasEmAndamento.find((m)=>
+    podeReceberEntradaTardia(m) &&
+    m.jogadores.some((j)=>j.tipo==="bot") &&
+    m.jogadores.filter((j)=>j.tipo==="humano").length < MATCH_CONFIG.jogadoresPorMesa
+  );
+}
 function retirarJogadorDaFila(id){ const i=filaGlobal.findIndex((j)=>j.id===id); if(i!==-1) filaGlobal.splice(i,1); }
 function substituirBotPorHumano(mesa,humano){ const i=mesa.jogadores.findIndex((j)=>j.tipo==="bot"); if(i===-1) return false; mesa.jogadores.splice(i,1,humano); jogadoresEmMesa.add(humano.id); mostrar(`${humano.nome} entrou na mesa ${mesa.id}.`); return true; }
 
@@ -56,6 +67,8 @@ function abrirModalEntradaTardia(mesa, onEscolha) {
 }
 
 function iniciarPartidaDaMesa(mesa) {
+  if (!mesa) return;
+  mesa.janelaEntradaTardiaAberta = false;
   if (!jogadorLocal) return;
   if (!mesa.jogadores.some((j)=>j.id===jogadorLocal.id)) return;
   mesaAtual = mesa;
@@ -69,7 +82,9 @@ function iniciarPartidaDaMesa(mesa) {
 
 function processarEntradaTardiaParaJogadorLocal() {
   if (!jogadorLocal || fluxoEntradaTardiaAtivo || mesaAtual) return false;
+  if (jogadoresEmMesa.has(jogadorLocal.id)) return false;
   const mesa = procurarMesaElegivelEntradaTardia();
+  if (mesa?.sugestoesEntradaTardiaRecusadas?.has(jogadorLocal.id)) return false;
   if (!mesa) return false;
   fluxoEntradaTardiaAtivo = true;
   abrirModalEntradaTardia(mesa, (escolha) => {
@@ -90,7 +105,10 @@ function processarEntradaTardiaParaJogadorLocal() {
       mostrarStatusLobby("Modo contra bots selecionado.");
       iniciarPartidaDaMesa(mesaBots);
     } else {
-      mostrarStatusLobby("Entrada tardia recusada. Buscando outra mesa elegível...");
+      mesa.sugestoesEntradaTardiaRecusadas ??= new Set();
+      mesa.sugestoesEntradaTardiaRecusadas.add(jogadorLocal.id);
+      retirarJogadorDaFila(jogadorLocal.id);
+      mostrarStatusLobby("Entrada tardia recusada. Você foi removido(a) da sugestão atual e da fila.");
     }
     fluxoEntradaTardiaAtivo = false;
     renderizarLobby();
@@ -105,6 +123,10 @@ function processarMatchmaking() {
   if (filaGlobal.length >= MATCH_CONFIG.jogadoresPorMesa || esperaPrimeiro >= MATCH_CONFIG.tempoMaximoEsperaMs) {
     const participantes = filaGlobal.splice(0, MATCH_CONFIG.jogadoresPorMesa);
     const mesa = montarMesa(participantes);
+    if (!mesa) {
+      mostrarStatusLobby("Não foi possível iniciar mesa sem jogador humano.");
+      return renderizarLobby();
+    }
     mesasEmAndamento.push(mesa);
     iniciarPartidaDaMesa(mesa);
   }

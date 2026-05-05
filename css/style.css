@@ -536,7 +536,13 @@ body {
 }
 
 .placar-time::before {
-  content: none;
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: -1;
 }
 
 
@@ -557,11 +563,8 @@ body {
   
 }
 
-.placar-time--eles {
+.placar-time--eles::before {
   background-image: url("../img/bandeirabranca.png");
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
 }
 
 .placar-time--eles .placar-time-nome,
@@ -570,11 +573,8 @@ body {
   text-shadow: 0 1px 3px rgba(110, 0, 0, 0.55);
 }
 
-.placar-time--nos {
+.placar-time--nos::before {
   background-image: url("../img/bandeiraverde.png");
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
 }
 
 .placar-time--nos .placar-time-nome,

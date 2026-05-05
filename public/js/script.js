@@ -13,6 +13,7 @@ let latestState = null;
 
 function entrarFila() {
   statusLobby.textContent = "Entrando na fila...";
+  console.log("[frontend] emit entrar_fila");
   socket.emit("entrar_fila");
 }
 
@@ -62,18 +63,22 @@ function render(state) {
 }
 
 socket.on("fila_atualizada", ({ posicao }) => {
+  console.log("[frontend] fila_atualizada", { posicao });
   statusLobby.textContent = `Na fila... posição ${posicao}`;
 });
 
 socket.on("mesa_criada", ({ mesaId }) => {
+  console.log("[frontend] mesa_criada", { mesaId });
   statusLobby.textContent = `Mesa criada: ${mesaId}`;
 });
 
 socket.on("game_state", (state) => {
+  console.log("[frontend] game_state recebido", { mesaId: state?.mesaId, turno: state?.turno, rodada: state?.rodada, jogadorIndex: state?.jogadorIndex });
   render(state);
 });
 
 socket.on("player_left", () => {
+  console.log("[frontend] player_left recebido");
   if (!latestState) return;
   mensagemEl.textContent = "Um jogador saiu da mesa.";
 });
@@ -81,4 +86,16 @@ socket.on("player_left", () => {
 window.pedirTruco = () => {};
 window.correr = () => {};
 
-entrarFila();
+socket.on("connect", () => {
+  console.log("[frontend] socket conectado; chamando entrarFila", socket.id);
+  entrarFila();
+});
+
+socket.on("disconnect", (reason) => {
+  console.warn("[frontend] socket desconectado", reason);
+});
+
+if (socket.connected) {
+  console.log("[frontend] socket já conectado; chamando entrarFila imediato");
+  entrarFila();
+}

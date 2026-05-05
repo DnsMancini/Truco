@@ -107,19 +107,23 @@ function getPublicGameState(game) {
 }
 
 
-function broadcastGameState(roomId) {
-  const room = rooms.get(roomId);
-  if (!room || !room.game) return;
 
+function getStateForPlayer(room, playerSocketId) {
   const game = room.game;
-  io.to(roomId).emit("game_state", {
-    hands: game.playerCards,
+  const playerIndex = room.players.indexOf(playerSocketId);
+  const visibleHands = game.playerCards.map((hand, idx) => (
+    idx === playerIndex ? hand : new Array(hand.length).fill(null)
+  ));
+
+  return {
+    hands: visibleHands,
+    hand: playerIndex >= 0 ? game.playerCards[playerIndex] : [],
+    playerIndex,
     table: game.mesa,
     turn: game.turno,
     round: game.rodada,
     score: game.pontos,
     players: room.players,
-    // compat legado
     mesa: game.mesa,
     turno: game.turno,
     starter: game.starter,
@@ -130,7 +134,16 @@ function broadcastGameState(roomId) {
     trucoNivel: game.trucoNivel,
     trucoPending: game.trucoPending,
     lastTrucoTeam: game.lastTrucoTeam
-  });
+  };
+}
+
+function broadcastGameState(roomId) {
+  const room = rooms.get(roomId);
+  if (!room || !room.game) return;
+
+  for (const playerId of room.players) {
+    io.to(playerId).emit("game_state", getStateForPlayer(room, playerId));
+  }
 }
 
 function resolveRoundWinner(mesa) {
@@ -348,7 +361,7 @@ io.on("connection", (socket) => {
     const game = room.game;
     if (game) {
       game.playerCards[oldIndex] = game.playerCards[oldIndex] || [];
-      socket.emit("game_sync", game);
+      socket.emit("game_sync", getStateForPlayer(room, socket.id));
       broadcastGameState(saved.roomId);
     }
 
@@ -405,7 +418,7 @@ io.on("connection", (socket) => {
       ...newHandState(0)
     };
 
-    io.to(roomId).emit("game_start", room.game);
+    io.to(roomId).emit("game_start", { started: true });
     broadcastGameState(roomId);
   }
 
@@ -417,7 +430,7 @@ io.on("connection", (socket) => {
     const room = rooms.get(roomId);
     if (!room || !room.game) return;
 
-    socket.emit("game_state", room.game);
+    socket.emit("game_state", getStateForPlayer(room, socket.id));
   });
 
   // =========================
@@ -498,7 +511,7 @@ io.on("connection", (socket) => {
     }
 
     // envia estado completo atualizado
-    io.to(roomId).emit("game_state", room.game);
+    broadcastGameState(roomId);
   });
 
   socket.on("request_truco", () => {

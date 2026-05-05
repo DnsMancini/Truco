@@ -6,7 +6,18 @@ const { criarEstadoInicial, distribuirCartas, jogarCarta } = require("./gamecore
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server, { cors: { origin: "*" } });
+
+const corsOrigin = process.env.CORS_ORIGIN
+  ? process.env.CORS_ORIGIN.split(",").map((origin) => origin.trim())
+  : "*";
+
+const io = new Server(server, {
+  cors: {
+    origin: corsOrigin,
+    methods: ["GET", "POST"],
+    credentials: false
+  }
+});
 
 app.use(express.static(path.join(__dirname, "public")));
 app.get("/", (_req, res) => res.sendFile(path.join(__dirname, "public/index.html")));
@@ -34,16 +45,12 @@ function snapshotMesa(mesa, socketId) {
 }
 
 function emitirEstadoMesa(mesa) {
-  console.log(`[mesa:${mesa.id}] emitindo game_state para ${mesa.players.length} jogador(es)`);
-  mesa.players.forEach((p, idx) => {
-    const payload = snapshotMesa(mesa, p.id);
-    console.log(`[mesa:${mesa.id}] -> game_state para socket=${p.id} jogadorIndex=${idx} turno=${payload.turno} rodada=${payload.rodada}`);
-    p.socket.emit("game_state", payload);
+  mesa.players.forEach((p) => {
+    p.socket.emit("game_state", snapshotMesa(mesa, p.id));
   });
 }
 
 function criarMesaSePossivel() {
-  console.log(`[fila] checando match. tamanho atual=${fila.length}`);
   while (fila.length >= 4) {
     const selecionados = fila.splice(0, 4);
     const mesaId = `mesa-${seqMesa++}`;
@@ -55,8 +62,8 @@ function criarMesaSePossivel() {
       players: selecionados.map((socket) => ({ id: socket.id, socket })),
       state
     };
+
     mesas.set(mesaId, mesa);
-    console.log(`[match] mesa criada ${mesaId} com sockets=${mesa.players.map((p) => p.id).join(",")}`);
 
     mesa.players.forEach((p) => {
       p.socket.data.mesaId = mesaId;
@@ -73,27 +80,16 @@ function criarMesaSePossivel() {
 }
 
 io.on("connection", (socket) => {
-  console.log(`[socket] conectado id=${socket.id}`);
-
   socket.on("entrar_fila", () => {
-    console.log(`[fila] evento entrar_fila recebido de socket=${socket.id}`);
-    if (socket.data.mesaId) {
-      console.log(`[fila] socket=${socket.id} já está na mesa ${socket.data.mesaId}; ignorando entrar_fila`);
-      return;
-    }
-    if (fila.some((s) => s.id === socket.id)) {
-      console.log(`[fila] socket=${socket.id} já está na fila; ignorando duplicado`);
-      return;
-    }
+    if (socket.data.mesaId) return;
+    if (fila.some((s) => s.id === socket.id)) return;
 
     fila.push(socket);
-    console.log(`[fila] socket=${socket.id} entrou na fila. tamanho=${fila.length}`);
     socket.emit("fila_atualizada", { posicao: fila.length });
     criarMesaSePossivel();
   });
 
   socket.on("play_card", ({ index }) => {
-    console.log(`[jogada] socket=${socket.id} tentou jogar index=${index}`);
     const mesaId = socket.data.mesaId;
     if (!mesaId || !mesas.has(mesaId)) return;
 
@@ -108,13 +104,9 @@ io.on("connection", (socket) => {
     emitirEstadoMesa(mesa);
   });
 
-  socket.on("disconnect", (reason) => {
-    console.log(`[socket] desconectado id=${socket.id} reason=${reason}`);
+  socket.on("disconnect", () => {
     const filaIdx = fila.findIndex((s) => s.id === socket.id);
-    if (filaIdx !== -1) {
-      fila.splice(filaIdx, 1);
-      console.log(`[fila] removido socket=${socket.id} da fila. tamanho=${fila.length}`);
-    }
+    if (filaIdx !== -1) fila.splice(filaIdx, 1);
 
     const mesaId = socket.data.mesaId;
     if (!mesaId || !mesas.has(mesaId)) return;
@@ -124,12 +116,11 @@ io.on("connection", (socket) => {
 
     io.to(mesaId).emit("player_left", { socketId: socket.id });
 
-    if (mesa.players.length === 0) {
-      mesas.delete(mesaId);
-    }
+    if (mesa.players.length === 0) mesas.delete(mesaId);
   });
 });
 
-server.listen(3000, () => {
-  console.log("🚀 Server rodando em http://localhost:3000");
+const PORT = Number(process.env.PORT) || 3000;
+server.listen(PORT, () => {
+  console.log(`🚀 Server rodando na porta ${PORT}`);
 });

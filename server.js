@@ -2,83 +2,124 @@ const express = require("express");
 const http = require("http");
 const path = require("path");
 const { Server } = require("socket.io");
+
 const {
   criarEstadoInicial,
   distribuirCartas,
   jogarCarta
 } = require("./gameCore");
+
 const app = express();
 const server = http.createServer(app);
+const io = new Server(server, {
+  cors: { origin: "*" }
+});
 
-let mesas = {};
-// servir frontend
 app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public/index.html"));
 });
 
-// socket corrigido
-const io = new Server(server, {
-  cors: {
-    origin: "*",
-    methods: ["GET", "POST"]
-  },
-  transports: ["websocket", "polling"]
-});
+const FILA = [];
+const MESAS = {};
 
+// -----------------------------
+// MATCHMAKING AUTOMÁTICO
+// -----------------------------
+function tentarFormarMesa() {
+  if (FILA.length < 4) return;
+
+  const mesaId = "mesa-" + Date.now();
+
+  const jogadores = FILA.splice(0, 4);
+
+  const estado = criarEstadoInicial();
+
+  MESAS[mesaId] = {
+    estado,
+    jogadores: jogadores.map(s => ({
+      id: s.id,
+      socket: s
+    }))
+  };
+
+  // entra na sala
+  jogadores.forEach((s) => {
+    s.join(mesaId);
+    s.mesaId = mesaId;
+  });
+
+  // distribui cartas
+  distribuirCartas(estado);
+
+  console.log("🎮 Mesa criada:", mesaId);
+
+  io.to(mesaId).emit("mesa_criada", {
+    mesaId,
+    estado,
+    jogadores: MESAS[mesaId].jogadores.map(j => j.id)
+  });
+}
+
+// -----------------------------
+// SOCKET CONNECT
+// -----------------------------
 io.on("connection", (socket) => {
-  console.log("Conectado:", socket.id);
+  console.log("🔌 Conectado:", socket.id);
 
-  socket.on("criar_mesa", () => {
-    const mesaId = "mesa-" + Date.now();
+  // ENTRAR NA FILA
+  socket.on("entrar_fila", () => {
+    if (FILA.find(s => s.id === socket.id)) return;
 
-    mesas[mesaId] = {
-      estado: criarEstadoInicial(),
-      jogadores: []
-    };
+    FILA.push(socket);
 
-    socket.join(mesaId);
-    socket.mesaId = mesaId;
+    console.log("📥 entrou na fila:", socket.id);
 
-    socket.emit("mesa_criada", mesaId);
+    tentarFormarMesa();
   });
 
-  socket.on("entrar_mesa", (mesaId) => {
-    const mesa = mesas[mesaId];
-    if (!mesa) return;
-
-    const jogadorIndex = mesa.jogadores.length;
-
-    mesa.jogadores.push(socket.id);
-
-    socket.join(mesaId);
-    socket.mesaId = mesaId;
-
-    // 🔥 envia estado atual
-    socket.emit("game_state", mesa.estado);
-
-    if (mesa.jogadores.length >= 2) {
-      distribuirCartas(mesa.estado);
-      io.to(mesaId).emit("game_state", mesa.estado);
-    }
-  });
-
+  // JOGAR CARTA
   socket.on("play_card", ({ index }) => {
     const mesaId = socket.mesaId;
     if (!mesaId) return;
 
-    const mesa = mesas[mesaId];
+    const mesa = MESAS[mesaId];
     if (!mesa) return;
 
-    const jogador = mesa.jogadores.indexOf(socket.id);
-    if (jogador === -1) return;
+    const jogadorIndex = mesa.jogadores.findIndex(j => j.id === socket.id);
+    if (jogadorIndex === -1) return;
 
-    // 🔥 valida turno
-    if (mesa.estado.turno !== jogador) return;
+    // 🔒 valida turno no servidor
+    if (mesa.estado.turno !== jogadorIndex) return;
 
-    jogarCarta(mesa.estado, jogador, index);
+    jogarCarta(mesa.estado, jogadorIndex, index);
 
-    io.to(mesaId).emit("game_state", mesa.estado);
+    io.to(mesaId).emit("game_state", {
+      estado: mesa.estado
+    });
   });
+
+  // DESCONECTAR
+  socket.on("disconnect", () => {
+    console.log("❌ Desconectou:", socket.id);
+
+    // remove da fila
+    const idx = FILA.findIndex(s => s.id === socket.id);
+    if (idx !== -1) FILA.splice(idx, 1);
+
+    // remove da mesa
+    const mesaId = socket.mesaId;
+    if (mesaId && MESAS[mesaId]) {
+      MESAS[mesaId].jogadores =
+        MESAS[mesaId].jogadores.filter(j => j.id !== socket.id);
+
+      io.to(mesaId).emit("player_left", socket.id);
+    }
+  });
+});
+
+// -----------------------------
+server.listen(3000, () => {
+  console.log("🚀 Server rodando em http://localhost:3000");
 });

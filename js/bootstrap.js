@@ -2,7 +2,8 @@ const PROD_SOCKET_URL = "https://truco-naooo.onrender.com";
 const socketEndpoint = window.TRUCO_SOCKET_URL || PROD_SOCKET_URL;
 
 const socket = io(socketEndpoint, {
-  transports: ["websocket"],
+  transports: ["websocket", "polling"],
+  path: "/socket.io",
   withCredentials: false,
 });
 
@@ -19,6 +20,15 @@ socket.on("connect", () => {
 
 socket.on("players_online", (n) => {
   console.log("Players online:", n);
+});
+
+
+socket.on("connect_error", (error) => {
+  console.warn("[socket] connect_error:", error?.message || error);
+});
+
+socket.io.on("reconnect_attempt", (attempt) => {
+  console.log("[socket] reconnect_attempt:", attempt);
 });
 
 const somDistribuir = new Audio("audio/Distribuicaocartas.mp3");
@@ -56,6 +66,7 @@ window.addEventListener("load", atualizarOrientacaoLayout);
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("/service-worker.js");
+    const swUrl = new URL("./service-worker.js", window.location.href);
+    navigator.serviceWorker.register(swUrl.href);
   });
 }

@@ -1,11 +1,18 @@
+const DEFAULT_SOCKET_URL = window.location.origin;
 const PROD_SOCKET_URL = "https://truco-naooo.onrender.com";
-const socketEndpoint = window.TRUCO_SOCKET_URL || PROD_SOCKET_URL;
+
+const socketEndpoint =
+  window.TRUCO_SOCKET_URL ||
+  localStorage.getItem("truco_socket_url") ||
+  (window.location.hostname.endsWith("github.io") ? PROD_SOCKET_URL : DEFAULT_SOCKET_URL);
 
 const socket = io(socketEndpoint, {
   transports: ["websocket", "polling"],
   path: "/socket.io",
   withCredentials: false,
+  reconnectionAttempts: 5,
 });
+
 
 const reconnectSocketKey = "truco_previous_socket_id";
 

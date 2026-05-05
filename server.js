@@ -7,7 +7,7 @@ const {
   criarEstadoInicial,
   distribuirCartas,
   jogarCarta
-} = require("./gameCore");
+} = require("./gamecore");
 
 const app = express();
 const server = http.createServer(app);

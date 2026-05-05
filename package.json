@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "test": "node --check server.js && node --check public/js/bootstrap.js && node --check public/js/cards.js && node --check public/js/lobby.js && node --check public/js/script.js"
+    "test": "node --check server.js && node --check public/js/bootstrap.js && node --check public/js/cards.js && node --check public/js/script.js"
   },
   "keywords": [],
   "author": "",

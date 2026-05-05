@@ -1,16 +1,22 @@
 const DEFAULT_SOCKET_URL = window.location.origin;
 const PROD_SOCKET_URL = "https://truco-naooo.onrender.com";
 
+const querySocketUrl = new URLSearchParams(window.location.search).get("socketUrl");
+if (querySocketUrl) {
+  localStorage.setItem("truco_socket_url", querySocketUrl);
+}
+
 const socketEndpoint =
   window.TRUCO_SOCKET_URL ||
   localStorage.getItem("truco_socket_url") ||
   (window.location.hostname.endsWith("github.io") ? PROD_SOCKET_URL : DEFAULT_SOCKET_URL);
 
 const socket = io(socketEndpoint, {
-  transports: ["websocket", "polling"],
+  transports: ["polling", "websocket"],
   path: "/socket.io",
   withCredentials: false,
   reconnectionAttempts: 5,
+  timeout: 10000,
 });
 
 
@@ -32,6 +38,10 @@ socket.on("players_online", (n) => {
 
 socket.on("connect_error", (error) => {
   console.warn("[socket] connect_error:", error?.message || error);
+  console.warn("[socket] endpoint usado:", socketEndpoint);
+  if (window.location.hostname.endsWith("github.io") && !localStorage.getItem("truco_socket_url")) {
+    console.warn('[socket] Defina um backend válido com ?socketUrl=https://SEU-BACKEND.onrender.com');
+  }
 });
 
 socket.io.on("reconnect_attempt", (attempt) => {

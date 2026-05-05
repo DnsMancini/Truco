@@ -1,8 +1,10 @@
-const socketEndpoint =
-  window.TRUCO_SOCKET_URL ||
-  (window.location.origin.startsWith("http") ? window.location.origin : undefined);
+const PROD_SOCKET_URL = "https://truco-naooo.onrender.com";
+const socketEndpoint = window.TRUCO_SOCKET_URL || PROD_SOCKET_URL;
 
-const socket = socketEndpoint ? io(socketEndpoint) : io();
+const socket = io(socketEndpoint, {
+  transports: ["websocket", "polling"],
+  withCredentials: false,
+});
 
 const reconnectSocketKey = "truco_previous_socket_id";
 

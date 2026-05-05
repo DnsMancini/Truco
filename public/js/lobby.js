@@ -7,10 +7,11 @@ export function entrarNaFila() {
   state.naFila = true;
 }
 
-socket.on("mesa_criada", ({ mesaId, estado }) => {
+socket.on("mesa_criada", ({ mesaId, jogadorIndex, jogadores }) => {
   console.log("mesa criada:", mesaId);
 
-  state.mesaAtual = estado;
+  state.jogadorLocal = jogadorIndex;
+  state.mesaAtual = { mesaId, jogadores };
 
-  iniciarJogo(estado);
+  iniciarJogo(state.mesaAtual);
 });

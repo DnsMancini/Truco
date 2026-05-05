@@ -125,8 +125,8 @@ function criarJogadorHumano(nome) { return { id:`humano-${Date.now()}-${Math.ran
 function criarBots(q) { return Array.from({ length:q }, (_,i)=>({ id:`bot-${Date.now()}-${i+1}-${Math.random().toString(36).slice(2,7)}`, nome:`Bot ${i+1} [BOT]`, tipo:"bot" })); }
 function jogadorJaEstaNaFilaOuMesa(id) { return filaGlobal.some((j)=>j.id===id) || jogadoresEmMesa.has(id); }
 
-const LOBBY_ENTRADA_DESATIVADA = true;
-const INICIAR_DIRETO_NA_MESA = true;
+const LOBBY_ENTRADA_DESATIVADA = false;
+const INICIAR_DIRETO_NA_MESA = false;
 
 function entrarNaFilaGlobal() {
   if (LOBBY_ENTRADA_DESATIVADA) {

@@ -15,6 +15,7 @@
   }
 }
 
+
 body {
   margin: 0;
   background: #0b0b0b;
@@ -153,7 +154,6 @@ body {
   line-height: 1.35;
   letter-spacing: 0.2px;
   text-align: justify;
-  text-justify: inter-word;
   color: rgba(255, 255, 255, 0.92);
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
   display: none;
@@ -398,6 +398,7 @@ body {
   font-weight: bold;
   font-size: 18px;
 
+  -webkit-user-select: none;
   user-select: none;
 }
 
@@ -1017,8 +1018,11 @@ body.orientacao-vertical #btnCorrer {
 
 .carta.virada {
   background: #fff url("../img/carta-copag-vermelha.png") center/contain no-repeat !important;
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: crisp-edges;
+  image-rendering: optimizeSpeed;
+image-rendering: -webkit-optimize-contrast;
+image-rendering: crisp-edges;
+image-rendering: pixelated;
+
 }
 
 .carta.playerCard {

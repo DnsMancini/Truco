@@ -6,22 +6,29 @@ const { Server } = require("socket.io");
 const app = express();
 const server = http.createServer(app);
 
-// 🔥 servir frontend
+// servir frontend
 app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public/index.html"));
 });
 
-// socket
+// socket corrigido
 const io = new Server(server, {
   cors: {
-    origin: "*"
-  }
+    origin: "*",
+    methods: ["GET", "POST"]
+  },
+  transports: ["websocket", "polling"]
 });
 
 io.on("connection", (socket) => {
   console.log("Conectado:", socket.id);
+});
+
+// log de erro (ajuda MUITO)
+io.engine.on("connection_error", (err) => {
+  console.log("Erro conexão:", err);
 });
 
 const PORT = process.env.PORT || 3000;

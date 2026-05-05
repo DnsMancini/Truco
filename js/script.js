@@ -861,8 +861,18 @@ function normalizarCarta(carta) {
   if (typeof carta === "string") return carta;
   if (!carta || typeof carta !== "object") return null;
 
+  if (typeof carta.rank === "string" && typeof carta.suit === "string") {
+    return `${carta.rank}${carta.suit}`;
+  }
+
   const valor = carta.c ?? carta.card ?? carta.value ?? carta.codigo;
-  return typeof valor === "string" ? valor : null;
+  if (typeof valor === "string") return valor;
+
+  if (valor && typeof valor === "object") {
+    return normalizarCarta(valor);
+  }
+
+  return null;
 }
 
 function normalizarMaos(hands) {
@@ -883,9 +893,9 @@ function normalizarMesa(table) {
     .map((entry) => {
       if (!entry || typeof entry !== "object") return null;
       const jogador = typeof entry.j === "number" ? entry.j : entry.player;
-      const carta = entry.c ?? entry.card;
-      if (typeof jogador !== "number" || !carta) return null;
-      return { j: jogador, c: carta, coberta: Boolean(entry.coberta) };
+      const cartaNormalizada = normalizarCarta(entry.c ?? entry.card);
+      if (typeof jogador !== "number" || !cartaNormalizada) return null;
+      return { j: jogador, c: cartaNormalizada, coberta: Boolean(entry.coberta) };
     })
     .filter(Boolean);
 }

@@ -12,11 +12,12 @@ const socketEndpoint =
   (window.location.hostname.endsWith("github.io") ? PROD_SOCKET_URL : DEFAULT_SOCKET_URL);
 
 const socket = io(socketEndpoint, {
-  transports: ["polling", "websocket"],
+  transports: ["websocket"],
   path: "/socket.io",
   withCredentials: false,
   reconnectionAttempts: 5,
   timeout: 10000,
+  upgrade: false,
 });
 
 

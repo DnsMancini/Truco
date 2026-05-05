@@ -4,28 +4,19 @@ const { Server } = require("socket.io");
 
 const app = express();
 const server = http.createServer(app);
+app.set("trust proxy", 1);
 
 app.use(express.static(__dirname));
 app.use('/js', express.static(`${__dirname}/js`));
 
-const allowedOrigins = [
-  "https://truco-naooo.onrender.com",
-  "http://localhost:3000",
-  "http://127.0.0.1:3000",
-];
-
 const io = new Server(server, {
   cors: {
-    origin(origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-        return;
-      }
-      callback(new Error("Origem não permitida pelo CORS."));
-    },
+    origin: "*",
     methods: ["GET", "POST"],
     credentials: false,
-  }
+  },
+  transports: ["websocket", "polling"],
+  allowUpgrades: true,
 });
 
 const ROOM_SIZE = 4;

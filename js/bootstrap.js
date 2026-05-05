@@ -2,7 +2,7 @@ const PROD_SOCKET_URL = "https://truco-naooo.onrender.com";
 const socketEndpoint = window.TRUCO_SOCKET_URL || PROD_SOCKET_URL;
 
 const socket = io(socketEndpoint, {
-  transports: ["websocket", "polling"],
+  transports: ["websocket"],
   withCredentials: false,
 });
 
